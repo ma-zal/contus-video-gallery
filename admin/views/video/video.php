@@ -297,30 +297,26 @@ foreach ( $gridVideo as $videoView ) {
 
 								<td class="description column-featured" style="text-align:center"> <?php
 									$feaStatus  = 1;
-									$feaImage   = esc_attr_e( 'deactivate.jpg' );
-									$feaPublish = esc_attr_e( 'Click here to Activate' );
+									$feaImage   = 'deactivate.jpg';
 	if ( $videoView->featured == 1 ) {
 		$feaStatus  = 0;
-		$feaImage   = esc_attr_e( 'activate.jpg' );
-		$feaPublish = esc_attr_e( 'Click here to InActivate' );
+		$feaImage   = 'activate.jpg';
 	}
 									?>
-									<a  title="Edit <?php echo balanceTags( $videoView->name ); ?>" href="<?php echo balanceTags( $selfurl ); ?>&videoId=<?php echo balanceTags( $videoView->vid ); ?>&featured=<?php echo balanceTags( $feaStatus ); ?>">   <img src="<?php echo balanceTags( APPTHA_VGALLERY_BASEURL ) . 'images/' . $feaImage ?>" title="<?php echo balanceTags( $feaPublish ); ?>" title="<?php echo balanceTags( $feaPublish ); ?>"   />
+									<a title="<?php if( $feaStatus == 0 ) esc_attr_e( 'Click here to Unfeature video' ); else esc_attr_e( 'Click here to Feature video' ); ?>" href="<?php echo balanceTags( $selfurl ); ?>&videoId=<?php echo balanceTags( $videoView->vid ); ?>&featured=<?php echo balanceTags( $feaStatus ); ?>">   <img src="<?php echo balanceTags( APPTHA_VGALLERY_BASEURL ) . 'images/' . $feaImage ?>" />
 									</a>
 								</td>
 								<td class="description column-description"><?php echo balanceTags( date( 'Y/m/d', strtotime( $videoView->post_date ) ) ); ?></td>
 
 								<td class="description column-description column-publish" style="text-align:center"><?php
 							$status  = 1;
-							$image   = esc_attr_e( 'deactivate.jpg' );
-							$publish = esc_attr_e( 'Click here to Activate' );
+							$image   =  'deactivate.jpg';
 	if ( $videoView->publish == 1 ) {
 		$status  = 0;
-		$image   = esc_attr_e( 'activate.jpg' );
-		$publish = esc_attr_e( 'Click here to InActivate' );
+		$image   =  'activate.jpg';
 	}
 							?>
-									<a  title="Edit <?php echo balanceTags( $videoView->name ); ?>" href="<?php echo balanceTags( $selfurl ); ?>&videoId=<?php echo balanceTags( $videoView->vid ); ?>&status=<?php echo balanceTags( $status ); ?>">   <img src="<?php echo balanceTags( APPTHA_VGALLERY_BASEURL ) . 'images/' . $image ?>" title="<?php echo balanceTags( $publish ); ?>" title="<?php echo balanceTags( $publish ); ?>"   /> </a>
+									<a title="<?php if( $status == 0 ) esc_attr_e( 'Click here to Activate' ); else esc_attr_e( 'Click here to InActivate' ); ?>" href="<?php echo balanceTags( $selfurl ); ?>&videoId=<?php echo balanceTags( $videoView->vid ); ?>&status=<?php echo balanceTags( $status ); ?>">   <img src="<?php echo balanceTags( APPTHA_VGALLERY_BASEURL ) . 'images/' . $image ?>" /> </a>
 
 								</td>
 								<td style="text-align:center">

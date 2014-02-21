@@ -163,7 +163,7 @@ if ( class_exists( 'VideoModel' ) != true ) {							## checks the VideoModel cla
 			}
 			$offset = ( $pagenum - 1 ) * $limit;
 			$query  = 'SELECT DISTINCT ( a.vid ),a.*,u.display_name FROM ' . $this->_videotable . ' a 
-					LEFT JOIN $wpdb->users u 
+					LEFT JOIN ' . $wpdb->users . ' u 
 					ON u.ID=a.member_id 
 					LEFT JOIN ' . $this->_wpdb->prefix . 'hdflvvideoshare_med2play p 
 					ON p.media_id=a.vid 

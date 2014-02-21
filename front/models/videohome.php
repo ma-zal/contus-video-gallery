@@ -172,7 +172,7 @@ if ( class_exists( 'ContusVideo' ) != true ) {											## checks the ContusVid
 					INNER JOIN ' . $this->_wpdb->prefix . 'hdflvvideoshare_med2play m ON m.media_id = w.vid
 					INNER JOIN ' . $this->_wpdb->prefix . 'hdflvvideoshare_playlist p ON p.pid=m.playlist_id
 					INNER JOIN ' . $this->_wpdb->prefix . 'posts s ON s.ID=w.slug
-					WHERE w.publish=1 AND p.is_publish=1 $where GROUP BY w.vid ORDER BY ' . $thumImageorder . ' LIMIT ' . $dataLimit;
+					WHERE w.publish=1 AND p.is_publish=1 ' . $where . ' GROUP BY w.vid ORDER BY ' . $thumImageorder . ' LIMIT ' . $dataLimit;
 			return $this->_wpdb->get_results( $query );
 		}
 
