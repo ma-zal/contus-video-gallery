@@ -8,7 +8,7 @@
   Author URI: http://www.apptha.com
   License: GPL2
  */
-WPimport( 'models/videosetting.php' );									## including settings model file for get database information.
+include_once( $adminModelPath . 'videosetting.php' );									## including settings model file for get database information.
 
 if ( class_exists( 'SettingsController' ) != true ) {						## checks if the SettingsController class has been defined starts
 

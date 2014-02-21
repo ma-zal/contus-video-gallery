@@ -8,7 +8,7 @@
   Author URI: http://www.apptha.com
   License: GPL2
  */
-WPimport( 'models/videoad.php' );								## including videoad model file for get database information.
+include_once( $adminModelPath . 'videoad.php' );								## including videoad model file for get database information.
 if ( class_exists( 'VideoadController' ) != true ) {			## checks if the VideoadController class has been defined starts
 
 	class VideoadController extends VideoadModel {			## VideoadController class starts
