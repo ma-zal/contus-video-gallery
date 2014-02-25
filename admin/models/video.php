@@ -145,7 +145,7 @@ if ( class_exists( 'VideoModel' ) != true ) {							## checks the VideoModel cla
 				$orderDirection = 'DESC';
 			}
 			$query = 'SELECT DISTINCT ( a.vid ) FROM ' . $this->_videotable . ' a 
-					LEFT JOIN $wpdb->users u 
+					LEFT JOIN ' . $wpdb->users . ' u 
 					ON u.ID=a.member_id 
 					LEFT JOIN ' . $this->_wpdb->prefix . 'hdflvvideoshare_med2play p 
 					ON p.media_id=a.vid 

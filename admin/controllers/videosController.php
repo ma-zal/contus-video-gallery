@@ -290,7 +290,7 @@ if ( class_exists( 'VideoController' ) != true ) {			## checks if the VideoContr
 						$delete_list = array_diff( $old_playlist, $act_playlist );
 						if ( $delete_list ) {
 							foreach ( $delete_list as $del ) {
-								$wpdb->query( ' DELETE FROM ' . $wpdb->prefix . 'hdflvvideoshare_med2play WHERE playlist_id = $del AND media_id ='. $this->_videoId );
+								$wpdb->query( ' DELETE FROM ' . $wpdb->prefix . 'hdflvvideoshare_med2play WHERE playlist_id = ' . $del . ' AND media_id ='. $this->_videoId );
 							}
 						}
 
@@ -298,9 +298,7 @@ if ( class_exists( 'VideoController' ) != true ) {			## checks if the VideoContr
 						if ( $add_list ) {
 							foreach ( $add_list as $new_list ) {
 								$new_list1 = $new_list - 1;
-								if ( $sorder[$new_list1] == '' )
-									$sorder[$new_list1] = '0';
-								$wpdb->query( ' INSERT INTO ' . $wpdb->prefix . 'hdflvvideoshare_med2play ( media_id,playlist_id,sorder ) VALUES ( '.$this->_videoId.', $new_list, 0 )' );
+								$wpdb->query( ' INSERT INTO ' . $wpdb->prefix . 'hdflvvideoshare_med2play ( media_id,playlist_id,sorder ) VALUES ( '.$this->_videoId.', ' . $new_list . ', 0 )' );
 							}
 						}
 						$i = 0;
@@ -349,7 +347,6 @@ if ( class_exists( 'VideoController' ) != true ) {			## checks if the VideoContr
 							if ( $add_list ) {
 								foreach ( $add_list as $new_list ) {
 									$new_list1 = $new_list - 1;
-									$sorder[$new_list1] = '0';
 									$wpdb->query( ' INSERT INTO ' . $wpdb->prefix . 'hdflvvideoshare_med2play ( media_id,playlist_id,sorder ) VALUES ( '.$video_aid.', '.$new_list.', 0 )' );
 								}
 							}

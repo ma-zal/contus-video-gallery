@@ -172,7 +172,7 @@ if ( class_exists( 'AjaxPlaylistController' ) != true ) {			## checks if the Pla
 			global $wpdb;
 
 			$mediaid = ( int ) $mediaid;
-			$result  = $wpdb->get_var( 'SELECT sorder FROM ' . $wpdb->prefix . 'hdflvvideoshare_med2play WHERE media_id = $mediaid and playlist_id= '.$pid );
+			$result  = $wpdb->get_var( 'SELECT sorder FROM ' . $wpdb->prefix . 'hdflvvideoshare_med2play WHERE media_id = ' . $mediaid . ' and playlist_id= '.$pid );
 
 			return $result;
 		}
