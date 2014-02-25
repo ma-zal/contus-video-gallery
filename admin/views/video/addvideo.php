@@ -246,7 +246,7 @@ if ( isset( $videoEdit->file_type ) && $videoEdit->file_type == 1 ) {
 
 				</form>
 				<div id="upload2" class="inside">
-					<div id="supportformats"><?php esc_attr_e( '<b>Supported video formats:</b>(  MP4, M4V, M4A, MOV, Mp4v or F4V )', 'video_gallery' ) ?></div>
+					<div id="supportformats"><b><?php esc_attr_e( 'Supported video formats:', 'video_gallery' ) ?></b> <?php esc_attr_e( '(  MP4, M4V, M4A, MOV, Mp4v or F4V )', 'video_gallery' ) ?></div>
 					<table class="form-table">
 						<tr id="ffmpeg_disable_new1" name="ffmpeg_disable_new1"><th style="vertical-align: middle;"><?php esc_attr_e( 'Upload Video', 'video_gallery' ) ?></th>
 							<td>
