@@ -88,7 +88,7 @@ if ( isset( $videoadEdit->file_path ) && $uploaded_video == 1 ) {
 	echo balanceTags( $file_path ); ?>
 										</label>
 									</form>
-									<?php esc_attr_e( '<b>Supported video formats:</b>(  MP4, M4V, M4A, MOV, Mp4v or F4V )', 'video_gallery' ) ?>
+									<b><?php esc_attr_e( 'Supported video formats:', 'video_gallery' ) ?></b><?php esc_attr_e( '(  MP4, M4V, M4A, MOV, Mp4v or F4V )', 'video_gallery' ) ?>
 								</div>
 								<span id="uploadmessage" style="display: block; margin-top:10px;margin-left:300px;color:red;font-size:12px;font-weight:bold;"></span>
 								<div id="f1-upload-progress" style="display:none">
