@@ -180,10 +180,14 @@ $playListId		   = $playlistOBJ->_playListId;
 $searchMsg		   = $playlistOBJ->_playlistsearchQuery;
 $searchBtn		   = $playlistOBJ->_searchBtn;
 $gridPlaylist   = $playlistOBJ->playlist_data();
-$Playlist_count = $playlistOBJ->playlist_count( $searchMsg, $searchBtn );
-$playlistEdit   = $playlistOBJ->playlist_edit( $playListId );
-$displayMsg		   = $playlistOBJ->get_message();
-$adminPage		   = filter_input( INPUT_GET, 'page' );
-$adminPage		   = filter_input( INPUT_GET, 'page' );
+$playlist_count = $playlistOBJ->playlist_count( $searchMsg, $searchBtn );
+if ( ! empty ( $playListId ) ) {
+	$playlistEdit = $playlistOBJ->playlist_edit( $playListId );
+} else {
+	$playlistEdit = '';
+}
+$displayMsg = $playlistOBJ->get_message();
+$adminPage  = filter_input( INPUT_GET, 'page' );
+$adminPage  = filter_input( INPUT_GET, 'page' );
 require_once( APPTHA_VGALLERY_BASEDIR . DS . 'admin/views/playlist/playlist.php' );
 ?>

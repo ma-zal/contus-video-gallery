@@ -662,11 +662,15 @@ $gridVideo		  = $videoOBJ->video_data();
 $videosearchQuery = $videoOBJ->_videosearchQuery;
 $searchBtn		  = $videoOBJ->_searchBtn;
 $Video_count	  = $videoOBJ->video_count( $videosearchQuery, $searchBtn );
-$videoEdit		  = $videoOBJ->video_edit( $videoId );
-$displayMsg		  = $videoOBJ->get_message( );
+if ( ! empty ( $videoId ) ) {
+	$videoEdit = $videoOBJ->video_edit( $videoId );
+} else {
+	$videoEdit = '';
+}
+$displayMsg   = $videoOBJ->get_message( );
 $searchMsg		  = $videoOBJ->_videosearchQuery;
-$settingsGrid     = $videoOBJ->_settingsData;
-$adminPage        = filter_input( INPUT_GET, 'page' );
+$settingsGrid = $videoOBJ->_settingsData;
+$adminPage    = filter_input( INPUT_GET, 'page' );
 if ( $adminPage == 'video' ) {													## including video form if starts
 	require_once( APPTHA_VGALLERY_BASEDIR . DS . 'admin/views/video/video.php' );
 }																				## including video form if starts

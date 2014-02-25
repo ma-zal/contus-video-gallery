@@ -204,9 +204,13 @@ $searchMsg     = $videoadOBJ->_videoadsearchQuery;
 $searchBtn     = $videoadOBJ->_searchBtn;
 $gridVideoad   = $videoadOBJ->videoad_data();
 $videoad_count = $videoadOBJ->videoad_count( $searchMsg, $searchBtn );
-$videoadEdit   = $videoadOBJ->videoad_edit( $videoadId );
-$displayMsg	   = $videoadOBJ->get_message();
-$adminPage     = filter_input( INPUT_GET, 'page' );
+if ( ! empty ( $videoadId ) ) {
+	$videoadEdit = $videoadOBJ->videoad_edit( $videoadId );
+} else {
+	$videoadEdit = '';
+}
+$displayMsg = $videoadOBJ->get_message();
+$adminPage  = filter_input( INPUT_GET, 'page' );
 if ( $adminPage == 'videoads' ) {														## including videoad form if starts
 	require_once( APPTHA_VGALLERY_BASEDIR . DS . 'admin/views/videoads/videoads.php' );
 }																					## including videoad form if starts
