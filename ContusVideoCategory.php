@@ -53,7 +53,7 @@ class Widget_ContusVideoCategory_init extends WP_Widget {
 		$countCategories  = $moreCategories[0]->contus;
 		$div = '';
 		$more_videos_link = get_morepage_permalink( $moreName, 'categories' );
-		$div .= '<div id="videos-category"  class="sidebar-wrap "> <h3 class="widget-title"><a href="' . $more_videos_link . '">' . $title . '</a></h3>';
+		$div .= '<div id="videos-category"  class="widget widget_categories sidebar-wrap "> <h3 class="widget-title"><a href="' . $more_videos_link . '">' . $title . '</a></h3>';
 		$div .= '<ul class="ulwidget clearfix">';
 		## were there any posts found?
 		if ( ! empty( $features ) ) {
