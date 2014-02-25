@@ -250,7 +250,7 @@ if ( class_exists( 'ContusVideoView' ) != true ) {
 							}
 							$div .= '<li class="video-block">';
 							$div .= '<div  class="video-thumbimg"><a href="' . $guid[$j] . '"><img src="' . $imageFea[$j] . '" alt="' . $nameF[$j] . '" class="imgHome" title="' . $nameF[$j] . '" /></a>';
-							if ( $duration[$j] != 0.00 ) {
+							if ( $duration[$j] != '0:00' ) {
 								$div .= '<span class="video_duration">' . $duration[$j] . '</span>';
 							}
 							$div .= '</div>';
@@ -347,7 +347,7 @@ if ( class_exists( 'ContusVideoView' ) != true ) {
 						}
 
 						$div .= '<li class="video-block"><div class="video-thumbimg"><a href="' . $guid . '"><img src="' . $imageFea . '" alt="" class="imgHome" title=""></a>';
-						if ( $duration != 0.00 ) {
+						if ( $duration != '0:00' ) {
 							$div .= '<span class="video_duration">' . $duration . '</span>';
 						}
 						$div .= '</div><div class="vid_info"><a href="' . $guid . '" class="videoHname"><span>' . $playListName . '</span></a>';

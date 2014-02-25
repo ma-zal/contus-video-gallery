@@ -143,7 +143,7 @@ if ( class_exists( 'VideoController' ) != true ) {			## checks if the VideoContr
 					$ffmpeg_path   = $this->_settingsData->ffmpeg_path;
 					$file_type     = '2';
 					ob_start();
-					passthru( $ffmpeg_path.' -i \'{'.$act_filepath1.'}\' 2>&1' );
+					passthru( $ffmpeg_path . ' -i "' . $act_filepath1 . '" 2>&1' );
 					$get_duration = ob_get_contents();
 					ob_end_clean();
 
@@ -153,6 +153,8 @@ if ( class_exists( 'VideoController' ) != true ) {			## checks if the VideoContr
 						$duration_array = explode( ':', $matches[1][0] );
 						$sec            = ceil( $duration_array[0] * 3600 + $duration_array[1] * 60 + $duration_array[2] );
 						$duration       = $this->converttime( $sec );
+					} else {
+						$duration = '0:00';
 					}
 				}
 
