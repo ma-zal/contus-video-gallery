@@ -118,8 +118,11 @@ if ( class_exists( 'ContusMoreView' ) != true ) {
 						break;
 					case 'search':
 						$video_search = str_replace( '%20', ' ', $this->_video_search );
-						$searchname   = explode( ' ', $video_search );
-						$likequery    = '';
+						if ( $this->_video_search == __( 'Video Search ...', 'video_gallery' ) ) {
+							$video_search = '';
+						}
+						$searchname = explode( ' ', $video_search );
+						$likequery  = '';
 						for ( $i = 0; $i < count( $searchname ); $i++ ) {
 							$likequery .= '(  t4.tags_name LIKE "%' . $searchname[$i] . '%" || t1.description LIKE "%' . $searchname[$i] . '%" || t1.name LIKE "%' . $searchname[$i] . '%" )';
 							if ( ( $i + 1 ) != count( $searchname ) ) {
