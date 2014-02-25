@@ -492,7 +492,7 @@ function add_meta_details() {
 		$keyApps     = $wpdb->get_var( 'SELECT keyApps FROM ' . $wpdb->prefix . 'hdflvvideoshare_settings' );
 		$videoID     = $wpdb->get_var( 'SELECT vid FROM ' . $wpdb->prefix . 'hdflvvideoshare WHERE slug="' . intval( $videoID ) . '"' );
 		$video_count = $wpdb->get_row(
-						'SELECT t1.description,t4.tags_name,t1.name,t1.image,t1.file_type
+						'SELECT t1.description,t4.tags_name,t1.name,t1.image,t1.file_type,t1.slug
 						FROM ' . $wpdb->prefix . 'hdflvvideoshare AS t1
 						LEFT JOIN ' . $wpdb->prefix . 'hdflvvideoshare_med2play AS t2
 						ON t2.media_id = t1.vid
@@ -528,10 +528,8 @@ function add_meta_details() {
 	<meta name="description" content="' . strip_tags( $des ) . '" />
 	<meta name="keyword" content="' . $tags_name . '" />
 	<link rel="image_src" href="' . $imageFea . '"/>
-	<link rel="canonical" href="' . get_permalink() . '"/>
-	<meta property="fb:app_id" content="' . $keyApps . '"/>
-	<meta property="og:type" content="website"/>
-	<meta property="og:url" content="' . get_permalink() . '"/>
+	<link rel="canonical" href="' . get_video_permalink( $video_count->slug ) . '"/>
+	<meta property="og:url" content="' . get_video_permalink( $video_count->slug ) . '"/>
 	<meta property="og:title" content="' . $videoname . '"/>
 	<meta property="og:description" content="' . strip_tags( $des ) . '"/>
 	<meta property="og:image" content="' . $imageFea . '"/>
