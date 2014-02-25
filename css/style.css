@@ -330,3 +330,5 @@ ul.ratethis1 li {cursor: pointer;float:left;}
 #videos-category .videoHname {
 min-height: initial;
 }
+
+#videosearchform #video_search { padding: 6px 0px }

@@ -44,7 +44,7 @@ class Widget_ContusVideoSearch_init extends WP_Widget {
 		$searchVal = __( 'Video Search ...', 'video_gallery' );
 		$focusVal  = 'onfocus="if(this.value == \'' . $searchVal . '\' )this.value= \'\' "';
 		$blurVal   = ' onblur="if(this.value == \'\' )this.value= \'' . $searchVal . '\' "';
-		$div       = '<div id="videos-search"  class="sidebar-wrap "><h3 class="widget-title">' . $title . '</h3>';
+		$div       = '<div id="videos-search"  class="widget widget_search sidebar-wrap "><h3 class="widget-title">' . $title . '</h3>';
 		$div      .= '<form role="search" method="get" id="videosearchform" action="' . home_url( '/' ) . '" >
 					<div><label class="screen-reader-text" >' . __( 'Search for:' ) . '</label>
 					<input type="hidden" value="' . $moreName . '" name="page_id" id="page_id"  />
