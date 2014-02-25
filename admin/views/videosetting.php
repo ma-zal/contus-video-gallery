@@ -102,7 +102,7 @@ $player_colors = unserialize( $settingsGrid->player_colors );
 						<div class="portlet-header"><b><?php esc_attr_e( 'License Configuration', 'video_gallery' ); ?></b></div>
 						<div class="portlet-content">
 							<table class="form-table">
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'License Key', 'video_gallery' ); ?></th>
 									<td valign="top"><input type='text' name="license" value="<?php echo balanceTags( $settingsGrid->license ); ?>"  style="float: left;" size=35 /> <?php if ( isset( $settingsGrid->license ) && strlen( $settingsGrid->license ) != 31 ) { ?><?php echo "<a target='_blank' href='http://www.apptha.com/checkout/cart/add/product/12'><img src='" . APPTHA_VGALLERY_BASEURL . "images/buynow.gif' alt='Buy'/></a>";
 				} ?></td>
@@ -115,18 +115,18 @@ $player_colors = unserialize( $settingsGrid->player_colors );
 						<div class="portlet-header"><b><?php esc_attr_e( 'Logo Configuration', 'video_gallery' ); ?></b></div>
 						<div class="portlet-content">
 							<table class="form-table">
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Logo Path', 'video_gallery' ); ?></th>
 									<td>
 										<input type='file' name="logopath" value="" size=40  /><?php echo balanceTags( $settingsGrid->logopath ); ?>
 										<input type='hidden' name="logopathvalue" value="<?php echo balanceTags( $settingsGrid->logopath ); ?>" />
 									</td>
 								</tr>
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Logo Target', 'video_gallery' ); ?></th>
 									<td><input type='text' name="logotarget" value="<?php if ( isset( $settingsGrid->logo_target ) ) echo balanceTags( $settingsGrid->logo_target ); ?>" size=45  /></td>
 								</tr>
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Logo Align', 'video_gallery' ); ?></th>
 									<td> <select name="logoalign" style="width:150px;">
 											<option <?php if ( $settingsGrid->logoalign == 'TL' ) { ?> selected="selected" <?php } ?> value="TL"><?php esc_attr_e( 'Top Left', 'video_gallery' ); ?></option>
@@ -135,7 +135,7 @@ $player_colors = unserialize( $settingsGrid->player_colors );
 											<option <?php if ( $settingsGrid->logoalign == 'BR' ) { ?> selected="selected" <?php } ?> value="BR"><?php esc_attr_e( 'Right Bottom', 'video_gallery' ); ?></option>
 										</select></td>
 								</tr>
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Logo Alpha', 'video_gallery' ); ?></th>
 									<td><input type='text' name="logoalpha" value="<?php echo balanceTags( $settingsGrid->logoalpha ); ?>" size=45  /></td>
 								</tr>
@@ -146,33 +146,33 @@ $player_colors = unserialize( $settingsGrid->player_colors );
 						<div class="portlet-header"><b><?php esc_attr_e( 'Player Configuration', 'video_gallery' ); ?></b></div>
 						<div class="portlet-content">
 							<table class="form-table">
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Auto Play', 'video_gallery' ); ?></th>
 									<td><input type='checkbox' class='check' name="autoplay" <?php if ( $settingsGrid->autoplay == 1 ) { ?> checked <?php } ?> value="1" size=45  /></td>
 								</tr>
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Player Width', 'video_gallery' ); ?></th>
 									<td><input type='text' name="width" value="<?php echo balanceTags( $settingsGrid->width ); ?>" size=45  /></td>
 								</tr>
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Player Height', 'video_gallery' ); ?></th>
 									<td><input type='text' name="height" value="<?php echo balanceTags( $settingsGrid->height ); ?>" size=45  /></td>
 								</tr>
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Stage Color', 'video_gallery' ); ?></th>
 									<td><input type='text' name="stagecolor" value="<?php echo balanceTags( $settingsGrid->stagecolor ); ?>" size=45  />
 										<br /><?php esc_attr_e( 'Ex : 0xdddddd ', 'video_gallery' ) ?>
 									</td>
 								</tr>
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Download', 'video_gallery' ); ?></th>
 									<td><input type='checkbox' class='check' name="download" <?php if ( $settingsGrid->download == 1 ) { ?> checked <?php } ?> value="1" size=45  /></td>
 								</tr>
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Buffer', 'video_gallery' ); ?></th>
 									<td><input type='text' name="buffer" value="<?php echo balanceTags( $settingsGrid->buffer ); ?>" size=45  /></td>
 								</tr>
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Volume', 'video_gallery' ); ?></th>
 									<td><input type='text' name="volume" value="<?php echo balanceTags( $settingsGrid->volume ); ?>" size=45  /></td>
 								</tr>
@@ -185,11 +185,11 @@ $player_colors = unserialize( $settingsGrid->player_colors );
 						<div class="portlet-content">
 							<table class="form-table">
 
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'FFMPEG Path', 'video_gallery' ); ?></th>
 									<td><input type='text' name="ffmpeg_path" value="<?php echo balanceTags( $settingsGrid->ffmpeg_path ); ?>" size=45  /></td>
 								</tr>
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Normal Scale', 'video_gallery' ); ?></th>
 									<td>
 										<select name="normalscale" style="width:150px;">
@@ -199,7 +199,7 @@ $player_colors = unserialize( $settingsGrid->player_colors );
 										</select>
 									</td>
 								</tr>
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Full Screen Scale', 'video_gallery' ); ?></th>
 									<td>
 										<select name="fullscreenscale" style="width:150px;">
@@ -210,56 +210,56 @@ $player_colors = unserialize( $settingsGrid->player_colors );
 									</td>
 								</tr>
 
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Embed Visible', 'video_gallery' ); ?></th>
 									<td><input type='checkbox' class='check' <?php if ( $settingsGrid->embed_visible == 1 ) { ?> checked <?php } ?> name="embed_visible" value="1" size=45  /></td>
 								</tr>
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Enable Views', 'video_gallery' ); ?></th>
 									<td><input type='checkbox' class='check' <?php if ( $settingsGrid->view_visible == 1 ) { ?> checked <?php } ?> name="view_visible" value="1" size=45  /></td>
 								</tr>
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Enable Ratings', 'video_gallery' ); ?></th>
 									<td><input type='checkbox' class='check' <?php if ( $settingsGrid->ratingscontrol == 1 ) { ?> checked <?php } ?> name="ratingscontrol" value="1" size=45  /></td>
 								</tr>
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Enable Tags', 'video_gallery' ); ?></th>
 									<td><input type='checkbox' class='check' <?php if ( $settingsGrid->tagdisplay == 1 ) { ?> checked <?php } ?> name="tagdisplay" value="1" size=45  /></td>
 								</tr>
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Enable Category', 'video_gallery' ); ?></th>
 									<td><input type='checkbox' class='check' <?php if ( $settingsGrid->categorydisplay == 1 ) { ?> checked <?php } ?> name="categorydisplay" value="1" size=45  /></td>
 								</tr>
 								<!--  Display Description on the player-->
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Show Description', 'video_gallery' ); ?></th>
 									<td><input type='checkbox' class='check' name="showTag" <?php if ( $settingsGrid->showTag == 1 ) { ?> checked <?php } ?> value="1" size=45  /></td>
 								</tr>
 								<!--  Display Default Image-->
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Display Default Image', 'video_gallery' ); ?></th>
 									<td><input type='checkbox' class='check' name="imageDefault" <?php if ( $settingsGrid->imageDefault == 1 ) { ?> checked <?php } ?> value="1" size=45  /></td>
 								</tr>
 								<!--  Subtitle settings starts here-->
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Subtitle Text Color', 'video_gallery' ); ?></th>
 									<td>
 										<input type='text' name="subTitleColor" value="<?php if ( ! empty( $player_colors['subTitleColor'] ) ) { echo balanceTags( $player_colors['subTitleColor'] ); } ?>" size=45  />
 									</td>
 								</tr>
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Subtitle Background Color', 'video_gallery' ); ?></th>
 									<td>
 										<input type='text' name="subTitleBgColor" value="<?php if ( ! empty( $player_colors['subTitleBgColor'] ) ) { echo balanceTags( $player_colors['subTitleBgColor'] ); } ?>" size=45  />
 									</td>
 								</tr>
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Subtitle Font Family', 'video_gallery' ); ?></th>
 									<td>
 										<input type='text' name="subTitleFontFamily" value="<?php if ( ! empty( $player_colors['subTitleFontFamily'] ) ) { echo balanceTags( $player_colors['subTitleFontFamily'] ); } ?>" size=45  />
 									</td>
 								</tr>
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Subtitle Font Size', 'video_gallery' ); ?></th>
 									<td>
 										<input type='text' name="subTitleFontSize" value="<?php if ( ! empty( $player_colors['subTitleFontSize'] ) ) { echo balanceTags( $player_colors['subTitleFontSize'] ); } ?>" size=45  />
@@ -274,109 +274,109 @@ $player_colors = unserialize( $settingsGrid->player_colors );
 						<div class="portlet-content">
 							<table class="form-table">
 								<!-- Share Popup Header color -->
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Share Popup Header Color', 'video_gallery' ); ?></th>
 									<td><input type='text' name="sharepanel_up_BgColor" value="<?php echo balanceTags( $player_colors['sharepanel_up_BgColor'] ); ?>" size=45  />
 									</td>
 								</tr>
 								<!-- Share Popup Background color -->
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Share Popup Background Color', 'video_gallery' ); ?></th>
 									<td><input type='text' name="sharepanel_down_BgColor" value="<?php echo balanceTags( $player_colors['sharepanel_down_BgColor'] ); ?>" size=45  />
 									</td>
 								</tr>
 								<!-- Share Popup Text color -->
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Share Popup Text Color', 'video_gallery' ); ?></th>
 									<td><input type='text' name="sharepaneltextColor" value="<?php echo balanceTags( $player_colors['sharepaneltextColor'] ); ?>" size=45  />
 									</td>
 								</tr>
 								<!-- Send Button Color -->
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Send Button Color', 'video_gallery' ); ?></th>
 									<td><input type='text' name="sendButtonColor" value="<?php echo balanceTags( $player_colors['sendButtonColor'] ); ?>" size=45  />
 									</td>
 								</tr>
 								<!-- Send Button Text Color -->
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Send Button Text Color', 'video_gallery' ); ?></th>
 									<td><input type='text' name="sendButtonTextColor" value="<?php echo balanceTags( $player_colors['sendButtonTextColor'] ); ?>" size=45  />
 									</td>
 								</tr>
 								<!-- Player Text Color -->
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Player Text Color', 'video_gallery' ); ?></th>
 									<td><input type='text' name="textColor" value="<?php echo balanceTags( $player_colors['textColor'] ); ?>" size=45  />
 									</td>
 								</tr>
 								<!-- Skin Background Color -->
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Skin Background Color', 'video_gallery' ); ?></th>
 									<td><input type='text' name="skinBgColor" value="<?php echo balanceTags( $player_colors['skinBgColor'] ); ?>" size=45  />
 									</td>
 								</tr>
 								<!-- Seek Bar Color -->
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Seek Bar Color', 'video_gallery' ); ?></th>
 									<td><input type='text' name="seek_barColor" value="<?php echo balanceTags( $player_colors['seek_barColor'] ); ?>" size=45  />
 									</td>
 								</tr>
 								<!-- Buffer Bar Color -->
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Buffer Bar Color', 'video_gallery' ); ?></th>
 									<td><input type='text' name="buffer_barColor" value="<?php echo balanceTags( $player_colors['buffer_barColor'] ); ?>" size=45  />
 									</td>
 								</tr>
 								<!-- Skin Icons Color -->
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Skin Icons Color', 'video_gallery' ); ?></th>
 									<td><input type='text' name="skinIconColor" value="<?php echo balanceTags( $player_colors['skinIconColor'] ); ?>" size=45  />
 									</td>
 								</tr>
 								<!-- Progress Bar Background Color -->
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Progress Bar Background Color', 'video_gallery' ); ?></th>
 									<td><input type='text' name="pro_BgColor" value="<?php echo balanceTags( $player_colors['pro_BgColor'] ); ?>" size=45  />
 									</td>
 								</tr>
 								<!-- Play Button Color -->
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Play Button Color', 'video_gallery' ); ?></th>
 									<td><input type='text' name="playButtonColor" value="<?php echo balanceTags( $player_colors['playButtonColor'] ); ?>" size=45  />
 									</td>
 								</tr>
 								<!-- Play Button Background Color -->
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Play Button Background Color', 'video_gallery' ); ?></th>
 									<td><input type='text' name="playButtonBgColor" value="<?php echo balanceTags( $player_colors['playButtonBgColor'] ); ?>" size=45  />
 									</td>
 								</tr>
 								<!-- Player Buttons Color -->
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Player Buttons Color', 'video_gallery' ); ?></th>
 									<td><input type='text' name="playerButtonColor" value="<?php echo balanceTags( $player_colors['playerButtonColor'] ); ?>" size=45  />
 									</td>
 								</tr>
 								<!-- Player Buttons Background Color -->
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Player Buttons Background Color', 'video_gallery' ); ?></th>
 									<td><input type='text' name="playerButtonBgColor" value="<?php echo balanceTags( $player_colors['playerButtonBgColor'] ); ?>" size=45  />
 									</td>
 								</tr>
 								<!-- Related Videos Background Color -->
-								<tr id="related_bgColor" style="display:none;">
+								<tr class="gallery_separator" id="related_bgColor" style="display:none;">
 									<th scope='row'><?php esc_attr_e( 'Related Videos Background Color', 'video_gallery' ); ?></th>
 									<td><input type='text' name="relatedVideoBgColor" value="<?php echo balanceTags( $player_colors['relatedVideoBgColor'] ); ?>" size=45  />
 									</td>
 								</tr>
 								<!-- Related Videos Scroll Bar Color -->
-								<tr id="related_scroll_barColor" style="display:none;">
+								<tr class="gallery_separator" id="related_scroll_barColor" style="display:none;">
 									<th scope='row'><?php esc_attr_e( 'Related Videos Scroll Bar Color', 'video_gallery' ); ?></th>
 									<td><input type='text' name="scroll_barColor" value="<?php echo balanceTags( $player_colors['scroll_barColor'] ); ?>" size=45  />
 									</td>
 								</tr>
 								<!-- Related Videos Scroll Bar Background Color -->
-								<tr id="related_scroll_barbgColor" style="display:none;">
+								<tr class="gallery_separator" id="related_scroll_barbgColor" style="display:none;">
 									<th scope='row'><?php esc_attr_e( 'Related Videos Scroll Bar Background Color', 'video_gallery' ); ?></th>
 									<td><input type='text' name="scroll_BgColor" value="<?php echo balanceTags( $player_colors['scroll_BgColor'] ); ?>" size=45  />
 									</td>
@@ -393,27 +393,27 @@ $player_colors = unserialize( $settingsGrid->player_colors );
 						<div class="portlet-header"><b><?php esc_attr_e( 'Playlist Configuration', 'video_gallery' ); ?></b></div>
 						<div class="portlet-content">
 							<table class="form-table">
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Playlist', 'video_gallery' ); ?></th>
 									<td><input type='checkbox' class='check' name="playlist" <?php if ( $settingsGrid->playlist == 1 ) { ?> checked <?php } ?> value="1"  /></td>
 
 								</tr>
-								<tr id="related_playlist_open" style="display:none;">
+								<tr class="gallery_separator" id="related_playlist_open" style="display:none;">
 									<th scope='row'><?php esc_attr_e( 'Playlist Open', 'video_gallery' ); ?></th>
 									<td><input type='checkbox' class='check' name="playlist_open" <?php if ( $settingsGrid->playlist_open == 1 ) { ?> checked <?php } ?> value="1"  /></td>
 
 								</tr>
-								<tr>
+								<tr class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'HD Default', 'video_gallery' ); ?></th>
 									<td><input type='checkbox' class='check' name="HD_default" <?php if ( $settingsGrid->HD_default == 1 ) { ?> checked <?php } ?> value="1"  /></td>
 								</tr>
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Playlist Autoplay', 'video_gallery' ); ?></th>
 									<td><input type='checkbox' class='check' <?php if ( $settingsGrid->playlistauto == 1 ) { ?> checked <?php } ?> name="playlistauto" value="1" /></td>
 
 								</tr>
 								<!-- Select Related Video View-->
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Related Video View', 'video_gallery' ); ?></th>
 									<td>
 										<select name="relatedVideoView" onchange="enablerelateditems( this.value )">
@@ -430,7 +430,7 @@ $player_colors = unserialize( $settingsGrid->player_colors );
 						<div class="portlet-content">
 							<table class="form-table">
 								<!-- Preroll -->
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Preroll Ads', 'video_gallery' ); ?></th>
 									<td>
 										<input name="preroll" id="preroll" type='radio' value="0"  <?php if ( $settingsGrid->preroll == 0 ) { echo 'checked'; } ?> /><label><?php esc_attr_e( 'Enable', 'video_gallery' ); ?></label>
@@ -438,7 +438,7 @@ $player_colors = unserialize( $settingsGrid->player_colors );
 									</td>
 								</tr>
 								<!-- Postroll -->
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Postroll Ads', 'video_gallery' ); ?></th>
 									<td>
 										<input name="postroll" id="postroll" type='radio' value="0"  <?php if ( $settingsGrid->postroll == 0 ) { echo 'checked'; } ?> /><label><?php esc_attr_e( 'Enable', 'video_gallery' ); ?></label>
@@ -446,7 +446,7 @@ $player_colors = unserialize( $settingsGrid->player_colors );
 									</td>
 								</tr>
 								<!-- Midroll Ads -->
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Midroll Ads', 'video_gallery' ); ?></th>
 									<td>
 										<input name="midroll_ads" id="midroll_ads" type='radio' value="0"  <?php if ( $settingsGrid->midroll_ads == 0 ) { echo 'checked'; } ?> /><label><?php esc_attr_e( 'Enable', 'video_gallery' ); ?></label>
@@ -454,7 +454,7 @@ $player_colors = unserialize( $settingsGrid->player_colors );
 									</td>
 								</tr>
 								<!-- IMA Ads -->
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'IMA Ads', 'video_gallery' ); ?></th>
 									<td>
 										<input name="imaAds" id="imaAds" type='radio' value="0"  <?php if ( $settingsGrid->imaAds == 0 ) { echo 'checked'; } ?> /><label><?php esc_attr_e( 'Enable', 'video_gallery' ); ?></label>
@@ -463,7 +463,7 @@ $player_colors = unserialize( $settingsGrid->player_colors );
 								</tr>
 
 								<!-- Ad Skip -->
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Ad Skip', 'video_gallery' ); ?></th>
 									<td>
 										<input name="adsSkip" id="adsSkip" type='radio' value="0"  <?php if ( $settingsGrid->adsSkip == 0 ) { echo 'checked'; } ?> /><label><?php esc_attr_e( 'Enable', 'video_gallery' ); ?></label>
@@ -471,13 +471,13 @@ $player_colors = unserialize( $settingsGrid->player_colors );
 									</td>
 								</tr>
 								<!-- Ad Skip Duration -->
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Ad Skip Duration', 'video_gallery' ); ?></th>
 									<td><input type='text' name="adsSkipDuration" value="<?php echo balanceTags( $settingsGrid->adsSkipDuration ); ?>" size=45  />
 									</td>
 								</tr>
 								<!-- Track Code -->
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Track Code', 'video_gallery' ); ?></th>
 									<td><input type='text' name="trackCode" value="<?php echo balanceTags( $settingsGrid->trackCode ); ?>" size=45  />
 									</td>
@@ -490,7 +490,7 @@ $player_colors = unserialize( $settingsGrid->player_colors );
 						<div class="portlet-header"><b><?php esc_attr_e( 'Comment Settings', 'video_gallery' ); ?></b></div>
 						<div class="portlet-content">
 							<table class="form-table">
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Select Comment Type', 'video_gallery' ); ?></th>
 									<td>
 										<select name="comment_option" onchange="enablefbapi( this.value )">
@@ -501,15 +501,15 @@ $player_colors = unserialize( $settingsGrid->player_colors );
 										</select>
 
 								</tr>
-								<tr id="facebook_api" style="display: none;" >
+								<tr class="gallery_separator" id="facebook_api" style="display: none;" >
 									<th scope='row'><?php esc_attr_e( 'App ID', 'video_gallery' ); ?></th>
 									<td><input type='text' name="keyApps" value="<?php echo balanceTags( $settingsGrid->keyApps ); ?>" size=45  /></td>
 								</tr>
-								<tr id="disqus_api" style="display: none;" >
+								<tr class="gallery_separator" id="disqus_api" style="display: none;" >
 									<th scope='row'><?php esc_attr_e( 'Shot Name', 'video_gallery' ); ?></th>
 									<td><input type='text' name="keydisqusApps" value="<?php echo balanceTags( $settingsGrid->keydisqusApps ); ?>" size=45  /></td>
 								</tr>
-								<tr id="facebook_api_link" style="display: none;" ><td> <a href="http://developers.facebook.com/" target="_blank"><?php esc_attr_e( 'Link to create Facebook App ID', 'video_gallery' ); ?></a></td></tr>
+								<tr class="gallery_separator" id="facebook_api_link" style="display: none;" ><th> <a href="http://developers.facebook.com/" target="_blank"><?php esc_attr_e( 'Create Facebook App ID', 'video_gallery' ); ?></a></th></tr>
 							</table>
 						</div>
 					</div>
@@ -518,49 +518,48 @@ $player_colors = unserialize( $settingsGrid->player_colors );
 						<div class="portlet-header"><b><?php esc_attr_e( 'Skin Configuration', 'video_gallery' ); ?></b></div>
 						<div class="portlet-content">
 							<table class="form-table">
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Display Timer', 'video_gallery' ); ?></th>
 									<td>
 										<input type='checkbox' class='check'  name="timer" <?php if ( $settingsGrid->timer == 1 ) { ?> checked <?php } ?> value="1" /></td>
-									<td>
 								</tr>
-								<tr>
-									<th scope='row'><?php esc_attr_e( 'Display Zoom', 'video_gallery' ); ?> <br/>( Not supported for viddler videos )</th>
-									<td><input type='checkbox' class='check' <?php if ( $settingsGrid->zoom == 1 ) { ?> checked <?php } ?> name="zoom" value="1" /></td>
+								<tr  class="gallery_separator">
+									<th scope='row'><?php esc_attr_e( 'Display Zoom', 'video_gallery' ); ?> </th>
+									<td><input type='checkbox' class='check' <?php if ( $settingsGrid->zoom == 1 ) { ?> checked <?php } ?> name="zoom" value="1" />&nbsp;( Not supported for viddler videos )</td>
 								</tr>
 								<!-- Display Email Icon-->
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Display Email', 'video_gallery' ); ?></th>
 									<td><input type='checkbox' class='check'  name="email" <?php if ( $settingsGrid->email == 1 ) { ?> checked <?php } ?>value="1"   /></td>
 								</tr>
 								<!-- Display Share Icon-->
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Display Share', 'video_gallery' ); ?></th>
 									<td><input type='checkbox' class='check'  name="shareIcon" <?php if ( $settingsGrid->shareIcon == 1 ) { ?> checked <?php } ?>value="1"   /></td>
 								</tr>
 								<!-- Display Volume Icon-->
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Display Volume', 'video_gallery' ); ?></th>
 									<td><input type='checkbox' class='check'  name="volumecontrol" <?php if ( $settingsGrid->volumecontrol == 1 ) { ?> checked <?php } ?>value="1"   /></td>
 								</tr>
 								<!-- Display Progress Bar-->
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Display Progress Bar', 'video_gallery' ); ?></th>
 									<td><input type='checkbox' class='check'  name="progressControl" <?php if ( $settingsGrid->progressControl == 1 ) { ?> checked <?php } ?>value="1"   /></td>
 								</tr>
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Display Full Screen', 'video_gallery' ); ?></th>
 									<td><input type='checkbox' class='check' <?php if ( $settingsGrid->fullscreen == 1 ) { ?> checked <?php } ?> name="fullscreen" value="1" size=45  /></td>
 								</tr>
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Skin Autohide', 'video_gallery' ); ?></th>
 									<td><input type='checkbox' class='check' <?php if ( $settingsGrid->skin_autohide == 1 ) { ?> checked <?php } ?> name="skin_autohide" value="1" size=45  /></td>
 								</tr>
-								<tr>
+								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Skin Visible', 'video_gallery' ); ?></th>
 									<td><input type='checkbox' class='check' <?php if ( isset( $player_colors['skinVisible'] ) && $player_colors['skinVisible'] == 1 ) { ?> checked <?php } ?> name="skinVisible" value="1" size=45  /></td>
 								</tr>
-								<tr>
+								<tr class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Skin Opacity', 'video_gallery' ); ?></th>
 									<td><input type='text' name="skin_opacity" value="<?php if ( isset( $player_colors['skin_opacity'] ) ) { echo balanceTags( $player_colors['skin_opacity'] ); } ?>" size=45  />
 										<br/> ( Range from 0 to 1 )
@@ -577,7 +576,7 @@ $player_colors = unserialize( $settingsGrid->player_colors );
 								<!--videos page banner settings-->
 
 								<!-- Popular Videos-->
-								<tr><th><?php esc_attr_e( 'Gutter Space ( px )', 'video_gallery' ); ?></th>
+								<tr class="gallery_separator"><th><?php esc_attr_e( 'Gutter Space ( px )', 'video_gallery' ); ?></th>
 									<td><input type="text" name="gutterspace" id="gutterspace" size="20" value="<?php echo balanceTags( $settingsGrid->gutterspace ); ?>"></td>
 								</tr>
 								<tr class="gallery_separator">
