@@ -241,7 +241,7 @@ if ( class_exists( 'ContusVideoShortcodeView' ) != true ) {
 				$pluginflashvars .= $flashvars .= '&amp;videodata=current_video_' . $videodivId;
 			}
 			##  Player starts here
-			$output .= '<div id="mediaspace' . $videodivId . '" class="player" >';
+			$output .= '<div id="mediaspace' . $videodivId . '" class="videoplayer" >';
 			$mobile  = vgallery_detect_mobile();
 			##  Embed player code
 			if ( ! empty( $fetched ) && $fetched[0]->file_type == 5 && ! empty( $fetched[0]->embedcode ) ) {
@@ -275,13 +275,13 @@ if ( class_exists( 'ContusVideoShortcodeView' ) != true ) {
 						$video_id = trim( $urlArray[1] );
 						$videourl = 'http://www.youtube.com/embed/'.$video_id;
 						##  Generate youtube embed code for html5 player
-						$output .= '<iframe  type="text/html" src="' . $videourl . '" frameborder="0"></iframe>';
+						$output .= '<iframe  type="text/html" widht="100%" src="' . $videourl . '" frameborder="0"></iframe>';
 					} else if ( strpos( $videourl, 'dailymotion' ) > 0 ) {				##  For dailymotion videos
 						$video   = $videourl;
-						$output .= '<iframe src="'.$video.'" class="iframe_frameborder" ></iframe>';
+						$output .= '<iframe src="'.$video.'" widht="100%" class="iframe_frameborder" ></iframe>';
 					} else if ( strpos( $videourl, 'viddler' ) > 0 ) {   ##  For viddler videos
 						$imgstr  = explode( '/', $videourl );
-						$output .= '<iframe id="viddler-'.$imgstr.'" src="//www.viddler.com/embed/'.$imgstr[4].'/?f=1&autoplay=0&player=full&secret=26392356&loop=false&nologo=false&hd=false" frameborder="0" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>';
+						$output .= '<iframe id="viddler-'.$imgstr.'" widht="100%" src="//www.viddler.com/embed/'.$imgstr[4].'/?f=1&autoplay=0&player=full&secret=26392356&loop=false&nologo=false&hd=false" frameborder="0" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>';
 					}
 				} else {   ##  Check for upload, URL and RTMP videos
 					if ( $file_type == 2 ) {	   ##  For uploaded image
@@ -291,7 +291,7 @@ if ( class_exists( 'ContusVideoShortcodeView' ) != true ) {
 						$videourl = $streamer . '_definst_/mp4:' . $videourl . '/playlist.m3u8';
 					}
 					##  Generate video code for html5 player
-					$output .= '<video id="video" poster="' . $imgurl . '"   src="' . $videourl . '" autobuffer controls onerror="failed( event )">' . $htmlplayer_not_support . '</video>';
+					$output .= '<video widht="100%" id="video" poster="' . $imgurl . '"   src="' . $videourl . '" autobuffer controls onerror="failed( event )">' . $htmlplayer_not_support . '</video>';
 				}
 			} else {
 				##  Flash player code
@@ -614,7 +614,7 @@ if ( class_exists( 'ContusVideoShortcodeView' ) != true ) {
 									$video_id    = trim( $urlArray[1] );
 									$reavideourl = 'http://www.youtube.com/embed/'.$video_id;
 									##  Generate youtube embed code for html5 player
-									$player_values = htmlentities( '<iframe  type="text/html" src="' . $reavideourl . '" frameborder="0"></iframe>' );
+									$player_values = htmlentities( '<iframe  widht="100%" type="text/html" src="' . $reavideourl . '" frameborder="0"></iframe>' );
 								} else if ( $file_type != 5 ) {							##  Check for upload, URL and RTMP videos
 									if ( $file_type == 2 ) {								##  For uploaded image
 										$reavideourl = $image_path . $reafile;
@@ -623,7 +623,7 @@ if ( class_exists( 'ContusVideoShortcodeView' ) != true ) {
 										$reavideourl = $streamer . '_definst_/mp4:' . $reafile . '/playlist.m3u8';
 									}
 									##  Generate video code for html5 player
-									$player_values = htmlentities( '<video id="video" poster="' . $imageFea . '"   src="' . $reavideourl . '" autobuffer controls onerror="failed( event )">' . $htmlplayer_not_support . '</video>' );
+									$player_values = htmlentities( '<video widht="100%" id="video" poster="' . $imageFea . '"   src="' . $reavideourl . '" autobuffer controls onerror="failed( event )">' . $htmlplayer_not_support . '</video>' );
 								}
 							} else {
 								##  Flash player code

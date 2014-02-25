@@ -87,7 +87,7 @@ if ( class_exists( 'ContusVideoView' ) != true ) {
 			$div .= '<div id="mediaspace" class="mediaspace" style="color: #666;">';
 			$div .= '<h3 id="video_title" style="width:' . $settingsData->width . ';text-align: left;"  class="more_title"></h3>';
 			##  FLASH PLAYER STARTS HERE
-			$div .= '<div id="flashplayer">';
+			$div .= '<div id="flashplayer" class="videoplayer">';
 			if ( $settingsData->default_player == 1 ) {
 				$swf = $this->_bannerswfPath;
 				$showplaylist = '&amp;showPlaylist=true';
@@ -104,12 +104,12 @@ if ( class_exists( 'ContusVideoView' ) != true ) {
 				if ( $mobile === true ) {
 					if ( ( preg_match( '/vimeo/', $videoUrl ) ) && ( $videoUrl != '' ) ) {					## IF VIDEO IS YOUTUBE
 						$vresult = explode( '/', $videoUrl );
-						$div    .= '<iframe type="text/html" src="http://player.vimeo.com/video/"' . $vresult[3] . '" frameborder="0"></iframe>';
+						$div    .= '<iframe widht="100%" type="text/html" src="http://player.vimeo.com/video/"' . $vresult[3] . '" frameborder="0"></iframe>';
 					} elseif ( strpos( $videoUrl, 'youtube' ) > 0 ) {
 						$imgstr   = explode( 'v=', $videoUrl );
 						$imgval   = explode( '&', $imgstr[1] );
 						$videoId1 = $imgval[0];
-						$div     .= '<iframe  type="text/html" src="http://www.youtube.com/embed/'. $videoId1 . '" frameborder="0"></iframe>';
+						$div     .= '<iframe widht="100%" type="text/html" src="http://www.youtube.com/embed/'. $videoId1 . '" frameborder="0"></iframe>';
 					} else {																		## IF VIDEO IS UPLOAD OR DIRECT PATH
 						if ( $file_type == 2 ) {														## For uploaded image
 							$videoUrl = $image_path . $videoUrl;
@@ -117,7 +117,7 @@ if ( class_exists( 'ContusVideoView' ) != true ) {
 							$streamer = str_replace( 'rtmp://', 'http://', $homeplayerData->streamer_path );
 							$videoUrl = $streamer . '_definst_/mp4:' . $videoUrl . '/playlist.m3u8';
 						}
-						$div .= '<video id="video" poster="' . $thumb_image . '"   src="' . $videoUrl . '" autobuffer controls onerror="failed( event )">' . __( 'Html5 Not support This video Format.', 'video_gallery' ) . '</video>';
+						$div .= '<video widht="100%" id="video" poster="' . $thumb_image . '"   src="' . $videoUrl . '" autobuffer controls onerror="failed( event )">' . __( 'Html5 Not support This video Format.', 'video_gallery' ) . '</video>';
 					}
 				} else {
 																									##  Flash player code

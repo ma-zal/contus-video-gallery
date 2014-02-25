@@ -249,15 +249,22 @@ font-size: 12px;
 width: 99px;
 }
 
-@media screen and (max-width: 800px){
-    .player embed{width: 100% !important; height: auto;}
-    .player object{width: 100% !important; height: auto;}
-    #player, .player{width: 100% !important; height: auto;}
-    .player iframe{width: 100% !important;  height: auto;}
-    #player iframe{width: 100% !important;  height: auto;}
-    #player #video{width: 100% !important;  height: auto;}
-    #htmlplayer #video{width: 100% !important; height: auto; }
+.videoplayer {
+    position: relative;
+    padding-bottom: 56.25%;
+    padding-top: 30px; height: 0; overflow: hidden;
 }
+ 
+.videoplayer iframe,
+.videoplayer object,
+.videoplayer embed {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
 @media screen and (max-width: 600px){
 /*    .videogallery,
     .type-videogallery{width: 100% !important;}*/
