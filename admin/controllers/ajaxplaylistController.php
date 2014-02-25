@@ -118,12 +118,11 @@ if ( class_exists( 'AjaxPlaylistController' ) != true ) {			## checks if the Pla
 			foreach ( $result as $playlist ) {
 
 				$hiddenarray[] = $playlist['playid'];
-				if ( isset( $playlist['checked'] ) ) {
-					$checked = 'checked="checked"';
-				} else {
-					$checked = '';
-				}
-				echo '<tr><td style="font-size:11px"><input value="' . $playlist['playid'] . '" type="checkbox" name="playlist[]" id="playlist-' . $playlist['playid'] . '" '.$checked.' /> <label for="playlist-' . $playlist['playid'] . '" class="selectit">' . esc_html( $playlist['name'] ) . '</label></td ></tr>';
+				echo '<tr><td style="font-size:11px"><input value="' . $playlist['playid']
+						. '" type="checkbox" name="playlist[]" id="playlist-' . $playlist['playid']
+						. '"' . ( $playlist['checked'] ? ' checked="checked"' : '' ) . '/> <label for="playlist-' . $playlist['playid']
+						. '" class="selectit">' . esc_html( $playlist['name'] ) . '</label></td ></tr>
+							';
 			}
 			echo '</table>';
 			$comma_separated = implode( ',', $hiddenarray );
@@ -158,12 +157,11 @@ if ( class_exists( 'AjaxPlaylistController' ) != true ) {			## checks if the Pla
 			echo '<table>';
 			foreach ( $result as $playlist ) {
 				$hiddenarray[] = $playlist['playid'];
-				if ( isset( $playlist['checked'] ) ) {
-					$checked = 'checked="checked"';
-				} else {
-					$checked = '';
-				}
-				echo '<tr><td style="font-size:11px"><input value="' . $playlist['playid'] . '" type="checkbox" name="playlist[]" id="playlist-' . $playlist['playid']. '" '.$checked.' /><label for="playlist-' . $playlist['playid'] . '" class="selectit"> ' . esc_html( $playlist['name'] ) . '</label></td ></tr>';
+				echo '<tr><td style="font-size:11px"><input value="' . $playlist['playid']
+						. '" type="checkbox" name="playlist[]" id="playlist-' . $playlist['playid']
+						. '" ' . ( $playlist['checked'] ? ' checked="checked"' : '' ) . ' /><label for="playlist-' . $playlist['playid']
+						. '" class="selectit"> ' . esc_html( $playlist['name'] ) . '</label></td ></tr>
+							';
 			}
 			echo '</table>';
 			$comma_separated = implode( ',', $hiddenarray );
