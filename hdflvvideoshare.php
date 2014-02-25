@@ -96,13 +96,13 @@ function add_my_rule() {
 }
 
 add_action( 'init', 'add_my_rule' );
-$video_search = filter_var( filter_input( INPUT_GET, 'video_search' ), FILTER_SANITIZE_STRING );
+$video_search = filter_input( INPUT_GET, 'video_search' );
 $wp_rewrite   = new WP_Rewrite();
 $link         = $wp_rewrite->get_page_permastruct();
 
 ## Convert non-sef URL to seo friendly URL
 if ( ! empty( $video_search ) && ! empty( $link ) ) {
-				$location = get_site_url() . '/search/' . $video_search;
+				$location = get_site_url() . '/search/' . urlencode( $video_search );
 				header( "Location: $location", true, 301 );
 				exit;
 }
@@ -516,9 +516,9 @@ function add_meta_details() {
 						$imageFea = $image_path . $imageFea;
 				}
 			}
-			if ( strpos( $imageFea, 'youtube' ) > 0 ) {
+			if ( strpos( $imageFea, 'youtube' ) > 0 || strpos( $imageFea, 'ytimg' ) > 0 ) {
 					$imgstr   = explode( '/', $imageFea );
-					$imageFea = 'http://img.youtube.com/vi/' . $imgstr[4] . '/mqdefault.jpg';
+					$imageFea = 'http://img.youtube.com/vi/' . $imgstr[4] . '/hqdefault.jpg';
 			}
 			$videoname = $video_count->name;					 ## Get video name
 			$des       = $video_count->description;		## Get Video Description

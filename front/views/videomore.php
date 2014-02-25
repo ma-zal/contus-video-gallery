@@ -38,7 +38,7 @@ if ( class_exists( 'ContusMoreView' ) != true ) {
 			if ( isset( $wp_query->query_vars['video_search'] ) && $wp_query->query_vars['video_search'] !== $searchVal ) {
 				$video_search = $wp_query->query_vars['video_search'];
 			}
-			$this->_video_search = $video_search;
+			$this->_video_search = urldecode( $video_search );
 
 			$this->_showF     = 5;
 			$this->_colF      = $this->_settingsData->colMore;							## get row of more page
