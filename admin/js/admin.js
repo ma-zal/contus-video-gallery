@@ -698,7 +698,7 @@ function validateInput() {
 			document.getElementById('islive-value').value = 0;
 		}
 	}
-	else if (document.getElementById('btn5').checked === true)
+	else if (document.getElementById('btn5') && document.getElementById('btn5').checked === true)
 	{
 		var embed_code	= document.getElementById('embedcode').value;
 		embed_code		= (embed_code + '').replace(/[\\"']/g, '\\$&').replace(/\u0000/g, '\\0');
@@ -710,7 +710,7 @@ function validateInput() {
 			document.getElementById('embedmessage').innerHTML = '';
 		}
 	}
-	if (document.getElementById('name').value === '') {
+	if (document.getElementById('name').value == '') {
 		document.getElementById('titlemessage').innerHTML = 'Enter Title';
 		document.getElementById('titlemessage').style.display = "block";
 		document.getElementById('name').focus();
@@ -744,7 +744,7 @@ function validateInput() {
 	var check_box = document.getElementsByTagName('input');
 	for (var i = 0; i < check_box.length; i++)
 	{
-		if (check_box[i].type === 'checkbox')
+		if (check_box[i].type == 'checkbox')
 		{
 			if (check_box[i].checked) {
 				return true;
