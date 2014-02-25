@@ -438,10 +438,10 @@ if ( class_exists( 'ContusMoreView' ) != true ) {
 					if ( $duration != 0.00 ) {
 						$div .= '<span class="video_duration">' . $duration . '</span>';
 					}
-					$div .= '</div><h5><a href="' . $guid . '" class="videoHname">' . $playListName . '</a></h5><div class="vid_info">';
+					$div .= '</div><div class="vid_info"><a href="' . $guid . '" class="videoHname">' . $playListName . '</a>';
 					if ( ! empty( $playList->playlist_name ) ) {
 						$playlist_url = get_playlist_permalink( $this->_mPageid, $playList->pid, $playList->playlist_slugname );
-						$div .= '<h6 class="playlistName"><a href="' . $playlist_url . '">' . $playList->playlist_name . '</a></h6>';
+						$div .= '<a class="playlistName" href="' . $playlist_url . '">' . $playList->playlist_name . '</a>';
 					}
 					## Rating starts here
 					if ( $this->_settingsData->ratingscontrol == 1 ) {
