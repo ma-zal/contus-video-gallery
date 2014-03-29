@@ -41,7 +41,7 @@ class Widget_ContusPopularVideos_init extends WP_Widget {
 		$title = empty( $instance['title'] ) ? ' ' : apply_filters( 'widget_title', $instance['title'] );
 		global $wpdb;
 		## These are our own options
-		$site_url = get_bloginfo( 'url' );
+		$site_url = get_site_url();
 		$dir      = dirname( plugin_basename( __FILE__ ) );
 		$dirExp   = explode( '/', $dir );
 		$dirPage  = $dirExp[0];

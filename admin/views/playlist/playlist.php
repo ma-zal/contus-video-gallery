@@ -31,7 +31,7 @@ $apptha_base_url = APPTHA_VGALLERY_BASEURL;
 					videoid[i] = orderid[i].replace( '&', "" );
 					oid = "ordertd_" + videoid[i];
 				}
-				dragdr.post( "<?php echo get_bloginfo( 'url' ); ?>/wp-admin/admin-ajax.php?action=playlistsortorder<?php echo balanceTags( $page ); ?>", order );
+				dragdr.post( "<?php echo get_site_url(); ?>/wp-admin/admin-ajax.php?action=playlistsortorder<?php echo balanceTags( $page ); ?>", order );
 			}
 		} );
 	} );
@@ -136,7 +136,7 @@ if ( isset( $_REQUEST['playlistsearchbtn'] ) ) {
 	?>
 	<div  class="updated below-h2">
 		<?php
-		$url = get_bloginfo( 'url' ) . '/wp-admin/admin.php?page=playlist';
+		$url = get_site_url() . '/wp-admin/admin.php?page=playlist';
 		$searchmsg = filter_input( INPUT_POST, 'PlaylistssearchQuery' );
 	if ( count( $gridPlaylist ) ) {
 		echo esc_attr_e( 'Search Results for', 'video_gallery' ) . ' "' . $searchMsg . '"';
@@ -193,24 +193,24 @@ if ( $page_links ) {
 								<span class="sorting-indicator"></span>
 							</th>
 							<th scope="col"  class="manage-column column-name sortable desc" style="">
-								<a href="<?php echo get_bloginfo( 'url' ); ?>/wp-admin/admin.php?page=playlist&orderby=id&order=<?php echo balanceTags( $reverse_direction ); ?>">
+								<a href="<?php echo get_site_url(); ?>/wp-admin/admin.php?page=playlist&orderby=id&order=<?php echo balanceTags( $reverse_direction ); ?>">
 									<span><?php esc_attr_e( 'ID', 'video_gallery' ); ?></span>
 									<span class="sorting-indicator"></span>
 								</a>
 							</th>
 							<th scope="col"  class="manage-column column-name sortable desc" style="">
-								<a href="<?php echo get_bloginfo( 'url' ); ?>/wp-admin/admin.php?page=playlist&orderby=title&order=<?php echo balanceTags( $reverse_direction ); ?>">
+								<a href="<?php echo get_site_url(); ?>/wp-admin/admin.php?page=playlist&orderby=title&order=<?php echo balanceTags( $reverse_direction ); ?>">
 									<span><?php esc_attr_e( 'Title', 'video_gallery' ); ?></span>
 									<span class="sorting-indicator"></span>
 								</a>
 							</th>
 							<th scope="col" class="manage-column column-Expiry sortable desc" style="">
-								<a href="<?php echo get_bloginfo( 'url' ); ?>/wp-admin/admin.php?page=playlist&orderby=publish&order=<?php echo balanceTags( $reverse_direction ); ?>"><span><?php esc_attr_e( 'Publish', 'video_gallery' ); ?></span>
+								<a href="<?php echo get_site_url(); ?>/wp-admin/admin.php?page=playlist&orderby=publish&order=<?php echo balanceTags( $reverse_direction ); ?>"><span><?php esc_attr_e( 'Publish', 'video_gallery' ); ?></span>
 									<span class="sorting-indicator"></span>
 								</a>
 							</th>
 							<th scope="col" class="manage-column column-sortorder sortable desc" style="">
-								<a href="<?php echo get_bloginfo( 'url' ); ?>/wp-admin/admin.php?page=playlist&orderby=sorder&order=<?php echo balanceTags( $reverse_direction ); ?>"><span><?php esc_attr_e( 'Order', 'video_gallery' ); ?></span>
+								<a href="<?php echo get_site_url(); ?>/wp-admin/admin.php?page=playlist&orderby=sorder&order=<?php echo balanceTags( $reverse_direction ); ?>"><span><?php esc_attr_e( 'Order', 'video_gallery' ); ?></span>
 									<span class="sorting-indicator"></span>
 								</a>
 							</th>
@@ -233,10 +233,10 @@ foreach ( $gridPlaylist as $playlistView ) {
 								</span>
 							</td>
 							<td class="id-column">
-								<a title="Edit <?php echo balanceTags( $playlistView->playlist_name ); ?>" href="<?php echo get_bloginfo( 'url' ); ?>/wp-admin/admin.php?page=newplaylist&playlistId=<?php echo balanceTags( $playlistView->pid ); ?>" ><?php echo balanceTags( $playlistView->pid ); ?></a><div class="row-actions">
+								<a title="Edit <?php echo balanceTags( $playlistView->playlist_name ); ?>" href="<?php echo get_site_url(); ?>/wp-admin/admin.php?page=newplaylist&playlistId=<?php echo balanceTags( $playlistView->pid ); ?>" ><?php echo balanceTags( $playlistView->pid ); ?></a><div class="row-actions">
 							</td>
 							<td class="title-column">
-								<a title="Edit <?php echo balanceTags( $playlistView->playlist_name ); ?>" class="row-title" href="<?php echo get_bloginfo( 'url' ); ?>/wp-admin/admin.php?page=newplaylist&playlistId=<?php echo balanceTags( $playlistView->pid ); ?>" ><?php echo balanceTags( $playlistView->playlist_name ); ?></a>
+								<a title="Edit <?php echo balanceTags( $playlistView->playlist_name ); ?>" class="row-title" href="<?php echo get_site_url(); ?>/wp-admin/admin.php?page=newplaylist&playlistId=<?php echo balanceTags( $playlistView->pid ); ?>" ><?php echo balanceTags( $playlistView->playlist_name ); ?></a>
 							</td>
 							<td class="pub-column Expiry column-Expiry">
 								<?php
@@ -249,7 +249,7 @@ foreach ( $gridPlaylist as $playlistView ) {
 		$publish = __( 'Click here to Deactivate', 'video_gallery' );
 	}
 								?>
-								<a href="<?php echo get_bloginfo( 'url' ); ?>/wp-admin/admin.php?page=playlist<?php if ( isset( $_GET['pagenum'] ) ) echo '&pagenum=' . $_GET['pagenum']; ?>&playlistId=<?php echo balanceTags( $playlistView->pid ); ?>&status=<?php echo balanceTags( $status ); ?>">   <img src="<?php echo balanceTags( $apptha_base_url ) . 'images/' . $image ?>" title="<?php echo balanceTags( $publish ); ?>"   /> </a>
+								<a href="<?php echo get_site_url(); ?>/wp-admin/admin.php?page=playlist<?php if ( isset( $_GET['pagenum'] ) ) echo '&pagenum=' . $_GET['pagenum']; ?>&playlistId=<?php echo balanceTags( $playlistView->pid ); ?>&status=<?php echo balanceTags( $status ); ?>">   <img src="<?php echo balanceTags( $apptha_base_url ) . 'images/' . $image ?>" title="<?php echo balanceTags( $publish ); ?>"   /> </a>
 							</td>
 							<td class="order-column Expiry column-Expiry">
 						<?php echo balanceTags( $playlistView->playlist_order ); ?>
@@ -276,24 +276,24 @@ if ( count( $gridPlaylist ) == 0 ) {
 								<span class="sorting-indicator"></span>
 							</th>
 							<th scope="col"  class="manage-column column-name sortable desc" style="">
-								<a href="<?php echo get_bloginfo( 'url' ); ?>/wp-admin/admin.php?page=playlist&orderby=id&order=<?php echo balanceTags( $reverse_direction ); ?>">
+								<a href="<?php echo get_site_url(); ?>/wp-admin/admin.php?page=playlist&orderby=id&order=<?php echo balanceTags( $reverse_direction ); ?>">
 									<span><?php esc_attr_e( 'ID', 'video_gallery' ); ?></span>
 									<span class="sorting-indicator"></span>
 								</a>
 							</th>
 							<th scope="col"  class="manage-column column-name sortable desc" style="">
-								<a href="<?php echo get_bloginfo( 'url' ); ?>/wp-admin/admin.php?page=playlist&orderby=title&order=<?php echo balanceTags( $reverse_direction ); ?>">
+								<a href="<?php echo get_site_url(); ?>/wp-admin/admin.php?page=playlist&orderby=title&order=<?php echo balanceTags( $reverse_direction ); ?>">
 									<span><?php esc_attr_e( 'Title', 'video_gallery' ); ?></span>
 									<span class="sorting-indicator"></span>
 								</a>
 							</th>
 							<th scope="col" class="manage-column column-Expiry sortable desc" style="">
-								<a href="<?php echo get_bloginfo( 'url' ); ?>/wp-admin/admin.php?page=playlist&orderby=publish&order=<?php echo balanceTags( $reverse_direction ); ?>"><span><?php esc_attr_e( 'Publish', 'video_gallery' ); ?></span>
+								<a href="<?php echo get_site_url(); ?>/wp-admin/admin.php?page=playlist&orderby=publish&order=<?php echo balanceTags( $reverse_direction ); ?>"><span><?php esc_attr_e( 'Publish', 'video_gallery' ); ?></span>
 									<span class="sorting-indicator"></span>
 								</a>
 							</th>
 							<th scope="col" class="manage-column column-sortorder sortable desc" style="">
-								<a href="<?php echo get_bloginfo( 'url' ); ?>/wp-admin/admin.php?page=playlist&orderby=sorder&order=<?php echo balanceTags( $reverse_direction ); ?>"><span><?php esc_attr_e( 'Order', 'video_gallery' ); ?></span>
+								<a href="<?php echo get_site_url(); ?>/wp-admin/admin.php?page=playlist&orderby=sorder&order=<?php echo balanceTags( $reverse_direction ); ?>"><span><?php esc_attr_e( 'Order', 'video_gallery' ); ?></span>
 									<span class="sorting-indicator"></span>
 								</a>
 							</th>

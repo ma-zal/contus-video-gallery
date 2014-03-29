@@ -24,7 +24,7 @@
 		<h2 class="option_title">
 			<?php echo '<img src="' . APPTHA_VGALLERY_BASEURL . '/images/vid_ad.png" alt="move" width="30"/>'; ?>
 			<?php esc_attr_e( 'Manage Video Ads', 'video_gallery' ); ?>
-			<a class="button-primary" href="<?php echo balanceTags( get_bloginfo( 'url' ) ); ?>/wp-admin/admin.php?page=newvideoad" >Add Video Ad</a>
+			<a class="button-primary" href="<?php echo balanceTags( get_site_url() ); ?>/wp-admin/admin.php?page=newvideoad" >Add Video Ad</a>
 		</h2>
 
 		<?php if ( $displayMsg ): ?>
@@ -42,7 +42,7 @@ if ( isset( $searchBtn ) ) {
 	?>
 	<div  class="updated below-h2">
 		<?php
-		$url = get_bloginfo( 'url' ) . '/wp-admin/admin.php?page=videoads';
+		$url = get_site_url() . '/wp-admin/admin.php?page=videoads';
 	if ( count( $gridVideoad ) ) {
 		echo balanceTags( count( $gridVideoad ) ) . '    Search Result( s ) for "' . $searchMsg . '".&nbsp&nbsp&nbsp<a href="'.$url.'" >Back to Video Ads List</a>';
 	} else {
@@ -99,18 +99,18 @@ if ( $page_links ) {
 							<input type="checkbox" name="" >
 						</th>
 						<th scope="col"  class="manage-column column-name sortable desc" style="">
-							<a  href="<?php echo balanceTags( get_bloginfo( 'url' ) ); ?>/wp-admin/admin.php?page=videoads&orderby=id&order=<?php echo balanceTags( $reverse_direction ); ?>">
+							<a  href="<?php echo balanceTags( get_site_url() ); ?>/wp-admin/admin.php?page=videoads&orderby=id&order=<?php echo balanceTags( $reverse_direction ); ?>">
 								<span><?php esc_attr_e( 'Ad ID', 'video_gallery' ); ?></span>
 								<span class="sorting-indicator"></span>
 							</a>
 						</th>
 						<th scope="col" class="manage-column column-description sortable desc" style="">
-							<a href="<?php echo balanceTags( get_bloginfo( 'url' ) ); ?>/wp-admin/admin.php?page=videoads&orderby=title&order=<?php echo balanceTags( $reverse_direction ); ?>" ><span><?php esc_attr_e( 'Title', 'video_gallery' ); ?></span>
+							<a href="<?php echo balanceTags( get_site_url() ); ?>/wp-admin/admin.php?page=videoads&orderby=title&order=<?php echo balanceTags( $reverse_direction ); ?>" ><span><?php esc_attr_e( 'Title', 'video_gallery' ); ?></span>
 								<span class="sorting-indicator"></span>
 							</a>
 						</th>
 						<th scope="col"  class="manage-column column-name sortable desc" style="">
-							<a  href="<?php echo balanceTags( get_bloginfo( 'url' ) ); ?>/wp-admin/admin.php?page=videoads&orderby=path&order=<?php echo balanceTags( $reverse_direction ); ?>">
+							<a  href="<?php echo balanceTags( get_site_url() ); ?>/wp-admin/admin.php?page=videoads&orderby=path&order=<?php echo balanceTags( $reverse_direction ); ?>">
 								<span><?php esc_attr_e( 'Path', 'video_gallery' ); ?></span>
 								<span class="sorting-indicator"></span>
 							</a>
@@ -123,7 +123,7 @@ if ( $page_links ) {
 							<span><?php esc_attr_e( 'Ad Method', 'video_gallery' ); ?></span>
 						</th>
 						<th scope="col" class="manage-column column-description sortable desc" style="">
-							<a  href="<?php echo balanceTags( get_bloginfo( 'url' ) ); ?>/wp-admin/admin.php?page=videoads&orderby=publish&order=<?php echo balanceTags( $reverse_direction ); ?>" ><span><?php esc_attr_e( 'Publish', 'video_gallery' ); ?></span>
+							<a  href="<?php echo balanceTags( get_site_url() ); ?>/wp-admin/admin.php?page=videoads&orderby=publish&order=<?php echo balanceTags( $reverse_direction ); ?>" ><span><?php esc_attr_e( 'Publish', 'video_gallery' ); ?></span>
 								<span class="sorting-indicator"></span>
 							</a>
 						</th>
@@ -138,10 +138,10 @@ foreach ( $gridVideoad as $videoAdview ) {
 								<input type="checkbox" name="videoad_id[]" value="<?php echo balanceTags( $videoAdview->ads_id ); ?>">
 							</th>
 							<td>
-								<a title="Edit <?php echo balanceTags( $videoAdview->title ); ?>" href="<?php echo balanceTags( get_bloginfo( 'url' ) ); ?>/wp-admin/admin.php?page=newvideoad&videoadId=<?php echo balanceTags( $videoAdview->ads_id ); ?>" ><?php echo balanceTags( $videoAdview->ads_id ); ?></a><div class="row-actions">
+								<a title="Edit <?php echo balanceTags( $videoAdview->title ); ?>" href="<?php echo balanceTags( get_site_url() ); ?>/wp-admin/admin.php?page=newvideoad&videoadId=<?php echo balanceTags( $videoAdview->ads_id ); ?>" ><?php echo balanceTags( $videoAdview->ads_id ); ?></a><div class="row-actions">
 							</td>
 							<td>
-								<a title="Edit <?php echo balanceTags( $videoAdview->title ); ?>" class="row-title" href="<?php echo balanceTags( get_bloginfo( 'url' ) ); ?>/wp-admin/admin.php?page=newvideoad&videoadId=<?php echo balanceTags( $videoAdview->ads_id ); ?>" ><?php echo balanceTags( $videoAdview->title ); ?></a>
+								<a title="Edit <?php echo balanceTags( $videoAdview->title ); ?>" class="row-title" href="<?php echo balanceTags( get_site_url() ); ?>/wp-admin/admin.php?page=newvideoad&videoadId=<?php echo balanceTags( $videoAdview->ads_id ); ?>" ><?php echo balanceTags( $videoAdview->title ); ?></a>
 							</td>
 							<td class="description column-description">
 							<?php if ( $videoAdview->admethod != 'midroll' ) echo balanceTags( $videoAdview->file_path ); ?>
@@ -164,7 +164,7 @@ foreach ( $gridVideoad as $videoAdview ) {
 	<?php if ( $videoAdview->admethod != 'midroll' ) echo balanceTags( $videoAdview->adtype ); ?>
 							</td>
 							<td class="description column-description">
-								<a href="<?php echo balanceTags( get_bloginfo( 'url' ) ); ?>/wp-admin/admin.php?page=videoads&videoadId=<?php echo balanceTags( $videoAdview->ads_id ); ?>&status=<?php echo balanceTags( $status ); ?>">   <img  src="<?php echo balanceTags( APPTHA_VGALLERY_BASEURL ) . 'images/' . $image ?>" title="<?php echo balanceTags( $publish ); ?>" title="<?php echo balanceTags( $publish ); ?>"  /></a>
+								<a href="<?php echo balanceTags( get_site_url() ); ?>/wp-admin/admin.php?page=videoads&videoadId=<?php echo balanceTags( $videoAdview->ads_id ); ?>&status=<?php echo balanceTags( $status ); ?>">   <img  src="<?php echo balanceTags( APPTHA_VGALLERY_BASEURL ) . 'images/' . $image ?>" title="<?php echo balanceTags( $publish ); ?>" title="<?php echo balanceTags( $publish ); ?>"  /></a>
 							</td>
 						</tr>
 						<?php
@@ -182,18 +182,18 @@ if ( count( $gridVideoad ) == 0 ) {
 							<input type="checkbox" name="" >
 						</th>
 						<th scope="col"  class="manage-column column-name sortable desc" style="">
-							<a  href="<?php echo balanceTags( get_bloginfo( 'url' ) ); ?>/wp-admin/admin.php?page=videoads&orderby=id&order=<?php echo balanceTags( $reverse_direction ); ?>">
+							<a  href="<?php echo balanceTags( get_site_url() ); ?>/wp-admin/admin.php?page=videoads&orderby=id&order=<?php echo balanceTags( $reverse_direction ); ?>">
 								<span><?php esc_attr_e( 'Ad ID', 'video_gallery' ); ?></span>
 								<span class="sorting-indicator"></span>
 							</a>
 						</th>
 						<th scope="col" class="manage-column column-description sortable desc" style="">
-							<a href="<?php echo balanceTags( get_bloginfo( 'url' ) ); ?>/wp-admin/admin.php?page=videoads&orderby=title&order=<?php echo balanceTags( $reverse_direction ); ?>" ><span><?php esc_attr_e( 'Title', 'video_gallery' ); ?></span>
+							<a href="<?php echo balanceTags( get_site_url() ); ?>/wp-admin/admin.php?page=videoads&orderby=title&order=<?php echo balanceTags( $reverse_direction ); ?>" ><span><?php esc_attr_e( 'Title', 'video_gallery' ); ?></span>
 								<span class="sorting-indicator"></span>
 							</a>
 						</th>
 						<th scope="col"  class="manage-column column-name sortable desc" style="">
-							<a  href="<?php echo balanceTags( get_bloginfo( 'url' ) ); ?>/wp-admin/admin.php?page=videoads&orderby=path&order=<?php echo balanceTags( $reverse_direction ); ?>">
+							<a  href="<?php echo balanceTags( get_site_url() ); ?>/wp-admin/admin.php?page=videoads&orderby=path&order=<?php echo balanceTags( $reverse_direction ); ?>">
 								<span><?php esc_attr_e( 'Path', 'video_gallery' ); ?></span>
 								<span class="sorting-indicator"></span>
 							</a>
@@ -205,7 +205,7 @@ if ( count( $gridVideoad ) == 0 ) {
 							<span><?php esc_attr_e( 'Ad Method', 'video_gallery' ); ?></span>
 						</th>
 						<th scope="col" class="manage-column column-description sortable desc" style="">
-							<a  href="<?php echo balanceTags( get_bloginfo( 'url' ) ); ?>/wp-admin/admin.php?page=videoads&orderby=publish&order=<?php echo balanceTags( $reverse_direction ); ?>" ><span><?php esc_attr_e( 'Publish', 'video_gallery' ); ?></span>
+							<a  href="<?php echo balanceTags( get_site_url() ); ?>/wp-admin/admin.php?page=videoads&orderby=publish&order=<?php echo balanceTags( $reverse_direction ); ?>" ><span><?php esc_attr_e( 'Publish', 'video_gallery' ); ?></span>
 								<span class="sorting-indicator"></span>
 							</a>
 						</th>

@@ -41,7 +41,7 @@ class Widget_ContusRelatedVideos_init extends WP_Widget {
 		global $wpdb;
 		## These are our own options
 		$show     = $instance['show'];	##  of Posts we are showing
-		$site_url = get_bloginfo( 'url' );
+		$site_url = get_site_url();
 		$dir      = dirname( plugin_basename( __FILE__ ) );
 		$dirExp   = explode( '/', $dir );
 		$dirPage  = $dirExp[0];
@@ -59,7 +59,7 @@ class Widget_ContusRelatedVideos_init extends WP_Widget {
 			if ( ! empty( $videoID ) ) {
 				$video_playlist_id = $wpdb->get_var( 'SELECT playlist_id FROM ' . $wpdb->prefix . 'hdflvvideoshare_med2play WHERE media_id='.$videoID );
 				$settings_result   = $wpdb->get_row( 'SELECT ratingscontrol,view_visible FROM ' . $wpdb->prefix . 'hdflvvideoshare_settings WHERE settings_id=1' );
-				$site_url  = get_bloginfo( 'url' );
+				$site_url  = get_site_url();
 				$ratearray = array( 'nopos1', 'onepos1', 'twopos1', 'threepos1', 'fourpos1', 'fivepos1' );
 				$viewslang = __( 'Views', 'video_gallery' );
 				$viewlang  = __( 'View', 'video_gallery' );

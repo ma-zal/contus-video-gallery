@@ -58,7 +58,7 @@ if ( class_exists( 'VideoModel' ) != true ) {							## checks the VideoModel cla
 					'comment_count'			=> '0',
 				);
 				$this->_wpdb->insert( $this->_posttable, $postsData );
-				$guid = get_bloginfo( 'url' ) . '/?post_type=videogallery&#038;p=' . $this->_wpdb->insert_id;
+				$guid = get_site_url() . '/?post_type=videogallery&#038;p=' . $this->_wpdb->insert_id;
 				$this->_wpdb->update( $this->_posttable, array( 'guid' => $guid ), array( 'ID' => $this->_wpdb->insert_id ) );
 				$this->_wpdb->update( $this->_videotable, array( 'slug' => $this->_wpdb->insert_id ), array( 'vid' => $last_insert_video_id ) );
 				return $last_insert_video_id;
@@ -106,7 +106,7 @@ if ( class_exists( 'VideoModel' ) != true ) {							## checks the VideoModel cla
 					'comment_count'			=> '0',
 				);
 				$this->_wpdb->insert( $this->_posttable, $postsData );
-				$guid = get_bloginfo( 'url' ) . '/?post_type=videogallery&#038;p=' . $this->_wpdb->insert_id;
+				$guid = get_site_url() . '/?post_type=videogallery&#038;p=' . $this->_wpdb->insert_id;
 				$this->_wpdb->update( $this->_posttable, array( 'guid' => $guid ), array( 'ID' => $this->_wpdb->insert_id ) );
 				$this->_wpdb->update( $this->_videotable, array( 'slug' => $this->_wpdb->insert_id ), array( 'vid' => $videoId ) );
 			} else {
@@ -216,9 +216,13 @@ if ( class_exists( 'VideoModel' ) != true ) {							## checks the VideoModel cla
 			}
 			return $this->_wpdb->get_var( 'SELECT COUNT( `vid` ) FROM ' . $this->_videotable . $where );
 		}																## function for getting single video ends
-		
+
 		public function video_delete( $videoId ) {						## function for deleting video starts
-			$query = 'DELETE FROM ' . $this->_videotable . '  WHERE vid IN ( ' . $videoId . ' )';
+			$slug   = $this->_wpdb->get_col( 'SELECT slug FROM ' . $this->_videotable . '  WHERE vid IN (' . $videoId . ')' );
+			$slugid = implode( ',', $slug );
+			$query  = 'DELETE FROM ' . $this->_videotable . '  WHERE vid IN (' . $videoId . ')';
+			$this->_wpdb->query( $query );
+			$query = 'DELETE FROM ' . $this->_posttable . '  WHERE ID IN (' . $slugid . ')';
 			return $this->_wpdb->query( $query );
 		}																## function for deleting video ends
 		
