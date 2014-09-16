@@ -1,12 +1,13 @@
 <?php
-/*
-  Name: Wordpress Video Gallery
-  Plugin URI: http://www.apptha.com/category/extension/Wordpress/Video-Gallery
-  Description: video ad model file.
-  Version: 2.6
-  Author: Apptha
-  Author URI: http://www.apptha.com
-  License: GPL2
+ /**  
+ * Video videoad model file.
+ *
+ * @category   Apptha
+ * @package    Contus video Gallery
+ * @version    2.6
+ * @author     Apptha Team <developers@contus.in>
+ * @copyright  Copyright (C) 2014 Apptha. All rights reserved.
+ * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html 
  */
 
 if ( class_exists( 'VideoadModel' ) != true ) {										## checks the VideoadModel class has been defined if starts
@@ -19,7 +20,7 @@ if ( class_exists( 'VideoadModel' ) != true ) {										## checks the VideoadMo
 			global $wpdb;
 			$this->_wpdb = $wpdb;
 			$this->_videoadtable = $this->_wpdb->prefix . 'hdflvvideoshare_vgads';
-			$this->_videoadId    = filter_input( INPUT_GET, 'videoadId' );
+			$this->_videoadId    = absint( filter_input( INPUT_GET, 'videoadId' ) );
 		}																			## contructor ends
 
 		public function insert_videoad( $videoadData, $videoadDataformat ) {		## function for inserting video starts
@@ -38,25 +39,44 @@ if ( class_exists( 'VideoadModel' ) != true ) {										## checks the VideoadMo
 
 		public function get_videoaddata( $searchValue, $searchBtn, $order, $orderDirection ) {	## function for getting search videos starts
 			$where   = '';
-			$pagenum = isset( $_GET['pagenum'] ) ? absint( $_GET['pagenum'] ) : 1;
+			$pagenum =  filter_input(INPUT_GET, 'pagenum');
+			if( empty ( $pagenum ) ){
+				$pagenum = 1; 
+			}
 			$limit   = 20;
 			$offset  = ( $pagenum - 1 ) * $limit;
+		    $query = 'SELECT * FROM ' . $this->_videoadtable ;
+			
 			if ( isset( $searchBtn ) ) {
-				$where = ' WHERE title LIKE "%' . $searchValue . '%" ';
+				$query .= ' WHERE title LIKE %s';
 			}
+			
 			if ( ! isset( $orderDirection ) ) {
-				$orderDirection = 'DESC';
+				$query .= ' ORDER BY '. $order .' DESC';
+			} else {
+				$query .= ' ORDER BY '.$order. ' ' . $orderDirection;  
 			}
-			$query = 'SELECT * FROM ' . $this->_videoadtable . $where . ' ORDER BY ' . $order . ' ' . $orderDirection . ' LIMIT '.$offset.', '.$limit;
+			$query .= ' LIMIT ' .$offset.', '.$limit;
+			if( isset( $searchBtn ) ) {
+				$query =  $this->_wpdb->prepare( $query , '%'.$searchValue.'%' );
+			} else {
+				$query =   $query;
+			}
 			return $this->_wpdb->get_results( $query );
 		}																			## function for getting search videos ends
 
 		public function videoad_count( $searchValue, $searchBtn ) {					## function for getting single video starts
-			$where = '';
+			$query ='SELECT COUNT( `ads_id` ) FROM ' . $this->_videoadtable;
 			if ( isset( $searchBtn ) ) {
-				$where = ' WHERE title LIKE "%' . $searchValue . '%" ';
+				$query .= ' WHERE title LIKE %s';
 			}
-			return $this->_wpdb->get_var( 'SELECT COUNT( `ads_id` ) FROM ' . $this->_videoadtable . $where );
+			if( isset ( $searchBtn ) ) {
+				$query = $this->_wpdb->prepare( $query  , '%'.$searchValue.'%' );
+			} else {
+				$query =  $query;
+			}
+			
+			return 	$this->_wpdb->get_var( $query ) ;
 		}
 
 		public function videoad_edit( $videoadId ) {								## function for getting single video starts

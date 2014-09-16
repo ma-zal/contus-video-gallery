@@ -1,16 +1,17 @@
 <?php
-/*
-  Name: Wordpress Video Gallery
-  Plugin URI: http://www.apptha.com/category/extension/Wordpress/Video-Gallery
-  Description: AdsXML file for player.
-  Version: 2.6
-  Author: Apptha
-  Author URI: http://www.apptha.com
-  License: GPL2
+/**
+ * AdsXML file for player.
+ * 
+ * @category   Apptha
+ * @package    Contus video Gallery
+ * @version    2.7
+ * @author     Apptha Team <developers@contus.in>
+ * @copyright  Copyright (C) 2014 Apptha. All rights reserved.
+ * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html 
  */
-## Used to import plugin configuration
+// Used to import plugin configuration
 require_once( dirname( __FILE__ ) . '/hdflv-config.php' );
-## get the path url from querystring
+// get the path url from querystring
 global $wpdb;
 $selectPlaylist = 'SELECT * FROM ' . $wpdb->prefix . 'hdflvvideoshare_vgads WHERE admethod = "imaad" AND publish=1 LIMIT 1';
 $themediafiles  = $wpdb->get_results( $selectPlaylist );
@@ -43,29 +44,29 @@ if ( count( $themediafiles ) > 0 ) {
 			}
 			$channels = $rows->channels;
 
-			## video ads
+			// video ads
 			echo '
 			<adSlotWidth>' . $imaadwidth . '</adSlotWidth>
 			<adSlotHeight>' . $imaadheight . '</adSlotHeight>
 			<adTagUrl>' . $imaadpath . '</adTagUrl>';
-			## text ads size( 468,60 )
+			// text ads size( 468,60 )
 			echo '<publisherId>' . $publisherId . '</publisherId>
 			<contentId>' . $contentId . '</contentId>';
-			## Text or Overlay
+			// Text or Overlay
 			echo '<adType>' . $imaadType . '</adType>
 			<channels>' . $channels . '</channels>';
 		}
 	}
 } else {
-	## video ads
+	// video ads
 	echo '
 	<adSlotWidth>400</adSlotWidth>
 	<adSlotHeight>250</adSlotHeight>
 	<adTagUrl>http://ad.doubleclick.net/pfadx/N270.126913.6102203221521/B3876671.22;dcadv=2215309;sz=0x0;ord=%5btimestamp%5d;dcmt=text/xml</adTagUrl>';
-	## text ads size(468,60 )
+	// text ads size(468,60 )
 	echo '<publisherId></publisherId>
 	<contentId>1</contentId>';
-	## Text or Overlay
+	// Text or Overlay
 	echo ' <adType>Text</adType>
 	<channels>poker</channels>';
 }

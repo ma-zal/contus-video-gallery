@@ -1,67 +1,73 @@
 <?php
-/*
-  Name: Wordpress Video Gallery
-  Plugin URI: http://www.apptha.com/category/extension/Wordpress/Video-Gallery
-  Description: playlistxml file for player.
-  Version: 2.6
-  Author: Apptha
-  Author URI: http://www.apptha.com
-  License: GPL2
+/**  
+ * Video player myextract xml file for video details and related  video settings.
+ *
+ * @category   Apptha
+ * @package    Contus video Gallery
+ * @version    2.7
+ * @author     Apptha Team <developers@contus.in>
+ * @copyright  Copyright (C) 2014 Apptha. All rights reserved.
+ * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html 
  */
-## Include config file
+// Include config file
 require_once( dirname( __FILE__ ) . '/hdflv-config.php' );
-$pageOBJ = new ContusVideoView();								## include class from Videohome view
-$contOBJ = new ContusVideoController();							## include class from Videohome controller
-$getVid  = $pageOBJ->_vId;										## Get video ID from video home view
-$getPid  = $pageOBJ->_pId;										## Get playlist ID from video home view
-$numberofvideos = filter_input( INPUT_GET, 'numberofvideos' );	## Get number of videos from URL
+$pageOBJ = new ContusVideoView();								// include class from Videohome view
+$contOBJ = new ContusVideoController();							// include class from Videohome controller
+$getVid  = $pageOBJ->_vId;										// Get video ID from video home view
+$getPid  = $pageOBJ->_pId;									// Get playlist ID from video home view
+$numberofvideos = filter_input( INPUT_GET, 'numberofvideos' );	// Get number of videos from URL
+
+if ( empty( $numberofvideos ) ) {
+	$numberofvideos = $contOBJ->related_video_count();
+}
+
 if ( empty( $numberofvideos ) ) {
 	$numberofvideos = 4;
 }
+
 $banner = 0;
 $type   = filter_input( INPUT_GET, 'type' );
 if ( ! empty( $numberofvideos ) && ! empty( $type ) ) {
 	$banner = 1;
 }
-if ( ! empty( $type ) && $type == 1 ) {										## IF type = popular video
+if ( ! empty( $type ) && $type == 1 ) {										// IF type = popular video
 	$thumImageorder  = 'w.hitcount DESC';
 	$where = '';
 	$singleVideodata = $contOBJ->home_playxmldata( $getVid, $thumImageorder, $where, $numberofvideos );
-} else if ( ! empty( $type ) && $type == 2 ) {								## IF type = recent video
+} else if ( ! empty( $type ) && $type == 2 ) {								// IF type = recent video
 	$thumImageorder  = 'w.vid DESC';
 	$where = '';
 	$singleVideodata = $contOBJ->home_playxmldata( $getVid, $thumImageorder, $where, $numberofvideos );
-} else if ( ! empty( $type ) && $type == 3 ) {								## IF type = featured video
+} else if ( ! empty( $type ) && $type == 3 ) {								// IF type = featured video
 	$thumImageorder  = 'w.ordering ASC';
 	$where = 'AND w.featured=1';
 	$singleVideodata = $contOBJ->home_playxmldata( $getVid, $thumImageorder, $where, $numberofvideos );
 } else if ( ! empty( $getVid ) ) {
-	$singleVideodata = $contOBJ->video_detail( $getVid );					## Get detail for particular video
+	$singleVideodata = $contOBJ->video_detail( $getVid);					// Get detail for particular video
 } else if ( ! empty( $getPid ) ) {
-	$singleVideodata = $contOBJ->video_Pid_detail( $getPid, 'playxml' );	## Get detail for particular playlist
+	$singleVideodata = $contOBJ->video_Pid_detail( $getPid, 'playxml',$numberofvideos);	// Get detail for particular playlist
 } else {
-	$singleVideodata = $pageOBJ->_featuredvideodata;						## Get detail of featured videos
+	$singleVideodata = $pageOBJ->_featuredvideodata;						// Get detail of featured videos
 }
 $settingsContent = $pageOBJ->settings_data();
 $tagsName = $pageOBJ->Tag_detail( $getVid );
 $islive = $streamer = $videoPreview = $videotag = $postroll_id = $subtitle = '';
-$pageOBJ->_imagePath = APPTHA_VGALLERY_BASEURL . 'images' . DS;	 ## declare image path
-## autoplay value
+$pageOBJ->_imagePath = APPTHA_VGALLERY_BASEURL . 'images' . DS;	 // declare image path
+// autoplay value
 if ( $settingsContent->playlistauto == 1 ) {
 	$ap = 'true';
 } else {
 	$ap = 'false';
 }
-
 $dir        = dirname( plugin_basename( __FILE__ ) );
 $dirExp     = explode( '/', $dir );
 $dirPage    = $dirExp[0];
 $image_path = str_replace( 'plugins/' . $dirPage . '/', 'uploads/videogallery/', APPTHA_VGALLERY_BASEURL );
-## playlist XML starts here
+// playlist XML starts here
 header( 'content-type:text/xml;charset = utf-8' );
 echo '<?xml version = "1.0" encoding = "utf-8"?>';
 echo '<playlist autoplay = "'.$ap.'" random = "false">';
-## Print all video details
+// Print all video details
 foreach ( $singleVideodata as $media ) {
 	$file_type = $media->file_type;
 	$fbPath    = '';
@@ -80,15 +86,19 @@ foreach ( $singleVideodata as $media ) {
 		$opimage    = $media->opimage;
 		$image      = $media->image;
 		$vidoeId    = $media->vid;
-		## Get thumb image detail
+		// Get thumb image detail
 		if ( $image == '' ) {
 			$image = $pageOBJ->_imagePath . 'nothumbimage.jpg';
 		} else {
 			if ( $file_type == 2 ) {
-				$image = $image_path . $image;
+				if( $file_type == 2 && strpos($image , '/' ) ){
+					$image = $image;
+				}else{
+					$image = $image_path . $image;
+				}
 			}
 		}
-		## Get preview image detail
+		// Get preview image detail
 		if ( $opimage == '' ) {
 			$opimage = $pageOBJ->_imagePath . 'noimage.jpg';
 		} else {
@@ -96,38 +106,47 @@ foreach ( $singleVideodata as $media ) {
 				$opimage = $image_path . $opimage;
 			}
 		}
-		## Get video url detail
+		// Get video url detail
 		if ( $videoUrl != '' ) {
 
 			if ( $file_type == 2 ) {
-				$videoUrl = $image_path . $videoUrl;
+				if( $file_type == 2  && strpos($videoUrl , '/' ) ) { 
+					$videoUrl = $videoUrl;
+				} else {
+					$videoUrl = $image_path . $videoUrl;
+				}
+				
 			}
 		}
-		## Get HD video url detail
+		// Get HD video url detail
 		if ( $hdvideoUrl != '' ) {
 
 			if ( $file_type == 2 ) {
-				$hdvideoUrl = $image_path . $hdvideoUrl;
+				if( $file_type == 2 && strpos( $hdvideoUrl, '/' ) ){
+				   $hdvideoUrl = $hdvideoUrl;
+				}else{
+					$hdvideoUrl = $image_path . $hdvideoUrl;
+				}
 			}
 		}
-		## Get RTMP detail
+		// Get RTMP detail
 		if ( $file_type == 4 ) {
 			$streamer = $media->streamer_path;
 			$islive   = ( $media->islive == 1 ) ? 'true' : 'false';
 		}
 
-		## Get subtitles
+		// Get subtitles
 		$subtitle1 = $media->srtfile1;
 		$subtitle2 = $media->srtfile2;
 		if ( ! empty( $subtitle1 ) && ! empty( $subtitle2 ) ) {
-			$subtitle = $image_path . $subtitle1 . ',' . $image_path . $subtitle2;
+			$subtitle = $image_path . $subtitle1. ',' . $image_path . $subtitle2 ;
 		} else if ( ! empty( $subtitle1 ) ) {
 			$subtitle = $image_path . $subtitle1;
 		} else if ( ! empty( $subtitle2 ) ) {
 			$subtitle = $image_path . $subtitle2;
 		}
 
-		## Get preroll ad detail
+		// Get preroll ad detail
 		if ( $settingsContent->preroll == 1 ) {
 			$preroll    = ' allow_preroll = "false"';
 			$preroll_id = ' preroll_id = "0"';
@@ -140,17 +159,17 @@ foreach ( $singleVideodata as $media ) {
 				$preroll_id = ' preroll_id = "0"';
 			}
 		}
-		## Get midroll ad detail
+		// Get midroll ad detail
 		$midroll = ' allow_midroll = "false"';
 		if ( $media->midrollads != 0 ) {
 			$midroll = ' allow_midroll = "true"';
 		}
-		## Get ima ad detail
+		// Get ima ad detail
 		$imaad = ' allow_ima = "false"';
 		if ( $media->imaad != 0 ) {
 			$imaad = ' allow_ima = "true"';
 		}
-		## Get postroll ad detail
+		// Get postroll ad detail
 		if ( $settingsContent->postroll == 1 ) {
 			$postroll    = ' allow_postroll = "false"';
 			$postroll_id = ' postroll_id = "0"';
@@ -163,14 +182,14 @@ foreach ( $singleVideodata as $media ) {
 				$postroll_id = ' postroll_id = "0"';
 			}
 		}
-		## download allowed or not
+		// download allowed or not
 		$individualdownload = $media->download;
 		if ( ( ( ( isset( $individualdownload[0] ) && $individualdownload[0] == 1 ) || ( isset( $individualdownload ) && $individualdownload == 1  ) ) ) && $file_type != 3 ) {
 			$download = 'true';
 		} else {
 			$download = 'false';
 		}
-		## Generate playlist XML
+		// Generate playlist XML
 		echo '<mainvideo
 			views="' . $views . '"
 			subtitle ="' . $subtitle . '"
@@ -187,7 +206,7 @@ foreach ( $singleVideodata as $media ) {
 			' . $postroll . '
 			' . $preroll . '
 			' . $postroll_id . '
-			' . $preroll_id . '
+			' . $preroll_id . '				
 			Tag =  "' . $tagsName . '"
 			allow_download = "' . $download . '"
 			video_hdpath = "' . $hdvideoUrl . '"
@@ -198,5 +217,5 @@ foreach ( $singleVideodata as $media ) {
 	}
 }
 echo '</playlist>';
-## XML end here
+// XML end here
 ?>

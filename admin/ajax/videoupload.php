@@ -1,16 +1,16 @@
 <?php
-/*
-  Name: Wordpress Video Gallery
-  Plugin URI: http://www.apptha.com/category/extension/Wordpress/Video-Gallery
-  Description: Ajax Video Upload.
-  Version: 2.6
-  Author: Apptha
-  Author URI: http://www.apptha.com
-  License: GPL2
+/**  
+ * Video Image, Video, Subtitle srt file uploads.
+ *
+ * @category   Apptha
+ * @package    Contus video Gallery
+ * @version    2.7
+ * @author     Apptha Team <developers@contus.in>
+ * @copyright  Copyright (C) 2014 Apptha. All rights reserved.
+ * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html 
  */
-## look up for the path
-require_once '../../hdflv-config.php';
-## get the path url from querystring
+
+global $errorcode, $allowedExtensions, $options1, $uploadpath, $file, $errorcode, $file_name;
 $file_name    = $error = '';
 $errorcode    = 12;
 $errormsg[0]  = '<b>Upload Success:</b> File Uploaded Successfully';
@@ -34,6 +34,8 @@ if ( isset( $_GET['error'] ) ) {
 
 if ( isset( $_GET['processing'] ) ) {
 	$pro = $_GET['processing'];
+}else{
+	$pro = 1;
 }
 
 if ( isset( $_POST['mode'] ) ) {
@@ -48,9 +50,8 @@ if ( isset( $_POST['mode'] ) ) {
 	}
 }
 
-## check if upload cancelled
 if ( ! iserror(  ) ) {
-	## check if stopped by post_max_size
+
 	if ( ( $pro == 1 ) && ( empty( $_FILES['myfile'] ) ) ) {
 		$errorcode = 13;
 	} else {
@@ -58,7 +59,6 @@ if ( ! iserror(  ) ) {
 		if ( no_file_upload_error( $file ) ) {
 
 			if ( is_allowed_extension( $file ) ) {
-				## check file size
 				if ( ! filesizeexceeds( $file ) ) {
 					doupload( $file );
 				}
@@ -66,7 +66,10 @@ if ( ! iserror(  ) ) {
 		}
 	}
 }
-
+/**
+ * Check the  error  occur  in the upload  the  files or  not
+ * @return boolean
+ */
 function iserror(  ) {
 	global $error;
 	global $errorcode;
@@ -77,7 +80,11 @@ function iserror(  ) {
 		return false;
 	}
 }
-
+/**
+ * Error message display
+ * @param unknown $file
+ * @return boolean
+ */
 function no_file_upload_error( $file ) {
 	global $errorcode;
 	$error_code = $file['error'];
@@ -111,11 +118,18 @@ function no_file_upload_error( $file ) {
 	}
 }
 
+/**
+ * Check the  upload file extension for  allowed format or Not
+ * @param unknown $file
+ * @return boolean
+ */
 function is_allowed_extension( $file ) {
 	global $allowedExtensions;
 	global $errorcode;
 	$filename = $file['name'];
-	$output   = in_array( end( explode( '.', $filename ) ), $allowedExtensions );
+	$extension = explode('.', $filename );
+	$extension = end($extension);
+	$output   = in_array($extension, $allowedExtensions );
 	if ( ! $output ) {
 		$errorcode = 2;
 		return false;
@@ -123,7 +137,11 @@ function is_allowed_extension( $file ) {
 		return true;
 	}
 }
-
+/**
+ * Check  file  upload size
+ * @param unknown $file
+ * @return boolean
+ */
 function filesizeexceeds( $file ) {
 	global $errorcode;
 	$POST_MAX_SIZE = ini_get( 'post_max_size' );
@@ -136,13 +154,20 @@ function filesizeexceeds( $file ) {
 		return false;
 	}
 }
-
+/**
+ * Move the  file  to video gallery folder ( OR ) Amazon  s3 bucket.
+ * @param unknown $file
+ * @return string
+ */
 function doupload( $file ) {
 
 	global $options1, $uploadpath, $file, $errorcode, $file_name, $wpdb;
 	$options1			= get_option( 'HDFLVSettings' );
-	$uploadPath = $wpdb->get_col( 'SELECT uploads FROM ' . $wpdb->prefix . 'hdflvvideoshare_settings' );
-	$uPath		= $uploadPath[0];
+	$wp_upload_dir = wp_upload_dir();
+        $upload_url    = $wp_upload_dir['baseurl'];
+        $site_url      = get_option('siteurl'); 
+        $uPath         = str_replace($site_url,'',$upload_url);
+        $uPath         = $uPath.'/videogallery';
 	if ( $uPath != '' ) {
 		$dir = ABSPATH . trim( $uPath ) . '/';
 		$url = trailingslashit( get_option( 'siteurl' ) ) . trim( $uPath ) . '/';
@@ -160,17 +185,54 @@ function doupload( $file ) {
 	$filesave = 'select MAX( vid ) from ' . $wpdb->prefix . 'hdflvvideoshare';
 	$fsquery  = mysql_query( $filesave );
 	$row      = mysql_fetch_array( $fsquery, MYSQL_NUM );
-
 	$destination_path = $uploadpath;
-
 	$row1      = $row[0] + 1;
-	$file_name = $row1 . '_' . $_FILES['myfile']['name'];
+	$extension = explode( '.', $file['name'] );
+	$extension = end( $extension );	
 
-	$target_path = $destination_path . '' . $file_name;
-	if ( @move_uploaded_file( $file['tmp_name'], $target_path ) ) {
-		$errorcode = 0;
+	if($extension == 'jpeg' || $extension == 'JPEG'){
+		$extension = 'jpg';
+	}
+	
+	if($extension == 'srt' || $extension == 'SRT'){
+		$file_name = 'video'.rand().'.'.$extension;
+	}else if($extension == 'jpg' || extension == 'png' || $extension =='gif' || $extension == 'JPG' || extension == 'PNG' || $extension =='GIF'){
+		$file_name = $row1 . '_thumb.'.$extension;
+	}
+	else{
+		$file_name = $row1 . '_video' .rand().'.'.$extension;	
+	}
+
+	if( $extension =='SRT' || $extension =='srt' ) {
+		$target_path = $destination_path . '' . $file_name;
+		if( @move_uploaded_file( $file['tmp_name'], $target_path ) ) {
+			$errorcode = 0;
+		} else {
+			$errorcode = 4;
+		}
+		
 	} else {
-		$errorcode = 4;
+		$amazon_s3_bucket_setting = $wpdb->get_var("SELECT player_colors FROM ".$wpdb->prefix."hdflvvideoshare_settings");
+		$player_colors = unserialize($amazon_s3_bucket_setting);
+			if( $player_colors['amazonbuckets_enable'] && $player_colors['amazonbuckets_name'] ){
+				$s3buckets_videourl = $s3bucket_thumburl =$s3bucket_previewurl = $file_temp_name = '';		
+				$s3bucket_name  =  $player_colors['amazonbuckets_name'];
+		                include_once(APPTHA_VGALLERY_BASEDIR.'/helper/s3_config.php');
+				if($s3->putObjectFile($file['tmp_name'],$s3bucket_name,$file_name,S3::ACL_PUBLIC_READ)){
+			    	$file_name = 'http://'.$s3bucket_name.'.s3.amazonaws.com/'.$file_name;
+			    	$errorcode = 0;
+				}else{
+					$errorcode = 4;
+				}
+				// End Amazon S3 bucket  storage data
+			  } else {	  
+				$target_path = $destination_path . '' . $file_name;
+				if( @move_uploaded_file( $file['tmp_name'], $target_path ) ) {
+					$errorcode = 0;
+				} else {
+					$errorcode = 4;
+				}
+			 }
 	}
 	sleep( 1 );
 }

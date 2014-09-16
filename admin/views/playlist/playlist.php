@@ -1,9 +1,9 @@
 <?php
-/*
+/**
   Name: Wordpress Video Gallery
   Plugin URI: http://www.apptha.com/category/extension/Wordpress/Video-Gallery
   Description: playlist model file.
-  Version: 2.6
+  Version: 2.7
   Author: Apptha
   Author URI: http://www.apptha.com
   License: GPL2
@@ -33,6 +33,7 @@ $apptha_base_url = APPTHA_VGALLERY_BASEURL;
 				}
 				dragdr.post( "<?php echo get_site_url(); ?>/wp-admin/admin-ajax.php?action=playlistsortorder<?php echo balanceTags( $page ); ?>", order );
 			}
+		    
 		} );
 	} );
 </script>
@@ -44,6 +45,8 @@ $apptha_base_url = APPTHA_VGALLERY_BASEURL;
 		<a href="?page=playlist" class="nav-tab nav-tab-active"><?php esc_attr_e( 'Categories', 'video_gallery' ); ?></a>
 		<a href="?page=videoads" class="nav-tab"><?php esc_attr_e( 'Video Ads', 'video_gallery' ); ?></a>
 		<a href="?page=hdflvvideosharesettings" class="nav-tab"><?php esc_attr_e( 'Settings', 'video_gallery' ); ?></a>
+		<a href="?page=googleadsense" class="nav-tab"><?php esc_attr_e( 'Google AdSense', 'video_gallery' ); ?></a>
+		
 	</h2>
 	<!--  MENU OPTIONS ENDS --->
 	<div class="wrap">
@@ -61,7 +64,7 @@ $apptha_base_url = APPTHA_VGALLERY_BASEURL;
 				var folder = '<?php echo balanceTags( $dirPage ); ?>';
 			</script>
 			<div class="apptha_gallery">
-				<?php if ( isset( $playListId ) ) { ?>
+				<?php if ( $playListId  ) { ?>
 					<h3><?php esc_attr_e( 'Update Category', 'video_gallery' ); ?></h3>
 				<?php } else { ?> <h3><?php esc_attr_e( 'Add a New Category', 'video_gallery' ); ?></h3> <?php } ?>
 <?php if ( $displayMsg && $displayMsg[1] == 'addcategory' ): ?>
@@ -75,7 +78,6 @@ $apptha_base_url = APPTHA_VGALLERY_BASEURL;
 				<div id="post-body" class="has-sidebar">
 					<div id="post-body-content" class="has-sidebar-content">
 						<div class="stuffbox">
-							<h3 class="hndle"><span><?php esc_attr_e( 'Enter Title / Name', 'video_gallery' ); ?></span></h3>
 							<div class="inside" style="margin:15px;">
 								<form name="adsform" method="post" enctype="multipart/form-data" >
 									<table class="form-table">
@@ -87,28 +89,24 @@ $apptha_base_url = APPTHA_VGALLERY_BASEURL;
 } else {
 	$playlist_name = '';
 } ?>
-												<input type="text" size="50" maxlength="200" id="playlistname" name="playlistname" value="<?php echo balanceTags( $playlist_name ); ?>"  />
+												<input type="text" maxlength="200" id="playlistname" name="playlistname" value="<?php echo htmlentities( $playlist_name ); ?>"  />
 												<span id="playlistnameerrormessage" style="display: block;color:red; "></span>
 											</td>
 										</tr>
 
 										<tr>
-											<th scope="row"><?php esc_attr_e( 'Publish', 'video_gallery' ) ?></th>
+											<th scope="row"><?php esc_attr_e( 'Publish', 'video_gallery' ); ?></th>
 											<td>
-												<input type="radio" name="ispublish" id="publish_yes" <?php if ( isset( $playlistEdit->is_publish ) && $playlistEdit->is_publish == 1 ) {
-	echo 'checked';
-} ?> value="1"> <label><?php esc_attr_e( 'Yes', 'video_gallery' ); ?></label>
-												<input type="radio" name="ispublish" id="ispublish_no" <?php if ( isset( $playlistEdit->is_publish ) && $playlistEdit->is_publish == 0 ) {
-	echo 'checked';
-} ?> value="0"><label> <?php esc_attr_e( 'No', 'video_gallery' ); ?></label>
+												<input type="radio" name="ispublish" id="published"  checked="checked" <?php if ( isset( $playlistEdit->is_publish ) && $playlistEdit->is_publish == 1 ) {echo 'checked="checked"';} ?> value="1" /> <label><?php esc_attr_e( 'Yes', 'video_gallery' ); ?></label>
+												<input type="radio" name="ispublish" id="published" <?php if ( isset( $playlistEdit->is_publish ) && $playlistEdit->is_publish == 0 ) { echo 'checked="checked"';} ?> value="0" /><label> <?php esc_attr_e( 'No', 'video_gallery' ); ?></label>
 											</td>
 										</tr>
 									</table>
-<?php if ( isset( $playListId ) ) { ?>
-										<input type="submit" name="playlistadd" onclick="return validateplyalistInput();" class="button-primary"  value="<?php esc_attr_e( 'Update Category', 'video_gallery' ); ?>" class="button" /> 
+<?php if ( $playListId ) { ?>
+										<input type="submit" name="playlistadd" onclick="return validateplyalistInput();" class="button-primary"  value="<?php esc_attr_e( 'Update', 'video_gallery' ); ?>" class="button" /> 
 										<input type="button" onclick="window.location.href = 'admin.php?page=playlist'" class="button-secondary" name="cancel" value="<?php esc_attr_e( 'Cancel' ); ?>" class="button" />
 	<?php } else { ?>
-										<input type="submit" name="playlistadd" onclick="return validateplyalistInput();" class="button-primary"  value="<?php esc_attr_e( 'Add Category', 'video_gallery' ); ?>" class="button" /> <?php } ?>
+										<input type="submit" name="playlistadd" onclick="return validateplyalistInput();" class="button-primary"  value="<?php esc_attr_e( 'Save', 'video_gallery' ); ?>" class="button" /> <?php } ?>
 								</form>
 							</div>
 						</div>
@@ -144,13 +142,13 @@ if ( isset( $_REQUEST['playlistsearchbtn'] ) ) {
 		echo esc_attr_e( 'No Search Results for', 'video_gallery' ) . ' "' . $searchMsg . '"';
 	}
 		?> </div> <?php } ?>
-			<form name="Playlists" action="" method="post" onsubmit="return Playlistsearch();">
+			<form name="Playlists" class="admin_video_search alignright" id="searchbox-playlist" action="" method="post" onsubmit="return Playlistsearch();">
 				<p class="search-box">
 					<input type="text"  name="PlaylistssearchQuery" id="PlaylistssearchQuery" value="<?php if ( isset( $searchmsg ) )
 					echo balanceTags( $searchmsg );
 				?>">
 					<input type="hidden"  name="page" value="Playlists">
-					<input type="submit" name="playlistsearchbtn"  class="button" value="<?php esc_attr_e( 'Search Categories', 'video_gallery' ); ?>"></p>
+					<input type="submit" name="playlistsearchbtn" id="playlistsearchButton"  class="button" value="<?php esc_attr_e( 'Search Categories', 'video_gallery' ); ?>"></p>
 			</form>
 			<form  name="Playlistsfrm" action="" method="post" onsubmit="return PlaylistdeleteIds()">
 				<div class="alignleft actions bulk-actions">
@@ -186,13 +184,13 @@ if ( $page_links ) {
 					<thead>
 						<tr>
 							<th scope="col"  class="manage-column column-cb check-column" style="">
-								<input type="checkbox" name="" >
+								<input type="checkbox" name="" id="manage-column-category-1" >
 							</th>
 							<th scope="col"  style="">
 								<span><?php esc_attr_e( '', 'video_gallery' ); ?> </span>
 								<span class="sorting-indicator"></span>
 							</th>
-							<th scope="col"  class="manage-column column-name sortable desc" style="">
+							<th scope="col"  class="manage-column column-id sortable desc" style="">
 								<a href="<?php echo get_site_url(); ?>/wp-admin/admin.php?page=playlist&orderby=id&order=<?php echo balanceTags( $reverse_direction ); ?>">
 									<span><?php esc_attr_e( 'ID', 'video_gallery' ); ?></span>
 									<span class="sorting-indicator"></span>
@@ -216,8 +214,8 @@ if ( $page_links ) {
 							</th>
 						</tr>
 					</thead>
-					<tbody id="test-list" class="list:post"> <input type=hidden id=playlistid2 name=playlistid2 value="1"  >
-					<div name=txtHint ></div>
+					<tbody id="test-list" class="list:post"> <input type=hidden id=playlistid2 name=playlistid2 value="1" />
+					<div name=txtHint></div>
 <?php
 foreach ( $gridPlaylist as $playlistView ) {
 	$class = ( $class == 'class="alternate"' ) ? '' : 'class="alternate"';
@@ -232,26 +230,26 @@ foreach ( $gridPlaylist as $playlistView ) {
 										 width="16" height="16" class="handle" />
 								</span>
 							</td>
-							<td class="id-column">
+							<td class="id-column column-id">
 								<a title="Edit <?php echo balanceTags( $playlistView->playlist_name ); ?>" href="<?php echo get_site_url(); ?>/wp-admin/admin.php?page=newplaylist&playlistId=<?php echo balanceTags( $playlistView->pid ); ?>" ><?php echo balanceTags( $playlistView->pid ); ?></a><div class="row-actions">
 							</td>
 							<td class="title-column">
 								<a title="Edit <?php echo balanceTags( $playlistView->playlist_name ); ?>" class="row-title" href="<?php echo get_site_url(); ?>/wp-admin/admin.php?page=newplaylist&playlistId=<?php echo balanceTags( $playlistView->pid ); ?>" ><?php echo balanceTags( $playlistView->playlist_name ); ?></a>
 							</td>
-							<td class="pub-column Expiry column-Expiry">
+							<td class="pub-column Expiry column-Expiry"  align="center">
 								<?php
 								$status  = 1;
 								$image   = 'deactivate.jpg';
-								$publish = __( 'Click here to Activate', 'video_gallery' );
+								$publish = __( 'Publish', 'video_gallery' );
 	if ( $playlistView->is_publish == 1 ) {
 		$status  = 0;
 		$image   = 'activate.jpg';
-		$publish = __( 'Click here to Deactivate', 'video_gallery' );
+		$publish = __( 'Unpublish', 'video_gallery' );
 	}
 								?>
 								<a href="<?php echo get_site_url(); ?>/wp-admin/admin.php?page=playlist<?php if ( isset( $_GET['pagenum'] ) ) echo '&pagenum=' . $_GET['pagenum']; ?>&playlistId=<?php echo balanceTags( $playlistView->pid ); ?>&status=<?php echo balanceTags( $status ); ?>">   <img src="<?php echo balanceTags( $apptha_base_url ) . 'images/' . $image ?>" title="<?php echo balanceTags( $publish ); ?>"   /> </a>
 							</td>
-							<td class="order-column Expiry column-Expiry">
+							<td class="order-column Expiry column-ordering column-Expiry">
 						<?php echo balanceTags( $playlistView->playlist_order ); ?>
 							</td>
 						</tr>
@@ -269,13 +267,13 @@ if ( count( $gridPlaylist ) == 0 ) {
 					<tfoot>
 						<tr>
 							<th scope="col"  class="manage-column column-cb check-column" style="">
-								<input type="checkbox" name="" >
+								<input type="checkbox" name="" id="manage-column-category-1" >
 							</th>
 							<th width="3%" scope="col"  style="">
 								<span><?php esc_attr_e( '', 'video_gallery' ); ?> </span>
 								<span class="sorting-indicator"></span>
 							</th>
-							<th scope="col"  class="manage-column column-name sortable desc" style="">
+							<th scope="col"  class="manage-column column-id sortable desc" style="">
 								<a href="<?php echo get_site_url(); ?>/wp-admin/admin.php?page=playlist&orderby=id&order=<?php echo balanceTags( $reverse_direction ); ?>">
 									<span><?php esc_attr_e( 'ID', 'video_gallery' ); ?></span>
 									<span class="sorting-indicator"></span>

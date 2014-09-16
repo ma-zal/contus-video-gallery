@@ -1,12 +1,13 @@
 <?php
-/*
-  Name: Wordpress Video Gallery
-  Plugin URI: http://www.apptha.com/category/extension/Wordpress/Video-Gallery
-  Description: Add video ads view file.
-  Version: 2.6
-  Author: Apptha
-  Author URI: http://www.apptha.com
-  License: GPL2
+/**  
+ * Multi type Video added and  update details form 
+ *
+ * @category   Apptha
+ * @package    Contus video Gallery
+ * @version    2.7
+ * @author     Apptha Team <developers@contus.in>
+ * @copyright  Copyright (C) 2014 Apptha. All rights reserved.
+ * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html 
  */
 ?>
 <?php
@@ -16,18 +17,19 @@ $dirPage    = $dirExp[0];
 $image_path = str_replace( 'plugins/' . $dirPage . '/', 'uploads/videogallery/', APPTHA_VGALLERY_BASEURL );
 ?>
 <script type="text/javascript">
-	folder = '<?php echo balanceTags( $dirPage ); ?>'
+	folder = '<?php echo balanceTags( $dirPage ); ?>';
+	var videogallery_plugin_folder =  '<?php echo plugins_url($dirPage) ; ?>';
 </script>
 <div class="apptha_gallery">
-	<?php if ( isset( $videoadId ) ) {
+	<?php if (  $videoadId  ) {
 		?>
-		<h2 class="option_title"><?php esc_attr_e( 'Update Video Ad', 'video_gallery' ); ?></h2> <?php } else {
-		?> <h2  class="option_title"><?php echo '<img src="' . APPTHA_VGALLERY_BASEURL . 'images/vid_ad.png" alt="move" width="30"/>'; ?><?php esc_attr_e( 'Add New Video Ad', 'video_gallery' ); ?></h2> <?php } ?>
-	<?php if ( isset( $msg ) ): ?>
+		<h2 class="option_title"><?php echo '<img src="' . APPTHA_VGALLERY_BASEURL . 'images/vid_ad.png" alt="move" width="30"/>'; ?><?php esc_attr_e( 'Update Video Ad', 'video_gallery' ); ?></h2> <?php } else {
+		?> <h2  class="option_title"><?php echo '<img src="' . APPTHA_VGALLERY_BASEURL . 'images/vid_ad.png" alt="move" width="30"/>'; ?><?php esc_attr_e( 'Add new Video Ad', 'video_gallery' ); ?></h2> <?php } ?>
+	<?php if ( isset( $displayMsg ) ): ?>
 		<div class="updated below-h2">
 			<p>
 				<?php
-				echo balanceTags( $msg );
+				echo balanceTags( $displayMsg );
 				$url = get_site_url() . '/wp-admin/admin.php?page=videoads';
 				echo '<a href="'.$url.'" >Back to VideoAds</a>';
 				?>
@@ -35,7 +37,8 @@ $image_path = str_replace( 'plugins/' . $dirPage . '/', 'uploads/videogallery/',
 		</div>
 	<?php endif; ?>
 <?php
-if ( isset( $videoadEdit->file_path ) && ! strstr( $videoadEdit->file_path, 'wp-content/uploads' ) ) {
+$videoadEdit == NULL ;
+if ( isset( $videoadEdit->file_path ) && ! strstr( $videoadEdit->file_path, '/uploads' ) ) {
 	$uploaded_video = 0;
 } else {
 	$uploaded_video = 1;
@@ -44,10 +47,9 @@ if ( isset( $videoadEdit->file_path ) && ! strstr( $videoadEdit->file_path, 'wp-
 
 	<div id="post-body" class="has-sidebar">
 		<div id="post-body-content" class="has-sidebar-content">
-			<div class="stuffbox">
-
-
+			<div class="stuffbox videoform">
 				<h3 class="hndle videoform_title">
+				   <?php if($videoadEdit) { ?>
 					<span>
 						<input type="radio" name="videoadtype" id="prepostroll" value="1" <?php if ( isset( $videoadEdit ) && $videoadEdit->admethod == 'prepost' ) { echo 'checked="checked" '; } ?> onClick="Videoadtype( 'prepostroll' )"/> Pre-roll/Post-roll Ad
 					</span>
@@ -57,8 +59,19 @@ if ( isset( $videoadEdit->file_path ) && ! strstr( $videoadEdit->file_path, 'wp-
 					<span>
 						<input type="radio" name="videoadtype" id="imaad" value="3" <?php if ( isset( $videoadEdit ) && $videoadEdit->admethod == 'imaad' ) { echo 'checked="checked" '; } ?> onClick="Videoadtype( 'imaad' )" />  IMA Ad
 					</span>
+					<?php } else { ?>
+					<span>
+						<input type="radio" name="videoadtype" id="prepostroll" value="1" onClick="Videoadtype( 'prepostroll' )"/> Pre-roll/Post-roll Ad
+					</span>
+					<span>
+						<input type="radio" name="videoadtype" id="midroll" value="2" onClick="Videoadtype( 'midroll' )" />  Mid-roll Ad
+					</span>
+					<span>
+						<input type="radio" name="videoadtype" id="imaad" value="3"  onClick="Videoadtype( 'imaad' )" />  IMA Ad
+					</span>
+					<?php } ?>
 				</h3>
-				<table class="form-table">
+				<table class="form-table videoadmethod">
 					<tr id="videoadmethod" name="videoadmethod">
 						<td  width="150"><?php esc_attr_e( 'Select file type', 'video_gallery' ) ?></td>
 						<td>
@@ -69,7 +82,7 @@ if ( isset( $videoadEdit->file_path ) && ! strstr( $videoadEdit->file_path, 'wp-
 				</table>
 				<div id="upload2" class="form-table">
 
-					<table class="form-table">
+					<table class="form-table videoadmethod">
 
 						<tr id="ffmpeg_disable_new1" name="ffmpeg_disable_new1">
 							<td  width="150"><?php esc_attr_e( 'Upload Video', 'video_gallery' ) ?></td>
@@ -92,7 +105,7 @@ if ( isset( $videoadEdit->file_path ) && $uploaded_video == 1 ) {
 								</div>
 								<span id="uploadmessage" style="display: block; margin-top:10px;margin-left:300px;color:red;font-size:12px;font-weight:bold;"></span>
 								<div id="f1-upload-progress" style="display:none">
-									<div style="float:left"><img id="f1-upload-image" src="<?php echo balanceTags( get_option( 'siteurl' ) ) . '/wp-content/plugins/' . $dirPage . '/images/empty.gif' ?>" alt="Uploading"  style="padding-top:2px"/>
+									<div style="float:left"><img id="f1-upload-image" src="<?php echo plugins_url().'/'. $dirPage . '/images/empty.gif' ?>" alt="Uploading"  style="padding-top:2px"/>
 										<label style="padding-top:0px;padding-left:4px;font-size:14px;font-weight:bold;vertical-align:top"  id="f1-upload-filename">PostRoll.flv</label></div>
 									<div style="float:right"> <span id="f1-upload-cancel">
 											<a style="float:right;padding-right:10px;" href="javascript:cancelUpload( 'normalvideoform' );" name="submitcancel">Cancel</a>
@@ -109,22 +122,20 @@ if ( isset( $videoadEdit->file_path ) && $uploaded_video == 1 ) {
 				</div>
 				<form action="" name="videoadsform" class="videoform" method="post" enctype="multipart/form-data"  >
 					<div id="videoadurl" style="display: none;" >
-						<table class="form-table">
+						<table class="form-table form-videoad-table">
 							<tr>
-								<td scope="row"  width="150"><?php esc_attr_e( 'Video Ad URL', 'video_gallery' ) ?></td>
-								<td>
-									<input type="text" size="50" onchange="clear_upload();" onkeyup="validateerrormsg();" name="videoadfilepath" id="videoadfilepath"  value="
-<?php 
-if ( isset( $videoadEdit->file_path ) ) {
-	$file_path_url = $videoadEdit->file_path; 
-} else {
-	$file_path_url = '';
-}
-echo balanceTags( $file_path_url );
-?>
-										   "  />&nbsp;&nbsp
-									<br /><?php esc_attr_e( 'Here you need to enter the video ad URL', 'video_gallery' ) ?>
+								<td scope="row"  width="150" class="videoaddurl"><?php esc_attr_e( 'Video Ad URL', 'video_gallery' ) ?></td>
+								<td> 
+								<?php if ( isset( $videoadEdit->file_path ) ) {
+									$file_path_url = $videoadEdit->file_path; 
+									} else {
+										$file_path_url = '';
+									} ?>
+									<input type="text" size="50" onchange="clear_upload();" onkeyup="validateerrormsg();" name="videoadfilepath" id="videoadfilepath"  value="<?php echo balanceTags( $file_path_url );?>" />
+									<div class="videoad_url_info_content">
+									<?php esc_attr_e( 'Here you need to enter the video ad URL', 'video_gallery' ) ?>
 									<br /><?php esc_attr_e( 'It accept also a Youtube link : http://www.youtube.com/watch?v=tTGHCRUdlBs', 'video_gallery' ) ?>
+									</div>
 									<span id="filepatherrormessage" style="display: block;color:red; "></span>
 								</td>
 							</tr>
@@ -215,14 +226,12 @@ if ( isset( $videoadEdit->channels ) ) {
 						<tr id="adtitle"  style="display: none;">
 							<td scope="row"  width="150"><?php esc_attr_e( 'Title / Name', 'video_gallery' ) ?></td>
 							<td>
-								<input type="text" size="50" onkeyup="validateerrormsg();" maxlength="200" name="videoadname" id="name" value="<?php 
-if ( isset( $videoadEdit->title ) ) {
-	$title = $videoadEdit->title; 
-} else {
-	$title = '';
-}
-								echo balanceTags( $title );
-								?>"  />
+							     <?php if ( isset( $videoadEdit->title ) ) {
+										$title = $videoadEdit->title; 
+									} else {
+										$title = '';
+									} ?>
+								<input type="text" size="50" onkeyup="validateerrormsg();" maxlength="200" name="videoadname" id="name" value="<?php echo balanceTags( $title );?>"  />
 								<span id="nameerrormessage" style="display: block;color:red; "></span>
 							</td>
 						</tr>
@@ -235,7 +244,7 @@ if ( isset( $videoadEdit->description ) ) {
 } else {
 	$description = '';
 }
-								echo balanceTags( $description );
+								echo htmlentities( $description );
 								?>"  />
 							</td>
 						</tr>
@@ -286,15 +295,19 @@ if ( isset( $videoadEdit->impressionurl ) ) {
 					<table class="form-table add_video_publish">
 						<tr>
 							<td scope="row" width="150"><?php esc_attr_e( 'Publish', 'video_gallery' ) ?></td>
+							<?php $checked = ''; 
+							if(!isset($videoadEdit->publish) ) {
+								 $checked = 'checked';
+							}?>
 							<td class="checkbox">
-								<input type="radio" name="videoadpublish"  value="1" <?php if ( isset( $videoadEdit->publish ) ) { echo 'checked'; } ?>><label>Yes</label>
-								<input type="radio" name="videoadpublish" value="0"  <?php if ( ! isset( $videoadEdit->publish ) ) { echo 'checked'; } ?>><label>No</label>
+								<input type="radio" name="videoadpublish"  value="1" <?php if ( isset( $videoadEdit->publish ) ) { echo 'checked'; } echo $checked; ?>><label>Yes</label>
+								<input type="radio" name="videoadpublish" value="0"  <?php if ( isset( $videoadEdit->publish ) && $videoadEdit->publish == 0 ) { echo 'checked'; } ?>><label>No</label>
 							</td>
 						</tr>
 					</table>
 
-<?php if ( isset( $videoadId ) ) { ?>
-						<input type="submit" name="videoadsadd" class="button-primary" onclick="return validateadInput();"  value="<?php esc_attr_e( 'Update Video Ad', 'video_gallery' ); ?>" class="button" /> <?php } else { ?> <input type="submit" name="videoadsadd" class="button-primary" onclick="return validateadInput();" value="<?php esc_attr_e( 'Add Video Ad', 'video_gallery' ); ?>" class="button" /> <?php } ?>
+<?php if ( $videoadId  ) { ?>
+						<input type="submit" name="videoadsadd" class="button-primary" onclick="return validateadInput();"  value="<?php esc_attr_e( 'Update', 'video_gallery' ); ?>" class="button" /> <?php } else { ?> <input type="submit" name="videoadsadd" class="button-primary" onclick="return validateadInput();" value="<?php esc_attr_e( 'Save', 'video_gallery' ); ?>" class="button" /> <?php } ?>
 					<input type="button" onclick="window.location.href = 'admin.php?page=videoads'" class="button-secondary" name="cancel" value="<?php esc_attr_e( 'Cancel' ); ?>" class="button" />
 					<input type="hidden" name="normalvideoform-value" id="normalvideoform-value" value="<?php if ( isset( $videoadEdit->file_path ) && $uploaded_video == 1 ) { echo balanceTags( str_replace( $image_path, '', $videoadEdit->file_path ) ); } else { echo ''; } ?>"  />
 					<input type="hidden" name="admethod" id="admethod" value="<?php 

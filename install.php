@@ -1,15 +1,17 @@
 <?php
-/*
+/**
   Name: Wordpress Video Gallery
   URI: http://www.apptha.com/category/extension/Wordpress/Video-Gallery
   Description: Wordpress Video Gallery Installation file.
-  Version: 2.6
+  Version: 2.7
   Author: Apptha
   Author URI: http://www.apptha.com
   License: GPL2
  */
 
-## Function to alter table while upgrade plugin
+/**
+ *Function to alter table while upgrade plugin
+**/
 
 function add_column_if_not_exists( $errorMsg, $table, $column, $attributes = 'INT( 11 ) NOT NULL DEFAULT "0"' ) {
 	global $wpdb;
@@ -26,7 +28,7 @@ function add_column_if_not_exists( $errorMsg, $table, $column, $attributes = 'IN
 			break;
 		}
 	}
-	## Alter table if column not exist
+	// Alter table if column not exist
 	if ( ! $columnExists ) {
 		$query = 'ALTER TABLE `'.$table.'` ADD `'.$column.'` '.$attributes;
 		$wpdb->query( $query );
@@ -37,7 +39,7 @@ function add_column_if_not_exists( $errorMsg, $table, $column, $attributes = 'IN
 	return true;
 }
 
-## Delete Unwanted columns from the table
+// Delete Unwanted columns from the table
 function delete_video_column( $table, $column ) {
 	global $wpdb;
 	$columnExists = false;
@@ -53,7 +55,7 @@ function delete_video_column( $table, $column ) {
 			break;
 		}
 	}
-	## Delet column if it exist
+	// Delet column if it exist
 	if ( $columnExists ) {
 		$query = 'ALTER TABLE `'.$table.'` DROP `'.$column.'`;';
 		$wpdb->query( $query );
@@ -64,7 +66,7 @@ function delete_video_column( $table, $column ) {
 	return true;
 }
 
-## Upgrade post table
+// Upgrade post table
 function upgrade_videos() {
 	global $wpdb;
 	$posttable = $wpdb->prefix . 'posts';
@@ -76,16 +78,16 @@ function upgrade_videos() {
 			$name = $videoID[$i]->name;
 			$vid = $videoID[$i]->vid;
 			$post_content = '[hdvideo id=' . $vid . ']';
-			## Insert into post table for already existing videos
+			// Insert into post table for already existing videos
 			$wpdb->query(
 					'INSERT INTO ' . $posttable . ' ( `post_author`,`post_date`, `post_date_gmt`, `post_content`, `post_title`, `post_excerpt`, `post_status`, `comment_status`, `ping_status`, `post_password`, `post_name`, `to_ping`, `pinged`, `post_modified`, `post_modified_gmt`, `post_content_filtered`, `post_parent`, `guid`, `menu_order`, `post_type`, `post_mime_type`, `comment_count` )
 					VALUES
 					( "1","2011-11-15 07:22:39", "2011-11-15 07:22:39", "'.$post_content.'", "'.$name.'", "", "publish", "open", "closed", "", "'.$slug.'", "", "", "2011-11-15 07:22:39", "2011-11-15 07:22:39", "", "0", "", "0","videogallery", "", "0" )'
 					);
 			$post_id = $wpdb->insert_id;
-			$guid    = get_site_url() . '/?post_type=videogallery&#038;p=' . $post_id;
-			$wpdb->query( 'UPDATE ' . $wpdb->prefix . 'hdflvvideoshare SET slug = '.$post_id.' WHERE vid = '.$vid );	   ## Update slug id in plugin's video table
-			$wpdb->query( 'UPDATE ' . $posttable . ' SET guid = '.$guid.' WHERE ID = '.$post_id );					   ## Update guid id in post table
+			$guid    = get_site_url() . '/?post_type=video&#038;p=' . $post_id;
+			$wpdb->query( 'UPDATE ' . $wpdb->prefix . 'hdflvvideoshare SET slug = '.$post_id.' WHERE vid = '.$vid );	   // Update slug id in plugin's video table
+			$wpdb->query( 'UPDATE ' . $posttable . ' SET guid = '.$guid.' WHERE ID = '.$post_id );					   // Update guid id in post table
 		}
 
 		$featuredID = $wpdb->get_results( 'SELECT vid FROM ' . $wpdb->prefix . 'hdflvvideoshare WHERE featured="ON"' );
@@ -94,21 +96,26 @@ function upgrade_videos() {
 			$wpdb->query( 'UPDATE ' . $wpdb->prefix . 'hdflvvideoshare SET featured = 1 WHERE vid = '.$vid );
 		}
 	}
+	$result =  $wpdb->get_results( "SELECT skin_autohide,player_colors FROM ".$wpdb->prefix."hdflvvideoshare_settings" );
+	if($result){
+		$wpdb->query( "UPDATE ".$wpdb->prefix."hdflvvideoshare_settings SET skin_autohide = 1");
+	}
 }
-
-## Install sample videos
-
+ /**
+  *Install sample videos
+  */
 function videogallery_install() {
 	global $wpdb;
-	$table_name					= $wpdb->prefix . 'hdflvvideoshare';
+	$table_name		= $wpdb->prefix . 'hdflvvideoshare';
 	$table_playlist = $wpdb->prefix . 'hdflvvideoshare_playlist';
 	$table_med2play = $wpdb->prefix . 'hdflvvideoshare_med2play';
 	$table_settings = $wpdb->prefix . 'hdflvvideoshare_settings';
-	$table_vgads				= $wpdb->prefix . 'hdflvvideoshare_vgads';
-	$table_tags					= $wpdb->prefix . 'hdflvvideoshare_tags';
+	$table_vgads	= $wpdb->prefix . 'hdflvvideoshare_vgads';
+	$table_tags		= $wpdb->prefix . 'hdflvvideoshare_tags';
 	$posttable		= $wpdb->prefix . 'posts';
+	$table_googleadsense = $wpdb->prefix .'hdflvvideoshare_vgoogleadsense';
 
-	$wfound = $pfound = $mfound = $rollfound = $tags = $settingsFound = false;
+	$wfound = $pfound = $mfound = $rollfound = $tags = $settingsFound = $adsense = false;
 
 	foreach ( $wpdb->get_results( 'SHOW TABLES;', ARRAY_N ) as $row ) {
 
@@ -124,18 +131,19 @@ function videogallery_install() {
 			$tags = true;
 		if ( $row[0] == $table_settings )
 			$settingsFound = true;
+		if( $row[0] == $table_googleadsense)
+			$adsense = true;
 	}
 
-	## get default collate
+	// get default collate
 	$charset_collate = '';
-
 	if ( version_compare( mysql_get_server_info(), '4.1.0', '>=' ) ) {
 		if ( ! empty( $wpdb->charset ) )
 			$charset_collate = 'DEFAULT CHARACTER SET '.$wpdb->charset;
 		if ( ! empty( $wpdb->collate ) )
 			$charset_collate .= ' COLLATE '.$wpdb->collate;
 	}
-	## Create wp_hdflvvideoshare table
+	// Create wp_hdflvvideoshare table
 	if ( ! $wfound ) {
 		$sql = 'CREATE TABLE ' . $table_name . ' ( 
 				vid MEDIUMINT( 10 ) NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -168,12 +176,15 @@ function videogallery_install() {
 				publish INT NOT NULL,
 				islive INT NOT NULL,
 				member_id INT( 3 ) NOT NULL,
-				ordering INT NOT NULL DEFAULT "0"
+				google_adsense INT( 3 ) NOT NULL,
+				google_adsense_value INT( 11 ) NOT NULL,
+				ordering INT NOT NULL DEFAULT "0",
+				amazon_buckets INT NOT NULL DEFAULT "0"
 				 ) '.$charset_collate.';';
 
 		$wpdb->query( $sql );
 	}
-	## Create wp_hdflvvideoshare_playlist table
+	// Create wp_hdflvvideoshare_playlist table
 	if ( ! $pfound ) {
 		$sql = 'CREATE TABLE ' . $table_playlist . ' ( 
 				pid BIGINT( 10 ) NOT NULL AUTO_INCREMENT PRIMARY KEY ,
@@ -186,7 +197,7 @@ function videogallery_install() {
 
 		$wpdb->query( $sql );
 	}
-	## Create wp_hdflvvideoshare_med2play table
+	// Create wp_hdflvvideoshare_med2play table
 	if ( ! $mfound ) {
 		$sql = 'CREATE TABLE ' . $table_med2play . ' ( 
 				rel_id BIGINT( 10 ) NOT NULL AUTO_INCREMENT PRIMARY KEY ,
@@ -197,7 +208,7 @@ function videogallery_install() {
 				 ) '.$charset_collate.';';
 		$wpdb->query( $sql );
 	}
-	## Create wp_hdflvvideoshare_settings table
+	// Create wp_hdflvvideoshare_settings table
 	if ( ! $settingsFound ) {
 		$sql = 'CREATE TABLE ' . $table_settings . ' ( 
 				settings_id BIGINT( 10 ) NOT NULL AUTO_INCREMENT PRIMARY KEY ,
@@ -284,10 +295,11 @@ function videogallery_install() {
 				playlist_auto INT( 3 ) NOT NULL,
 				progressControl INT( 3 ) NOT NULL,
 				imageDefault INT( 3 ) NOT NULL
+				
 				 ) '.$charset_collate.';';
 		$wpdb->query( $sql );
 	}
-	## Create wp_hdflvvideoshare_vgads table
+	// Create wp_hdflvvideoshare_vgads table
 	if ( ! $rollfound ) {
 		$sqlRoll = 'CREATE TABLE IF NOT EXISTS ' . $table_vgads . ' ( 
 					`ads_id` bigint( 10 ) NOT NULL AUTO_INCREMENT,
@@ -311,7 +323,15 @@ function videogallery_install() {
 					 ) '.$charset_collate.';';
 		$wpdb->query( $sqlRoll );
 	}
-	## Create wp_hdflvvideoshare_tags table
+	// Create wp_hdflvvideoshare_googleadsense table
+	if(!$adsense){
+	$sqladsense = 'CREATE TABLE IF NOT EXISTS ' . $table_googleadsense . ' (
+			`id` int( 10 ) NOT NULL AUTO_INCREMENT,
+			`googleadsense_details` text NOT NULL,
+			PRIMARY KEY ( `id` ) )'.$charset_collate.';';
+	$wpdb->query($sqladsense);
+	}			
+	// Create wp_hdflvvideoshare_tags table
 	if ( ! $tags ) {
 		$sqlTags = 'CREATE TABLE IF NOT EXISTS '.$table_tags.'  ( 
 					`vtag_id` int( 25 ) NOT NULL AUTO_INCREMENT,
@@ -325,7 +345,7 @@ function videogallery_install() {
 
 	$site_url = get_option( 'siteurl' );
 
-	## Creating the pages for the videomore
+	// Creating the pages for the videomore
 	$postM = $wpdb->get_results( 'SELECT * FROM ' . $wpdb->prefix . 'posts WHERE post_content="[videomore]"' );
 	if ( empty( $postM ) ) {
 		$contus_more = 'INSERT INTO ' . $wpdb->prefix . 'posts( `post_author`, `post_date`, `post_date_gmt`, `post_content`, `post_title`, `post_excerpt`, `post_status`, `comment_status`, `ping_status`, `post_password`, `post_name`, `to_ping`, `pinged`, `post_modified`, `post_modified_gmt`, `post_content_filtered`, `post_parent`, `guid`, `menu_order`, `post_type`, `post_mime_type`, `comment_count` )
@@ -337,9 +357,13 @@ function videogallery_install() {
 		$moreId  = $wpdb->get_var( 'SELECT ID FROM ' . $wpdb->prefix . 'posts ORDER BY ID DESC LIMIT 0,1' );
 		$moreUpd = 'UPDATE ' . $wpdb->prefix . 'posts SET guid="'.$site_url.'/?page_id='.$moreId.'" WHERE ID="'.$moreId.'"';
 		$wpdb->query( $moreUpd );
+                
+                // For add video more and home page id missing
+                $sql_more_id = "INSERT INTO ".$wpdb->prefix."options (`option_name`,`option_value`,`auto_load`) VALUES ('video_more_id','".$moreId."','yes')";
+                $wpdb->query($sql_more_id);
 	}
 
-	## Creating the pages for the videohome
+	// Creating the pages for the videohome
 
 	$postH = $wpdb->get_results( 'SELECT * FROM ' . $wpdb->prefix . 'posts WHERE post_content="[videohome]"' );
 	if ( empty( $postH ) ) {
@@ -353,9 +377,13 @@ function videogallery_install() {
 		$homeId  = $wpdb->get_var( 'SELECT ID FROM ' . $wpdb->prefix . 'posts ORDER BY ID DESC LIMIT 0,1' );
 		$homeUpd = 'UPDATE ' . $wpdb->prefix . 'posts SET guid="'.$site_url.'/?page_id='.$homeId.'" WHERE ID="'.$homeId.'"';
 		$wpdb->query( $homeUpd );
+                // Save video home page id.
+                $sql_more_id = "INSERT INTO ".$wpdb->prefix."options (`option_name`,`option_value`,`auto_load`) VALUES ('video_more_id','".$homeId."','yes')";
+                $wpdb->query($sql_more_id);
+                
 	}
 
-	## Insert sample videos
+	// Insert sample videos
 
 	$videoCategories = $wpdb->get_results( 'SELECT * FROM ' . $table_name );
 	$post_id = $wpdb->get_var( 'SELECT ID FROM ' . $posttable . ' ORDER BY ID DESC' );
@@ -384,12 +412,14 @@ function videogallery_install() {
 				( '.$member_id.','.$postid[10].',"White House Down Trailer #2 2013 Jamie Foxx Movie - Official [HD]", "White House Down Trailer #2 2013 - Official movie trailer 2 in HD - starring Channing Tatum, Jamie Foxx, Maggie Gyllenhaal - directed by Roland Emmerich - a Washington, D.C. police officer is on a tour of the presidential mansion when a heavily armed grou","", "http://www.youtube.com/watch?v=Kkoor7Z6aeE", "", 1, "2:35", "http://i3.ytimg.com/vi/Kkoor7Z6aeE/mqdefault.jpg", "http://i3.ytimg.com/vi/Kkoor7Z6aeE/maxresdefault.jpg", "", "http://www.youtube.com/watch?v=Kkoor7Z6aeE", "1", 3, "2013-08-06 14:08:59", "0", "0", "1","10","","0","0","0" ),
 				( '.$member_id.','.$postid[11].',"Landscapes: Volume 2", "","", "http://www.youtube.com/watch?v=DaYx4XmWEoI", "", 1, "3:31", "http://i3.ytimg.com/vi/DaYx4XmWEoI/mqdefault.jpg", "http://i3.ytimg.com/vi/DaYx4XmWEoI/maxresdefault.jpg", "", "http://www.youtube.com/watch?v=DaYx4XmWEoI", "1", 1, "2013-08-06 14:09:48", "0", "0", "1","11","","0","0","0" ),
 				( '.$member_id.','.$postid[12].',"Krrish 3 - Official Theatrical Trailer ( Exclusive )", "Watch the Exclusive Official Theatrical Trailer of Krrish 3, the most awaited movie of the year starring Hrithik Roshan, Priyanka Chopra, Kangna Ranaut, Vivek Oberoi & Shaurya Chauhan. Releasing this Diwali...!Directed & Produced by - Rakesh Roshan","", "http://www.youtube.com/watch?v=MCCVVgtI5xU", "", 1, "2:16", "http://i3.ytimg.com/vi/MCCVVgtI5xU/mqdefault.jpg", "http://i3.ytimg.com/vi/MCCVVgtI5xU/maxresdefault.jpg", "", "http://www.youtube.com/watch?v=MCCVVgtI5xU", "1", 2, "2013-08-06 14:10:54", "0", "0", "1","12","","0","0","0" ),
-				( '.$member_id.','.$postid[13].',"THE TWILIGHT SAGA: BREAKING DAWN PART 2 - TV Spot Generation", "","", "http://www.youtube.com/watch?v=ey0aA3YY0Mo", "", 1, "0:32", "http://i3.ytimg.com/vi/ey0aA3YY0Mo/mqdefault.jpg", "http://i3.ytimg.com/vi/ey0aA3YY0Mo/maxresdefault.jpg", "", "http://www.youtube.com/watch?v=ey0aA3YY0Mo", "1", 3, "http://www.youtube.com/watch?v=ey0aA3YY0Mo", "0", "0", "1","13","","0","0","0" ),
+				( '.$member_id.','.$postid[13].',"THE TWILIGHT SAGA: BREAKING DAWN PART 2 - TV Spot Generation", "","", "http://www.youtube.com/watch?v=ey0aA3YY0Mo", "", 1, "0:32", "http://i3.ytimg.com/vi/ey0aA3YY0Mo/mqdefault.jpg", "http://i3.ytimg.com/vi/ey0aA3YY0Mo/maxresdefault.jpg", "", "http://www.youtube.com/watch?v=ey0aA3YY0Mo", "1", 3,"2013-08-06 14:12:07","", "0", "1","13","","0","0","0" ),
 				( '.$member_id.','.$postid[14].',"Journey To The Center Of The Earth HD Trailer", "","", "http://www.youtube.com/watch?v=iJkspWwwZLM", "", 1, "2:30", "http://i3.ytimg.com/vi/iJkspWwwZLM/mqdefault.jpg", "http://i3.ytimg.com/vi/iJkspWwwZLM/maxresdefault.jpg", "", "http://www.youtube.com/watch?v=iJkspWwwZLM", "1", 2, "2013-08-06 14:12:07", "0", "0", "1","14","","0","0","0" ),
 				( '.$member_id.','.$postid[15].',"ICE AGE 4 Trailer 2012 Movie - Continental Drift - Official [HD]", "Ice Age 4: Continental Drift Trailer 2012 Movie - Official Ice Age 4 trailer in [HD] - Scrat accidentally triggers the breakup of Pangea and thus the splitting of the continents.","", "http://www.youtube.com/watch?v=ja-qjGeDBZQ", "", 1, "2:33", "http://i3.ytimg.com/vi/ja-qjGeDBZQ/mqdefault.jpg", "http://i3.ytimg.com/vi/ja-qjGeDBZQ/maxresdefault.jpg", "", "http://www.youtube.com/watch?v=ja-qjGeDBZQ", "1", 3, "2013-08-06 13:47:15", "0", "0", "1","15","","0","0","0" ),
 				( '.$member_id.','.$postid[16].',"Big Buck Bunny", "Big Buck Bunny was the first project in the Blender Institute Amsterdam. This 10 minute movie has been made inspired by the best cartoon tradition.","", "http://www.youtube.com/watch?v=Vpg9yizPP_g", "", 1, "1:47", "http://i3.ytimg.com/vi/Vpg9yizPP_g/mqdefault.jpg", "http://i3.ytimg.com/vi/Vpg9yizPP_g/maxresdefault.jpg", "", "http://www.youtube.com/watch?v=Vpg9yizPP_g", "1", 3, "2013-08-06 13:53:12", "0", "0", "1","16","","0","0","0" )'
 				);
-		## video title array
+		
+		
+		// video title array
 		$videoName = array(
 			0 => 'Pacific Rim Official Wondercon Trailer ( 2013 ) - Guillermo del Toro Movie HD',
 			1 => 'GI JOE 2 Retaliation Trailer 2 - 2013 Movie - Official [HD]',
@@ -409,7 +439,9 @@ function videogallery_install() {
 			15 => 'ICE AGE 4 Trailer 2012 Movie - Continental Drift - Official [HD]',
 			16 => 'Big Buck Bunny',
 			);
-		## insert all sample video in to post table
+		/**
+		 *  insert all sample video in to post table
+		 */
 		for ( $i = 1; $i <= 17; $i++ ) {
 			$j = $i - 1;
 			$slug = sanitize_title( $videoName[$j] );
@@ -423,7 +455,9 @@ function videogallery_install() {
 					);
 		}
 	}
-	## Insert sample categories
+	/** 
+	 * Insert sample categories
+	 */
 	$movieTrailer = $wpdb->get_results( 'SELECT * FROM ' . $table_playlist );
 	if ( empty( $movieTrailer ) ) {
 
@@ -437,7 +471,9 @@ function videogallery_install() {
 				( 5, "Video Game","video-game", "", "5","1" )'
 				);
 	}
-	## Update settings
+ 	/**
+     * Default video gallery setting insert for plugin  initialisation.
+	 */
 	$videoSettings = $wpdb->get_results( 'SELECT * FROM ' . $table_settings );
 	if ( empty( $videoSettings ) ) {
 		$wpdb->query(
@@ -457,7 +493,7 @@ function videogallery_install() {
 				`rowMore`,`player_colors`,`playlist_open`,`showPlaylist`,`midroll_ads`,
 				`adsSkip`,`adsSkipDuration`,`relatedVideoView`,`imaAds`,`trackCode`,
 				`showTag`,`shareIcon`,`volumecontrol`,`playlist_auto`,`progressControl`,
-				`imageDefault`,`view_visible` )
+				`imageDefault`,`view_visible`)
 				VALUES
 				( 0,1, 1, 1, 1,
 				3, 2, 2, "platoon.jpg", "" ,
@@ -472,15 +508,65 @@ function videogallery_install() {
 				"1","2","4","off","popular",
 				"1","hpopular","1","vpopular","1",
 				"650","450","5","20","4",
-				"2","","1","1","0",
+				"2"," ","1","1","0",
 				"1","5","center","0","",
 				"1","1","1","1", "1",
-				"1","1" )'
+				"1","1")'
 				);
+		    $player_color_data = array(
+					'sharepanel_up_BgColor' => '',
+					'sharepanel_down_BgColor' => '',
+					'sharepaneltextColor' => '',
+					'sendButtonColor' => '',
+					'sendButtonTextColor' => '',
+					'textColor' => '',
+					'skinBgColor' => '',
+					'seek_barColor' => '',
+					'buffer_barColor' => '',
+					'skinIconColor' => '',
+					'pro_BgColor' => '',
+					'playButtonColor' => '',
+					'playButtonBgColor' => '',
+					'playerButtonColor' => '',
+					'playerButtonBgColor' => '',
+					'relatedVideoBgColor' => '',
+					'scroll_barColor' => '',
+					'scroll_BgColor' => '',
+		    		'skinVisible' =>'1',
+					'skin_opacity' => '',
+					'subTitleColor' => '',
+					'subTitleBgColor' => '',
+					'subTitleFontFamily' => '',
+					'subTitleFontSize' => '',
+		    		'show_social_icon' => '1',
+		    		'show_posted_by' => '1',
+		    		'recentvideo_order' =>'',
+		    		'related_video_count' => '100',
+		    		'report_visible' => '',
+					'amazon_bucket_access_secretkey' => '',
+					'amazon_bucket_access_key' => '',
+					'amazonbuckets_link' => '',
+					'amazonbuckets_name' => '',
+					'amazonbuckets_enable' => '',
+					'iframe_visible' => '',
+					'googleadsense_visible' => '',
+		    		'user_allowed_method' =>'y',
+		    		'show_added_on' => '1',
+		    		'member_upload_enable'=>'1',
+		    		'show_rss_icon'=> '1',
+			);
+			$player_color = serialize( $player_color_data );
+			$settingData = array(
+					'player_colors' =>$player_color
+			);
+			$wpdb->update($table_settings ,$settingData ,array('settings_id'=>'1'),'%s');
+		   
 	}
 
-	## Update video and category details in med2play table
-	$media2Play = $wpdb->get_results( 'SELECT * FROM ' . $table_med2play . 'WHERE post_content="[videofeatured]"' );
+	/**
+	 *  Update video and category details in med2play table
+	 */
+	$media2Play = $wpdb->get_results( 'SELECT * FROM ' . $table_med2play);
 	if ( empty( $media2Play ) ) {
 		$wpdb->query(
 				'INSERT INTO ' . $wpdb->prefix . 'hdflvvideoshare_med2play ( `rel_id`, `media_id`, `playlist_id`, `porder`, `sorder` )
@@ -505,6 +591,7 @@ function videogallery_install() {
 				( 23, 11, 4, 0, 0 )'
 				);
 		}
-	flush_rewrite_rules();
+  update_option('video_gallery_adjustment_instruction','adjustment_setting');	
+  flush_rewrite_rules();
 }
 ?>

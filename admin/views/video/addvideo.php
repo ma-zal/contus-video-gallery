@@ -1,12 +1,14 @@
 <?php
-/*
-  Name: Wordpress Video Gallery
-  Plugin URI: http://www.apptha.com/category/extension/Wordpress/Video-Gallery
-  Description: Add video view file.
-  Version: 2.6
-  Author: Apptha
-  Author URI: http://www.apptha.com
-  License: GPL2
+/**
+ * Video gallery admin addvideo form and update form for video added. 
+ * 
+ * Add video with multiple method 
+ * @category   Apptha
+ * @package    Contus video Gallery
+ * @version    2.7
+ * @author     Apptha Team <developers@contus.in>
+ * @copyright  Copyright (C) 2014 Apptha. All rights reserved.
+ * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html 
  */
 ?>
 <!-- Add A Video -->
@@ -16,7 +18,8 @@ $dirExp  = explode( '/', $dir );
 $dirPage = $dirExp[0];
 ?>
 <script type="text/javascript">
-	folder = '<?php echo balanceTags( $dirPage ); ?>'
+	folder = '<?php echo balanceTags( $dirPage ); ?>';
+    var	videogallery_plugin_folder =  '<?php echo plugins_url().'/'.$dirPage ; ?>' ;
 </script>
 <?php
 $act_vid = 0;
@@ -24,7 +27,7 @@ $video_description = '';
 $site_url = get_option( 'siteurl' );
 if ( isset( $_GET['videoId'] ) ) {
 	$act_vid = ( int ) $_GET['videoId'];
-}
+} 
 ?>
 	<?php if ( $displayMsg ) { ?>
 		<div class="updated below-h2">
@@ -36,85 +39,15 @@ if ( isset( $_GET['videoId'] ) ) {
 <div class="apptha_gallery">
 	<div class="wrap">
 		<script type="text/javascript">
-			function t1( t2 )
-			{
-				if ( t2.value == "y" || t2 == "y" )
-				{
-					document.getElementById( 'upload2' ).style.display = "block";
-					document.getElementById( 'supportformats' ).style.display = "";
-					document.getElementById( 'ffmpeg_disable_new4' ).style.display = "";
-					document.getElementById( 'ffmpeg_disable_new2' ).style.display = "";
-					document.getElementById( 'ffmpeg_disable_new3' ).style.display = "";
-					document.getElementById( 'ffmpeg_disable_new1' ).style.display = "";
-					document.getElementById( 'ffmpeg_disable_new5' ).style.display = "";
-					document.getElementById( 'ffmpeg_disable_new6' ).style.display = "";
-					document.getElementById( 'youtube' ).style.display = "none";
-					document.getElementById( 'embedvideo' ).style.display = "none";
-					document.getElementById( 'customurl' ).style.display = "none";
-				} else if ( t2.value == "c" || t2 == "c" ) {
-					document.getElementById( 'youtube' ).style.display = "block";
-					document.getElementById( 'upload2' ).style.display = "block";
-					document.getElementById( 'supportformats' ).style.display = "none";
-					document.getElementById( 'ffmpeg_disable_new4' ).style.display = "none";
-					document.getElementById( 'ffmpeg_disable_new2' ).style.display = "none";
-					document.getElementById( 'ffmpeg_disable_new3' ).style.display = "none";
-					document.getElementById( 'ffmpeg_disable_new1' ).style.display = "none";
-					document.getElementById( 'ffmpeg_disable_new5' ).style.display = "";
-					document.getElementById( 'ffmpeg_disable_new6' ).style.display = "";
-					document.getElementById( 'embedvideo' ).style.display = "none";
-					document.getElementById( 'customurl' ).style.display = "none";
-				} else if ( t2.value == "url" || t2 == "url" ) {
-					document.getElementById( 'customurl' ).style.display = "block";
-					document.getElementById( 'embedvideo' ).style.display = "none";
-					document.getElementById( 'islive_visible' ).style.display = "none";
-					document.getElementById( 'upload2' ).style.display = "block";
-					document.getElementById( 'supportformats' ).style.display = "none";
-					document.getElementById( 'ffmpeg_disable_new4' ).style.display = "none";
-					document.getElementById( 'ffmpeg_disable_new2' ).style.display = "none";
-					document.getElementById( 'ffmpeg_disable_new3' ).style.display = "none";
-					document.getElementById( 'ffmpeg_disable_new1' ).style.display = "none";
-					document.getElementById( 'ffmpeg_disable_new5' ).style.display = "";
-					document.getElementById( 'ffmpeg_disable_new6' ).style.display = "";
-					document.getElementById( 'stream1' ).style.display = "none";
-					document.getElementById( 'hdvideourl' ).style.display = "";
-					document.getElementById( 'youtube' ).style.display = "none";
-				} else if ( t2.value == "rtmp" || t2 == "rtmp" ) {
-					document.getElementById( 'customurl' ).style.display = "block";
-					document.getElementById( 'islive_visible' ).style.display = "";
-					document.getElementById( 'stream1' ).style.display = "";
-					document.getElementById( 'upload2' ).style.display = "block";
-					document.getElementById( 'supportformats' ).style.display = "none";
-					document.getElementById( 'ffmpeg_disable_new4' ).style.display = "none";
-					document.getElementById( 'ffmpeg_disable_new2' ).style.display = "none";
-					document.getElementById( 'ffmpeg_disable_new3' ).style.display = "none";
-					document.getElementById( 'ffmpeg_disable_new1' ).style.display = "none";
-					document.getElementById( 'ffmpeg_disable_new5' ).style.display = "";
-					document.getElementById( 'ffmpeg_disable_new6' ).style.display = "";
-					document.getElementById( 'embedvideo' ).style.display = "none";
-					document.getElementById( 'hdvideourl' ).style.display = "none";
-					document.getElementById( 'youtube' ).style.display = "none";
-				} else if ( t2.value == "embed" || t2 == "embed" ) {
-					document.getElementById( 'embedvideo' ).style.display = "block";
-					document.getElementById( 'islive_visible' ).style.display = "";
-					document.getElementById( 'stream1' ).style.display = "";
-					document.getElementById( 'customurl' ).style.display = "none";
-					document.getElementById( 'hdvideourl' ).style.display = "none";
-					document.getElementById( 'youtube' ).style.display = "none";
-					document.getElementById( 'adstypebox' ).style.display = "none";
-					document.getElementById( 'upload2' ).style.display = "block"
-					document.getElementById( 'ffmpeg_disable_new3' ).style.display = ""
-					document.getElementById( 'supportformats' ).style.display = "none";
-					document.getElementById( 'ffmpeg_disable_new4' ).style.display = "none";
-					document.getElementById( 'ffmpeg_disable_new2' ).style.display = "none";
-					document.getElementById( 'ffmpeg_disable_new1' ).style.display = "none";
-					document.getElementById( 'ffmpeg_disable_new5' ).style.display = "none";
-					document.getElementById( 'ffmpeg_disable_new6' ).style.display = "none";
-				}
-			}
-
 			function savePlaylist( playlistName, mediaId ) {
 				var name = playlistName.value;
+				name = name.trim();
+				document.getElementById('jaxcat').innerHTML="";
 				var playlistajax = jQuery.noConflict();
+				if(name == '' ){
+				  document.getElementById('jaxcat').innerHTML="<p>Enter the playlist name </p>";	
+                  return false;
+				}
 				playlistajax.ajax( {
 					type: "GET",
 					url: "admin.php?page=ajaxplaylist",
@@ -125,60 +58,116 @@ if ( isset( $_GET['videoId'] ) ) {
 					}
 				} );
 			}
+			function getyoutube_details(){
+	               var youtube_url =  document.getElementById("filepath1").value;
+	               var urlmatch = /(http:\/\/|https:\/\/)[A-Za-z0-9\.-]{3,}\.[A-Za-z]{3}|(http:\/\/|https:\/\/)/;
+	               var errormsg = "<p>Enter Valid Video URL</p>";
+	               if( !urlmatch.test(youtube_url) ){
+	            	   document.getElementById('Youtubeurlmessage').innerHTML = errormsg;
+	            	   document.getElementById('Youtubeurlmessage').style.display = "block";
+	            	   return false;
+		           }
+	               var playlistajax = jQuery.noConflict();
+	               document.getElementById('loading_image').style.display ="block";         
+		           var requesturl = '<?php echo admin_url('admin-ajax.php?action=getyoutubedetails'); ?>'; 
+		           playlistajax.ajax({
+	                       url:requesturl,
+	                       type:"GET",
+	                       data:"filepath="+ youtube_url,
+	                       success : function( msg ){
+                               var resultdata =  playlistajax.parseJSON(msg);
+                               document.getElementById( 'name' ).value = resultdata[0];
+                           	   document.getElementById( 'filepath1' ).value = resultdata[4];
+                           		tinymce.activeEditor.setContent(resultdata[5]);
+                               var tag_name = resultdata[6];
+                           	   if( tag_name == 'undefined' ) {	   
+                           	   	 document.getElementById( 'tags_name' ).value = resultdata[6];
+                           	   }	                      
+	                    	   document.getElementById( 'embedvideo').style.display = "none";
+                               document.getElementById('loading_image').style.display ='none';
+                               tinymce.execCommand('mceAddControl',true,'description');
+                            }  
+	               } ); 
+	           }
+			
 		</script>
 		<?php
 		$adminPage = filter_input( INPUT_GET, 'page' );
 		$videoId   = filter_input( INPUT_GET, 'videoId' );
-if ( $adminPage == 'newvideo' && ! empty( $videoId ) ) {
-	$editbutton = 'Update video';
-	$page_title = 'Edit video';
-} else {
-	$editbutton = 'Add video';
-	$page_title = 'Add a new video';
-}
-		?>
-		<h2> <?php echo esc_attr_e( $page_title, 'video_gallery' ); ?> </h2>
-
-
+		if ( $adminPage == 'newvideo' && ! empty( $videoId ) ) {
+			$editbutton = 'Update';
+			$page_title = 'Edit video';
+		} else {
+			$editbutton = 'Save';
+			$page_title = 'Add a new video';
+		}
+		
+		/**
+		 * Function get user roles 
+		 */
+		function get_current_user_role() {
+			global $current_user;
+			get_currentuserinfo();
+			$user_roles = $current_user->roles;
+			$user_role  = array_shift( $user_roles );
+			return $user_role;
+		}
+		$user_role = get_current_user_role();
+		$player_colors = unserialize($settingsGrid->player_colors);
+		$user_allowed_method = explode(',',$player_colors['user_allowed_method']);
+      ?>
+		<h2 class="option_title"> <?php echo '<img src="' . APPTHA_VGALLERY_BASEURL . 'images/manage_video.png" alt="move" width="30"/>'; ?><?php echo esc_attr_e( $page_title, 'video_gallery' ); ?> </h2>
 		<div id="poststuff" class="has-right-sidebar">
 			<?php if ( isset( $get_key ) && $get_title != $get_key ) {
 				?>
 				<a href="http://www.apptha.com/shop/checkout/cart/add/product/12" target="_blank">
-					<img src="<?php echo balanceTags( $site_url ) . '/wp-content/plugins/' . $folder . '/images/buynow.png'; ?>" style="float:right;margin-top: 4px;" width="125" height="28"  height="43" /></a>
+					<img src="<?php echo plugins_url() . $folder . '/images/buynow.png'; ?>" style="float:right;margin-top: 4px;" width="125" height="28"  height="43" /></a>
 			<?php } ?>
 			<div class="stuffbox videoform" name="youtube" >
 				<h3 class="hndle videoform_title">
-					<span><input type="radio" name="agree" id="btn2" value="c" onClick="t1( this )" /> <?php esc_attr_e( 'YouTube URL / Viddler / Dailymotion', 'video_gallery' ); ?></span>
-					<span><input type="radio" name="agree" id="btn1" value="y" onClick="t1( this )" /> <?php esc_attr_e( 'Upload file', 'video_gallery' ); ?></span>
-					<span><input type="radio" name="agree" id="btn3" value="url" onClick="t1( this )" /> <?php esc_attr_e( 'Custom URL', 'video_gallery' ); ?></span>
-					<span><input type="radio" name="agree" id="btn4" value="rtmp" onClick="t1( this )" /> <?php esc_attr_e( 'RTMP', 'video_gallery' ); ?></span>
-					<?php if ( isset( $settingsGrid->license ) && strlen( $settingsGrid->license ) == 31 ) { ?>
-						<span><input type="radio" name="agree" id="btn5" value="embed" onClick="t1( this )" /> <?php esc_attr_e( 'Embed Video', 'video_gallery' ); ?></span>
+				    <?php if(in_array('c', $user_allowed_method) || $user_role == 'administrator') { ?>
+					 	<span><input type="radio" name="agree" id="btn2" value="c" onClick="t1( this )" /> <?php esc_attr_e( 'YouTube URL / Viddler / Dailymotion', 'video_gallery' ); ?></span>
 					<?php } ?>
+					<?php if(in_array('y', $user_allowed_method) || $user_role == 'administrator'){?>
+						<span><input type="radio" name="agree" id="btn1" value="y" onClick="t1( this )" /> <?php esc_attr_e( 'Upload file', 'video_gallery' ); ?></span>
+					<?php } ?>
+					<?php if(in_array('url', $user_allowed_method) || $user_role == 'administrator') { ?>
+						<span><input type="radio" name="agree" id="btn3" value="url" onClick="t1( this )" /> <?php esc_attr_e( 'Custom URL', 'video_gallery' ); ?></span>
+					<?php } ?>
+					<?php if(in_array('rmtp', $user_allowed_method) || $user_role == 'administrator'){ ?>
+						<span><input type="radio" name="agree" id="btn4" value="rtmp" onClick="t1( this )" /> <?php esc_attr_e( 'RTMP', 'video_gallery' ); ?></span>
+					<?php } ?>
+					<?php if ( isset( $settingsGrid->license ) && ( strpos( $settingsGrid->license ,'CONTUS' ) ) ) { ?>
+					<?php if(in_array('embed', $user_allowed_method) || $user_role == 'administrator') {?>
+				  		<span><input type="radio" name="agree" id="btn5" value="embed" onClick="t1( this )" /> <?php esc_attr_e( 'Embed Video', 'video_gallery' ); ?></span>
+					 <?php } ?>
+					<?php  } ?>
 				</h3>
 
 
 				<form method=post>
-					<div id="youtube" class="rtmp_inside inside" >
+					<div id="youtube" class="rtmp_inside inside">
 						<table class="form-table">
 							<tr>
 								<th scope="row"><?php esc_attr_e( 'Video URL', 'video_gallery' ) ?></th>
-								<td class="rtmp_td"><input type="text" size="50" name="filepath" value="<?php
-if ( isset( $videoEdit->file_type ) && $videoEdit->file_type == 1 ) {
-		echo balanceTags( $videoEdit->link );
-}
-											?>" id="filepath1" onkeyup="generate12( this.value );" />&nbsp;&nbsp<input id="generate" type="submit" name="youtube_media" class="button-primary" value="<?php esc_attr_e( 'Generate details', 'video_gallery' ); ?>" />
+								<td class="rtmp_td"><input type="text" class="youtubelinkinput" name="filepath" size="50" value="<?php
+											if ( isset( $videoEdit->file_type ) && $videoEdit->file_type == 1 ) {
+												echo balanceTags( $videoEdit->link );
+											}
+											?>" id="filepath1" onkeyup="generate12( this.value );" />&nbsp;&nbsp<input id="generate" type="button" name="youtube_media" class="button-primary" value="<?php esc_attr_e( 'Generate details', 'video_gallery' ); ?>" onClick="return getyoutube_details();" />
+									<div id="loading_image" align="center" style="display:none;"><img src="<?php echo plugins_url($dirPage.'/images/ajax-loader.gif');?>" /></div>
 									<span id="Youtubeurlmessage" style="display: block; "></span>
-									<p><?php esc_attr_e( 'Here you need to enter the video URL', 'video_gallery' ) ?></p>
-									<p><?php esc_attr_e( 'It accepts Youtube links like : http://www.youtube.com/watch?v=tTGHCRUdlBs or http://youtu.be/tTGHCRUdlBs', 'video_gallery' ) ?></p>
+									<div class="youtubelinkinfo"><p><?php esc_attr_e( 'Here you need to enter the video URL', 'video_gallery' ) ?></p>
+									<p><?php esc_attr_e( 'It accepts YouTube links like : https://www.youtube.com/watch?v=-umZJqaBY8Y or http://youtu.be/0vrdgDdPApQ', 'video_gallery' ) ?></p>
 									<p><?php esc_attr_e( 'Viddler link like : http://www.viddler.com/v/67b33b8f', 'video_gallery' ) ?></p>
 									<p><?php esc_attr_e( 'Dailymotion link like : http://www.dailymotion.com/video/x16787y_nature-catskills_news', 'video_gallery' ) ?></p>
+								</div>
 								</td>
 							</tr>
 						</table>
 					</div>
 
-					<div id="embedvideo" class="rtmp_inside inside" >
+					<div id="embedvideo" class="rtmp_inside inside" style="display:none;">
 						<table class="form-table">
 							<tr>
 								<th scope="row"><?php esc_attr_e( 'Embed Code', 'video_gallery' ) ?></th>
@@ -262,7 +251,7 @@ if ( isset( $videoEdit->file_type ) && $videoEdit->file_type == 1 ) {
 								</div>
 								<span id="uploadmessage" style="display: block; margin-top:10px;color:red;font-size:12px;font-weight:bold;"></span>
 								<div id="f1-upload-progress" style="display:none">
-									<div style="float:left"><img id="f1-upload-image" src="<?php echo balanceTags( get_option( 'siteurl' ) . '/wp-content/plugins/' . $dirPage . '/images/empty.gif' ); ?>" alt="Uploading"  style="padding-top:2px"/>
+									<div style="float:left"><img id="f1-upload-image" src="<?php echo plugins_url().'/'.$dirPage.'/images/empty.gif'; ?>" alt="Uploading"  style="padding-top:2px"/>
 										<label style="padding-top:0px;padding-left:4px;font-size:14px;font-weight:bold;vertical-align:top"  id="f1-upload-filename">PostRoll.flv</label></div>
 									<div style="float:right"> <span id="f1-upload-cancel">
 											<a style="float:right;padding-right:10px;" href="javascript:cancelUpload( 'normalvideoform' );" name="submitcancel">Cancel</a>
@@ -290,7 +279,7 @@ if ( isset( $videoEdit->file_type ) && $videoEdit->file_type == 1 ) {
 								</div>
 
 								<div id="f2-upload-progress" style="display:none">
-									<div style="float:left"><img id="f2-upload-image" src="<?php echo balanceTags( get_option( 'siteurl' ) . '/wp-content/plugins/' . $dirPage . '/images/empty.gif' ); ?>" alt="Uploading"  style="padding-top:2px" />
+									<div style="float:left"><img id="f2-upload-image" src="<?php echo balanceTags( plugins_url().'/'.$dirPage.'/images/empty.gif' ); ?>" alt="Uploading"  style="padding-top:2px" />
 										<label style="padding-top:0px;padding-left:4px;font-size:14px;font-weight:bold;vertical-align:top"  id="f2-upload-filename">PostRoll.flv</label></div>
 									<div style="float:right"><span id="f2-upload-cancel">
 											<a style="float:right;padding-right:10px;" href="javascript:cancelUpload( 'hdvideoform' );" name="submitcancel">Cancel</a>
@@ -320,7 +309,7 @@ if ( isset( $videoEdit->file_type ) && $videoEdit->file_type == 1 ) {
 								</div>
 								<span id="uploadthumbmessage" style="display: block; margin-top:10px;color:red;font-size:12px;font-weight:bold;"></span>
 								<div id="f3-upload-progress" style="display:none">
-									<div style="float:left"><img id="f3-upload-image" src="<?php echo balanceTags( get_option( 'siteurl' ) . '/wp-content/plugins/' . $dirPage . '/images/empty.gif' ); ?>" alt="Uploading" style="padding-top:2px" />
+									<div style="float:left"><img id="f3-upload-image" src="<?php echo balanceTags( plugins_url().'/'. $dirPage . '/images/empty.gif' ); ?>" alt="Uploading" style="padding-top:2px" />
 										<label style="padding-top:0px;padding-left:4px;font-size:14px;font-weight:bold;vertical-align:top"  id="f3-upload-filename">PostRoll.flv</label></div>
 									<div style="float:right"> <span id="f3-upload-cancel">
 											<a style="float:right;padding-right:10px;" href="javascript:cancelUpload( 'thumbimageform' );" name="submitcancel">Cancel</a>
@@ -346,7 +335,7 @@ if ( isset( $videoEdit->file_type ) && $videoEdit->file_type == 1 ) {
 									</form>
 								</div>
 								<div id="f4-upload-progress" style="display:none">
-									<div style="float:left"><img id="f4-upload-image" src="<?php echo balanceTags( get_option( 'siteurl' ) . '/wp-content/plugins/' . $dirPage . '/images/empty.gif' ); ?>" alt="Uploading" style="padding-top:2px" />
+									<div style="float:left"><img id="f4-upload-image" src="<?php echo balanceTags(  plugins_url().'/'. $dirPage . '/images/empty.gif' ); ?>" alt="Uploading" style="padding-top:2px" />
 										<label style="padding-top:0px;padding-left:4px;font-size:14px;font-weight:bold;vertical-align:top"  id="f4-upload-filename">PostRoll.flv</label></div>
 									<div style="float:right"><span id="f4-upload-cancel">
 											<a style="float:right;padding-right:10px;" href="javascript:cancelUpload( 'previewimageform' );" name="submitcancel">Cancel</a>
@@ -377,8 +366,8 @@ if ( isset( $videoEdit->file_type ) && $videoEdit->file_type == 1 ) {
 								</div>
 
 								<div id="f5-upload-progress" style="display:none">
-									<div style="float:left"><img id="f5-upload-image" src="<?php echo balanceTags( get_option( 'siteurl' ) . '/wp-content/plugins/' . $dirPage . '/images/empty.gif' ); ?>" alt="Uploading" style="padding-top:2px" />
-										<label style="padding-top:0px;padding-left:4px;font-size:14px;font-weight:bold;vertical-align:top"  id="f5-upload-filename">SubTitle.srt</label></div>
+									<div style="float:left"><img id="f5-upload-image" src="<?php echo balanceTags(plugins_url().'/' . $dirPage . '/images/empty.gif' ); ?>" alt="Uploading" style="padding-top:2px" />
+										<label style="padding-top:0px;padding-left:4px;font-size:14px;font-weight:bold;vertical-align:top"  id="f5-upload-filename">Subtitle.srt</label></div>
 									<div style="float:right"><span id="f5-upload-cancel">
 											<a style="float:right;padding-right:10px;" href="javascript:cancelUpload( 'subtitle1form' );" name="submitcancel">Cancel</a>
 										</span>
@@ -390,12 +379,11 @@ if ( isset( $videoEdit->file_type ) && $videoEdit->file_type == 1 ) {
 
 								</div>
 							</td></tr>
-						<tr id="subtilelang1" style="display:none;"><th width="17%"><?php echo esc_attr_e( 'Enter subtile1 language' ); ?></th>
+						<tr id="subtilelang1" style="display:none;"><th width="17%"><?php echo esc_attr_e( 'Enter Subtitle1 language' ); ?></th>
 							<td width="83%"><input type="text" name="subtile_lang1"  id="subtile_lang1" style="width:300px" maxlength="250" value="<?php if ( isset( $videoEdit->subtitle_lang1 ) ) echo balanceTags( htmlentities( $videoEdit->subtitle_lang1 ) ); ?>" />
 								<span id="uploadsrt1message" style="display: block; margin-top:10px;color:red;font-size:12px;font-weight:bold;"></span>
 							</td>
 						</tr>
-
 						<tr id="ffmpeg_disable_new6" name="ffmpeg_disable_new6"><th><?php esc_attr_e( 'Upload srt file for Subtitle2', 'video_gallery' ) ?></th><td>
 								<div id="f6-upload-form" >
 									<form name="subtitle2form" method="post" enctype="multipart/form-data" >
@@ -409,7 +397,7 @@ if ( isset( $videoEdit->file_type ) && $videoEdit->file_type == 1 ) {
 								</div>
 
 								<div id="f6-upload-progress" style="display:none">
-									<div style="float:left"><img id="f6-upload-image" src="<?php echo balanceTags( get_option( 'siteurl' ) . '/wp-content/plugins/' . $dirPage . '/images/empty.gif' ); ?>" alt="Uploading" style="padding-top:2px" />
+									<div style="float:left"><img id="f6-upload-image" src="<?php echo balanceTags(  plugins_url().'/'. $dirPage . '/images/empty.gif' ); ?>" alt="Uploading" style="padding-top:2px" />
 										<label style="padding-top:0px;padding-left:4px;font-size:14px;font-weight:bold;vertical-align:top"  id="f6-upload-filename">SubTitle.srt</label></div>
 									<div style="float:right"><span id="f6-upload-cancel">
 											<a style="float:right;padding-right:10px;" href="javascript:cancelUpload( 'subtitle2form' );" name="submitcancel">Cancel</a>
@@ -422,7 +410,7 @@ if ( isset( $videoEdit->file_type ) && $videoEdit->file_type == 1 ) {
 
 								</div>
 							</td></tr>
-						<tr id="subtilelang2" style="display:none;"><th width="17%"><?php echo esc_attr_e( 'Enter subtile2 language' ); ?></th>
+						<tr id="subtilelang2" style="display:none;"><th width="17%"><?php echo esc_attr_e( 'Enter Subtitle2 language' ); ?></th>
 							<td width="83%"><input type="text" name="subtile_lang2"  id="subtile_lang2" style="width:300px" maxlength="250" value="<?php if ( isset( $videoEdit->subtitle_lang2 ) ) echo balanceTags( htmlentities( $videoEdit->subtitle_lang2 ) ); ?>" />
 								<span id="uploadsrt2message" style="display: block; margin-top:10px;color:red;font-size:12px;font-weight:bold;"></span>
 							</td>
@@ -450,6 +438,11 @@ if ( isset( $videoEdit->file_type ) && $videoEdit->file_type == 1 ) {
 			<input type="hidden" name="member_id" id="member_id"  value="<?php if ( isset( $videoEdit->member_id ) ) echo balanceTags( $videoEdit->member_id ); ?>" />
 			<input type="hidden" name="customimage" id="customimage"  value="" />
 			<input type="hidden" name="custompreimage" id="custompreimage"  value="" />
+			<?php if( $player_colors['amazonbuckets_enable'] && $player_colors['amazonbuckets_link'] && $player_colors['amazonbuckets_name'] ) { ?>
+				<input type="hidden" name="amazon_buckets" id="amazon_buckets" value="1" />
+			<?php } else{ ?>
+				<input  type="hidden" name="amazon_buckets" id="amazon_buckets" value="0">
+			<?php } ?>
 			<div id="poststuff">
 				<div id="post-body" class="metabox-holder columns-2">
 					<div id="post-body-content">
@@ -460,7 +453,7 @@ if ( isset( $videoEdit->file_type ) && $videoEdit->file_type == 1 ) {
 								<table class="form-table">
 									<tr>
 										<th scope="row"><?php esc_attr_e( 'Title / Name', 'video_gallery' ) ?></th>
-										<td><input value="<?php if ( isset( $videoEdit->name ) ) echo balanceTags( $videoEdit->name ); ?>" type="text" size="50" maxlength="200" name="name" onkeyup="validatevideotitle();" id="name" />
+										<td><input value="<?php if ( isset( $videoEdit->name ) ) echo htmlentities( $videoEdit->name ); ?>" type="text" size="50" maxlength="200" name="name" onkeyup="validatevideotitle();" id="name" />
 											<span id="titlemessage" style="display: block; margin-top:10px;color:red;font-size:12px;font-weight:bold;"></span>
 										</td>
 									</tr>
@@ -476,24 +469,34 @@ if ( isset( $videoEdit->file_type ) && $videoEdit->file_type == 1 ) {
 									<tr>
 										<th scope="row"><?php esc_attr_e( 'Featured Video', 'video_gallery' ) ?></th>
 										<td>
-											<input type="radio" id="feature_on" name="feature" <?php if ( isset( $videoEdit->featured ) && $videoEdit->featured == '1' ) { echo 'checked="checked"'; } ?> value="1"> <label>Yes</label>
-											<input type="radio" id="feature_off" name="feature" <?php if ( isset( $videoEdit->featured ) && $videoEdit->featured == '' ) { echo 'checked="checked"'; } ?> value="0"> <label>No</label>
+										<?php if( isset($videoEdit->featured ) && $videoEdit->featured ) {
+											    $feature_enable  ="checked";
+											    $feature_disable ="";
+											  }else if( isset( $videoEdit->featured ) &&  $videoEdit->featured == '0' ){
+												$feature_enable  ="";
+												$feature_disable ="checked";
+											  }else{
+											  	$feature_enable  ="";
+											  	$feature_disable = "checked";
+											  }  ?>
+											<input type="radio" id="feature_on" name="feature" <?php echo $feature_enable ; ?> value="1"> <label>Yes</label>
+											<input type="radio" name="feature" <?php echo $feature_disable; ?> value="0"> <label>No</label>
 
 										</td>
 									</tr>
 									<tr>
 										<th scope="row"><?php esc_attr_e( 'Download', 'video_gallery' ) ?></th>
 										<td>
-											<input type="radio" id="download_on" name="download" <?php if ( isset( $videoEdit->download ) && $videoEdit->download == '1' ) { echo 'checked="checked"'; } ?> value="1"> <label>Yes</label>
-											<input type="radio" id="download_off" name="download" <?php if ( isset( $videoEdit->download ) && ( $videoEdit->download == '' || $videoEdit->download == '0' ) ) { echo 'checked="checked"'; } ?> value="0"> <label>No</label>
-											<br/><?php esc_attr_e( 'Note : Not supported for Custom URL, YouTube and Embed videos', 'video_gallery' ) ?>
+											<input type="radio" id="" name="download" <?php if ( isset( $videoEdit->download ) && $videoEdit->download == '1' ) { echo 'checked="checked"'; } ?> value="1"> <label>Yes</label>
+											<input type="radio" id="" name="download" <?php if (!isset( $videoEdit->download )){ echo 'checked="checked"';} if ( isset( $videoEdit->download ) && ( $videoEdit->download == '' || $videoEdit->download == '0' ) ) { echo 'checked="checked"'; } ?> value="0"> <label>No</label>
+											<br/><?php esc_attr_e( 'Note : Supported Only For Uploaded videos', 'video_gallery' ) ?>
 										</td>
 									</tr>
 									<tr>
 										<th scope="row"><?php esc_attr_e( 'Publish', 'video_gallery' ) ?></th>
 										<td>
-											<input type="radio" id="publish_on" name="publish" <?php if ( isset( $videoEdit->publish ) && $videoEdit->publish == '1' ) { echo 'checked="checked"'; } ?> value="1"> <label>Yes</label>
-											<input type="radio" id="publish_off" name="publish" <?php if ( isset( $videoEdit->publish ) && $videoEdit->publish == '0' ) { echo 'checked="checked"'; } ?> value="0"> <label>No</label>
+											<input type="radio" id="" name="publish" <?php if ( !isset( $videoEdit->publish ) ){ echo 'checked="checked"'; } if ( isset( $videoEdit->publish ) && $videoEdit->publish == '1' ) { echo 'checked="checked"'; } ?> value="1"> <label>Yes</label>
+											<input type="radio" id="" name="publish" <?php  if ( isset( $videoEdit->publish ) && $videoEdit->publish == '0' ) { echo 'checked="checked"'; } ?> value="0"> <label>No</label>
 
 										</td>
 									</tr>
@@ -506,7 +509,9 @@ if ( isset( $videoEdit->file_type ) && $videoEdit->file_type == 1 ) {
 global $wpdb;
 $tables   = $wpdb->get_results( 'SELECT * FROM ' . $wpdb->prefix . 'hdflvvideoshare_vgads WHERE admethod="prepost" AND publish=1' );
 $settings = $wpdb->get_results( 'SELECT * FROM ' . $wpdb->prefix . 'hdflvvideoshare_settings' );
-if ( $settings[0]->preroll == 0 || $settings[0]->postroll == 0 || $settings[0]->midroll_ads == 0 || $settings[0]->imaAds == 1 ) {
+$google_adsenses = $wpdb->get_results( 'SELECT * FROM ' . $wpdb->prefix . 'hdflvvideoshare_vgoogleadsense' );
+
+if ( $settings[0]->preroll == 0 || $settings[0]->postroll == 0 || $settings[0]->midroll_ads == 0 || $settings[0]->imaAds == 0 || $player_colors['googleadsense_visible'] == 1  ) {
 	?>
 
 							<div class="stuffbox" id="adstypebox">
@@ -518,13 +523,13 @@ if ( $settings[0]->preroll == 0 || $settings[0]->postroll == 0 || $settings[0]->
 												<th scope="row"><?php esc_attr_e( 'Preroll ads', 'video_gallery' ) ?></th>
 												<td>
 													<select name="prerollads" id="prerollads" >
-														<option value="0" >select</option>
+														<option value="0">select</option>
 	<?php foreach ( $tables as $table ) { ?>
 															<option id="6<?php echo balanceTags( $table->ads_id ); ?>" name="<?php echo balanceTags( $table->ads_id ); ?>" value="<?php echo balanceTags( $table->ads_id ); ?>" > <?php echo balanceTags( $table->title ); ?></option>
 	<?php } ?>
 													</select>
 		<?php
-		if ( isset( $videoEdit->prerollads ) ) { echo '<script>document.getElementById( "6' . $videoEdit->prerollads . '" ).selected="selected"</script>'; } ?>
+		if ( isset( $videoEdit->prerollads )&&($videoEdit->prerollads)) { echo '<script>document.getElementById( "6' . $videoEdit->prerollads . '" ).selected="selected"</script>'; } ?>
 												</td>
 											</tr>
 										</table>
@@ -534,13 +539,13 @@ if ( $settings[0]->preroll == 0 || $settings[0]->postroll == 0 || $settings[0]->
 												<th scope="row"><?php esc_attr_e( 'Postroll ads', 'video_gallery' ) ?></th>
 												<td>
 													<select name="postrollads" id="postrollads" >
-														<option value="0" >select</option>
-	<?php foreach ( $tables as $table ) { ?>
+                                                                                                                <option value="0">select</option>
+	<?php  foreach ( $tables as $table ) { ?>
 															<option id="5<?php echo balanceTags( $table->ads_id ); ?>" name="<?php echo balanceTags( $table->ads_id ); ?>" value="<?php echo balanceTags( $table->ads_id ); ?>" > <?php echo balanceTags( $table->title ); ?></option>
 	<?php } ?>
 													</select>
 													<?php
-		if ( isset( $videoEdit->postrollads ) ) {
+		if ( isset( $videoEdit->postrollads )&& ($videoEdit->postrollads)) {
 			echo '<script>document.getElementById( "5' . $videoEdit->postrollads . '" ).selected="selected"</script>';
 		}
 													?>
@@ -552,29 +557,73 @@ if ( $settings[0]->preroll == 0 || $settings[0]->postroll == 0 || $settings[0]->
 
 
 										<table class="form-table">
-
+                                            <?php $videodisable = ''; if(!isset($videoEdit->midrollads)) { 
+                                            	  $videodisable = 'checked';
+                                            }?>
 											<tr>
 												<th scope="row"><?php esc_attr_e( 'Midroll Ad', 'video_gallery' ) ?></th>
 												<td>
-													<input type="radio" id="midrollads_on" name="midrollads" <?php if ( isset( $videoEdit->midrollads ) && $videoEdit->midrollads == '1' ) { echo 'checked="checked"'; } ?> value="1"> <label>Enable</label>
-													<input type="radio" id="midrollads_off" name="midrollads" <?php if ( isset( $videoEdit->midrollads ) && $videoEdit->midrollads == '0' ) { echo 'checked="checked"'; } ?> value="0"> <label>Disable</label>
+												    <input type="radio" id="midrollads_on" name="midrollads" <?php if ( isset( $videoEdit->midrollads ) && $videoEdit->midrollads == '1' ) { echo 'checked="checked"'; } ?> value="1"> <label>Enable</label>
+													<input type="radio" id="midrollads_off" name="midrollads" <?php if ( isset( $videoEdit->midrollads ) && $videoEdit->midrollads == '0' ) { echo 'checked="checked"'; } echo $videodisable; ?> value="0"> <label>Disable</label>
 
 												</td>
 											</tr>
 										</table>
-	<?php } ?>
-	<?php if ( $settings[0]->imaAds == 0 ) { ?>
+							<?php } ?>
+							<?php if ( $settings[0]->imaAds == 0 ) { ?>
+	                                    <?php $videodisable = ''; 
+	                                        if(!isset($videoEdit->imaAds)) { 
+                                            	$videodisable = 'checked';
+                                            } else {
+                                            	$videodisable = 'checked';
+                                            }?>
 										<table class="form-table">
 											<tr>
 												<th scope="row"><?php esc_attr_e( 'IMA Ad', 'video_gallery' ) ?></th>
 												<td>
-													<input type="radio" id="imaad_on" name="imaad" <?php if ( isset( $videoEdit->imaad ) && $videoEdit->imaad == '1' ) { echo 'checked="checked"'; } ?> value="1"> <label>Enable</label>
-													<input type="radio" id="imaad_off" name="imaad" <?php if ( isset( $videoEdit->imaad ) && $videoEdit->imaad == '0' ) { echo 'checked="checked"'; } ?> value="0"> <label>Disable</label>
+													<input type="radio" id="imaad" name="imaad" <?php if ( isset( $videoEdit->imaad ) && $videoEdit->imaad == '1' ) { echo 'checked="checked"'; } ?> value="1"> <label>Enable</label>
+													<input type="radio" id="imaad" name="imaad" <?php if (!isset( $videoEdit->imaad)) { echo 'checked'; }  if ( isset( $videoEdit->imaad ) && $videoEdit->imaad == '0' ) { echo 'checked="checked"'; } ?> value="0"> <label>Disable</label>
 
 												</td>
 											</tr>
 										</table>
-	<?php } ?>
+									<?php } ?>  
+									<?php  if( isset($player_colors['googleadsense_visible']) && $player_colors['googleadsense_visible'] == 1 ) { ?>                                                      
+	                                   <table class="form-table">
+	                                   <tr>  <?php $videodisable = ''; 
+	                                        if(!isset($videoEdit->google_adsense)) { 
+                                            	$videodisable = 'checked';
+                                            }?>
+	                                       <th scope="row"> <?php esc_attr_e('Google Adsense Show','video_gallery');?></th>
+	                                       <td>
+	                                       <input type="radio" id="googleadsense" name="googleadsense" <?php if ( isset( $videoEdit->google_adsense ) && $videoEdit->google_adsense == '1' ) { echo 'checked="checked"'; } ?> value="1"> <label>Enable</label>
+										   <input type="radio" id="googleadsense" name="googleadsense" <?php if ( isset( $videoEdit->google_adsense ) && $videoEdit->google_adsense == '0' ) { echo 'checked="checked"'; } echo $videodisable ; ?> value="0"> <label>Disable</label>
+	                                       
+	                                       </td>
+	                                      </tr>
+	                                     </table>
+	                                   <table class="form-table">
+	                                      <tr>
+	                                       <th scope="row"> <?php esc_attr_e('Google Adsense','video_gallery');?></th>
+	                                       <td>
+	                                         <select name="google_adsense_value">
+	                                         <?php if(isset($videoEdit->google_adsense_value)){
+                                                    	$editGoogleadsense = $videoEdit->google_adsense_value;
+                                                    }else{
+                                                    	$editGoogleadsense ='0';
+                                                    } ?>
+	                                         <option value="0" <?php if($editGoogleadsense == 0){ echo 'seleceted';} ?>><?php esc_attr_e('Select','video_gallery');?></option> 
+	                                         <?php if($google_adsenses){
+	                                         	    foreach($google_adsenses as $google_adsense){                                    	
+	                                         	    $googleadsense_details = unserialize($google_adsense->googleadsense_details); $google_code = $googleadsense_details['googleadsense_title']; ?>
+	                                         	<option value="<?php echo $google_adsense->id;?>" <?php if($google_adsense->id ==$editGoogleadsense ){ echo "selected";} ?>><?php echo $google_code ;?></option>
+	                                         <?php }
+	                                          }  ?>
+	                                         </select>
+	                                       </td>
+	                                      </tr>
+	                                   </table>
+	                                   <?php } ?>
 								</div>
 							</div>
 	<?php } ?>
@@ -585,17 +634,18 @@ if ( $settings[0]->preroll == 0 || $settings[0]->postroll == 0 || $settings[0]->
 							<div id="categorydiv" class="postbox">
 								<div class="handlediv" title="Click to toggle"><br></div>
 								<h3 class="hndle"><span><?php esc_attr_e( 'Categories', 'video_gallery' ); ?></span></h3>                                                                                   
-								<div class="inside" style="color:blue" >
+								<div class="inside" style="" >
 									<div id="submitpost" class="submitbox">
 
 										<div class="misc-pub-section">
 											<h4><span>
 													<a style="cursor:pointer"  onclick="playlistdisplay()"><?php esc_attr_e( 'Create New', 'video_gallery' ) ?></a></span></h4>
-											<div id="playlistcreate1"><?php esc_attr_e( 'Name', 'video_gallery' ); ?><input type="text" size="20" name="p_name" id="p_name" value="" />
-												<input type="button" class="button-primary" name="add_pl1" value="<?php esc_attr_e( 'Add' ); ?>" onclick="return savePlaylist( document.getElementById( 'p_name' ), <?php echo balanceTags( $act_vid ); ?> );" class="button button-highlighted" />
-												<a style="cursor:pointer;margin: 5px 0 0 175px;display: inline-block;text-decoration: underline;" onclick="playlistclose()"><b>Close</b></a></div>
+											<div id="playlistcreate1"><?php esc_attr_e( 'Name', 'video_gallery' ); ?><input type="text" style="width:100%;" name="p_name" id="p_name" value="" />
+												<input type="button" class="button-primary button button-highlighted" name="add_pl1" value="<?php esc_attr_e( 'Add' ); ?>" onclick="return savePlaylist( document.getElementById( 'p_name' ), <?php echo balanceTags( $act_vid ); ?> );"  />
+												<a  class="button cancelplaylist"  onclick="playlistclose()"><b>Close</b></a></div>
 											<div id="jaxcat"></div>
 											<div id="playlistchecklist"><?php $ajaxplaylistOBJ->get_playlist(); ?></div>
+											 <input type="hidden" name="filetypevalue" id="filetypevalue" value="1"  />
 										</div>
 									</div>
 								</div>
@@ -616,52 +666,11 @@ if ( $settings[0]->preroll == 0 || $settings[0]->postroll == 0 || $settings[0]->
 
 
 		<script>
-			document.getElementById( 'playlistcreate1' ).style.display = "none";
-			document.getElementById( "btn2" ).checked = true;
-<?php if ( isset( $videoEdit->featured ) && $videoEdit->featured == '1' ) { ?>
-				document.getElementById( "feature_on" ).checked = true;
-	<?php } else if ( isset( $videoEdit->featured ) && $videoEdit->featured == '0' ) { ?>document.getElementById( "feature_off" ).checked = true;
-		<?php } else { ?>document.getElementById( "feature_on" ).checked = true;
-		<?php } ?>
-
-<?php if ( isset( $videoEdit->download ) && $videoEdit->download == '1' ) { ?>
-				document.getElementById( "download_on" ).checked = true;
-	<?php } else if ( isset( $videoEdit->download ) && $videoEdit->download == '0' ) { ?>document.getElementById( "download_off" ).checked = true;
-		<?php } else { ?>document.getElementById( "download_off" ).checked = true;
-	   <?php } ?>
-
-<?php if ( isset( $videoEdit->publish ) && $videoEdit->publish == '1' ) { ?>
-				document.getElementById( "publish_on" ).checked = true;
-	   <?php } else if ( isset( $videoEdit->publish ) && $videoEdit->publish == '0' ) { ?>document.getElementById( "publish_off" ).checked = true;
-	   <?php } else { ?>document.getElementById( "publish_on" ).checked = true;
-	   <?php } ?>
-			document.getElementById( 'generate' ).style.visibility = "hidden";
+				document.getElementById( 'generate' ).style.visibility = "hidden";
 		</script>
 
 	</div><!--END wrap -->
 </div><!--END wrap -->
-
-<?php
-if ( isset( $_POST['youtube_media'] ) ) {
-	$act1 = $videoOBJ->youtubeurl();
-	?>          <input type="hidden" name="act" id="act3" value="<?php if ( isset( $act1[3] ) )
-		echo balanceTags( $act1[3] );
-		?>" />
-	<input type="hidden" name="act" id="act0" value="<?php echo balanceTags( stripslashes( str_replace( '"', '', $act1[0] ) ) ); ?>" />
-	<input type="hidden" name="act" id="act4" value="<?php echo balanceTags( $act1[4] ); ?>" />
-	<input type="hidden" name="act" id="act5" value="<?php if ( isset( $act1[5] ) )
-		echo balanceTags( $act1[5] );
-	?>" />
-	<input type="hidden" name="act" id="act6" value="<?php if ( isset( $act1[6] ) )
-		echo balanceTags( $act1[6] );
-		?>" />
-	<script>
-		document.getElementById( 'name' ).value = document.getElementById( 'act0' ).value;
-		document.getElementById( 'filepath1' ).value = document.getElementById( 'act4' ).value;
-		document.getElementById( 'description' ).value = document.getElementById( 'act5' ).value;
-		document.getElementById( 'tags_name' ).value = document.getElementById( 'act6' ).value;
-	</script>
-	<?php } ?>
 <script type="text/javascript">
 <?php
 if ( isset( $videoEdit->file_type ) && $videoEdit->file_type == 1 ) {
@@ -689,11 +698,24 @@ if ( isset( $videoEdit->file_type ) && $videoEdit->file_type == 1 ) {
 		t1( "embed" );
 		document.getElementById( "btn5" ).checked = true;
 	<?php
-} else {
-	?>
-		t1( "c" );
-		document.getElementById( "btn2" ).checked = true;
-	<?php
-}
-?>
+}  else if( in_array('c', $user_allowed_method) || $user_role == 'administrator') { ?>
+	t1( "c" );
+	document.getElementById( "btn2" ).checked = true;
+<?php } else if( in_array('y', $user_allowed_method)) { ?>
+	t1( "y" );
+	document.getElementById( "btn1" ).checked = true;
+<?php } else if( in_array('url', $user_allowed_method)) { ?>
+	t1( "url" );
+	document.getElementById( "btn3" ).checked = true;
+<?php } else if( in_array('rmtp', $user_allowed_method)) { ?>
+
+	t1( "rtmp" );
+	document.getElementById( "btn4" ).checked = true;
+<?php } else if( in_array('embed', $user_allowed_method)) { ?>
+	t1( "embed" );
+	document.getElementById( "btn5" ).checked = true;
+<?php } else { ?>
+	t1( "c" );
+	document.getElementById( "btn2" ).checked = true;
+<?php } ?>
 </script>

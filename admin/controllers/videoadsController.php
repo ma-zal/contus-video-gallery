@@ -1,17 +1,18 @@
 <?php
-/*
-  Name: Wordpress Video Gallery
-  Plugin URI: http://www.apptha.com/category/extension/Wordpress/Video-Gallery
-  Description: Video Ad Controller.
-  Version: 2.6
-  Author: Apptha
-  Author URI: http://www.apptha.com
-  License: GPL2
+/**
+ *  Video Ad Controller.
+ *
+ * @category   Apptha
+ * @package    Contus video Gallery
+ * @version    2.7
+ * @author     Apptha Team <developers@contus.in>
+ * @copyright  Copyright (C) 2014 Apptha. All rights reserved.
+ * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html 
  */
-include_once( $adminModelPath . 'videoad.php' );								## including videoad model file for get database information.
-if ( class_exists( 'VideoadController' ) != true ) {			## checks if the VideoadController class has been defined starts
+include_once( $adminModelPath . 'videoad.php' );				// including videoad model file for get database information.
+if ( class_exists( 'VideoadController' ) != true ) {			// checks if the VideoadController class has been defined starts
 
-	class VideoadController extends VideoadModel {			## VideoadController class starts
+	class VideoadController extends VideoadModel {			    // VideoadController class starts
 
 		public $_status;
 		public $_msg;
@@ -25,7 +26,7 @@ if ( class_exists( 'VideoadController' ) != true ) {			## checks if the VideoadC
 		public $_orderDirection;
 		public $_orderBy;
 
-		public function __construct() {						## contructor starts
+		public function __construct() {						// contructor starts
 			parent::__construct();
 			$this->_addnewVideoad		= filter_input( INPUT_POST, 'videoadsadd' );
 			$this->_status				= filter_input( INPUT_GET, 'status' );
@@ -34,14 +35,14 @@ if ( class_exists( 'VideoadController' ) != true ) {			## checks if the VideoadC
 			$this->_update				= filter_input( INPUT_GET, 'update' );
 			$this->_add					= filter_input( INPUT_GET, 'add' );
 			$this->_del					= filter_input( INPUT_GET, 'del' );
-			$this->_orderDirection     = filter_input( INPUT_GET, 'order' );
+			$this->_orderDirection      = filter_input( INPUT_GET, 'order' );
 			$this->_orderBy				= filter_input( INPUT_GET, 'orderby' );
-		}													## contructor ends
+		}													// contructor ends
 
-		public function add_newvideoad() {					## function for adding video starts
-			if ( isset( $this->_status ) ) {				## updating status of video ad starts
+		public function add_newvideoad() {					// function for adding video starts
+			if ( isset( $this->_status ) ) {				// updating status of video ad starts
 				$this->status_update( $this->_videoadId, $this->_status );
-			}												## updating status of video ad ends
+			}												// updating status of video ad ends
 
 			if ( isset( $this->_addnewVideoad ) ) {
 				$videoadName     = filter_input( INPUT_POST, 'videoadname' );
@@ -66,7 +67,11 @@ if ( class_exists( 'VideoadController' ) != true ) {			## checks if the VideoadC
 					$videoadFilepath = filter_input( INPUT_POST, 'videoadfilepath' );
 				else {
 					$image_path		 = str_replace( 'plugins/' . $dirPage . '/', 'uploads/videogallery/', APPTHA_VGALLERY_BASEURL );
-					$videoadFilepath = $image_path . $videoadFilepath;
+					if( strpos( '' , $videoadFilepath ) ) {
+						$videoadFilepath = $videoadFilepath;  
+					} else {
+						$videoadFilepath = $image_path . $videoadFilepath;
+					}
 				}
 				$videoadPublish = filter_input( INPUT_POST, 'videoadpublish' );
 
@@ -88,19 +93,18 @@ if ( class_exists( 'VideoadController' ) != true ) {			## checks if the VideoadC
 					'channels'		=> $channels,
 					'publish'		=> $videoadPublish,
 				);
-
 				$videoadDataformat = array( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%d', '%s', '%s', '%s', '%d', '%s', '%d' );
 
-				if ( isset( $this->_videoadId ) ) {							## update for video ad if starts
+				if ( $this->_videoadId  ) {							// update for video ad if starts
 					$updateflag = $this->videoad_update( $videoadData, $videoadDataformat, $this->_videoadId );
 
 					if ( $updateflag ) {
 						$this->admin_redirect( 'admin.php?page=newvideoad&videoadId=' . $this->_videoadId . '&update=1' );
 					} else {
-						$this->admin_redirect( 'admin.php?page=newvideoad&videoadId=' . $this->_videoadId . '&update=0' );
+						$this->admin_redirect( 'admin.php?page=newvideoad&videoadId=' . $this->_videoadId . '&update=1' );
 					}
-				}														## update for video ad if ends
-				else {													## adding video ad else starts
+				}														// update for video ad if ends
+				else {													// adding video ad else starts
 					$addflag = $this->insert_videoad( $videoadData, $videoadDataformat );
 
 					if ( ! $addflag ) {
@@ -108,17 +112,17 @@ if ( class_exists( 'VideoadController' ) != true ) {			## checks if the VideoadC
 					} else {
 						$this->admin_redirect( 'admin.php?page=videoads&add=1' );
 					}
-				}														## adding video ad else ends
+				}														// adding video ad else ends
 			}
 		}
 
-		## function for adding video ends
-		public function admin_redirect( $url ) {							## admin redirection url function starts
+		// function for adding video ends
+		public function admin_redirect( $url ) {							// admin redirection url function starts
 			echo '<script>window.open( "' . $url . '","_top",false )</script>';
 		}
 
-		## admin redirection url function ends
-		public function videoad_data() {								## getting videoad data function starts
+		// admin redirection url function ends
+		public function videoad_data() {								// getting videoad data function starts
 			$orderBy = array( 'id', 'title', 'path', 'publish' );
 			$order   = 'id';
 
@@ -146,8 +150,8 @@ if ( class_exists( 'VideoadController' ) != true ) {			## checks if the VideoadC
 			return $this->get_videoaddata( $this->_videoadsearchQuery, $this->_searchBtn, $order, $this->_orderDirection );
 		}
 
-		## getting videoad data function ends
-		public function get_message() {									## displaying database message function starts
+		// getting videoad data function ends
+		public function get_message() {									// displaying database message function starts
 			if ( isset( $this->_update ) && $this->_update == '1' ) {
 				$this->_msg = 'Video Ad Updated Successfully ...';
 			} else if ( $this->_update == '0' ) {
@@ -164,21 +168,21 @@ if ( class_exists( 'VideoadController' ) != true ) {			## checks if the VideoadC
 			if ( isset( $this->_status ) && $this->_status == '1' ) {
 				$this->_msg = 'Video Ad Published Successfully ...';
 			} else if ( $this->_status == '0' ) {
-				$this->_msg = 'Video Ad UnPublished Successfully ...';
+				$this->_msg = 'Video Ad Unpublished Successfully ...';
 			}
 
 			return $this->_msg;
 		}
 
-		## displaying database message function ends
-		public function get_delete() {												## deleting videoad data function starts
+		// displaying database message function ends
+		public function get_delete() {												// deleting videoad data function starts
 			$videoadApply      = filter_input( INPUT_POST, 'videoadapply' );
 			$videoadActionup   = filter_input( INPUT_POST, 'videoadactionup' );
 			$videoadActiondown = filter_input( INPUT_POST, 'videoadactiondown' );
 			$videoadcheckId    = filter_input( INPUT_POST, 'videoad_id', FILTER_VALIDATE_INT, FILTER_REQUIRE_ARRAY );
 
-			if ( isset( $videoadApply ) ) {												## apply button if starts
-				if ( $videoadActionup || $videoadActiondown == 'videoaddelete' ) {	## delete button if starts
+			if ( isset( $videoadApply ) ) {												// apply button if starts
+				if ( $videoadActionup || $videoadActiondown == 'videoaddelete' ) {	// delete button if starts
 					if ( is_array( $videoadcheckId ) ) {
 						$videoadId  = implode( ',', $videoadcheckId );
 						$deleteflag = $this->videoad_delete( $videoadId );
@@ -188,15 +192,15 @@ if ( class_exists( 'VideoadController' ) != true ) {			## checks if the VideoadC
 							$this->admin_redirect( 'admin.php?page=videoads&del=1' );
 						}
 					}
-				}																	## delete button if ends
-			}																		## apply button if ends
+				}																	// delete button if ends
+			}																		// apply button if ends
 		}
-																					## deleting videoad data function ends
+																					// deleting videoad data function ends
 	}
-																					## VideoadController class ends
-}																					## Checks if the VideoadController class has been defined ends
+																					// VideoadController class ends
+}																					// Checks if the VideoadController class has been defined ends
 
-$videoadOBJ = new VideoadController();												## creating object for VideoadController class
+$videoadOBJ = new VideoadController();												// creating object for VideoadController class
 $videoadOBJ->add_newvideoad();
 $videoadOBJ->get_delete();
 $videoadId     = $videoadOBJ->_videoadId;
@@ -211,10 +215,10 @@ if ( ! empty ( $videoadId ) ) {
 }
 $displayMsg = $videoadOBJ->get_message();
 $adminPage  = filter_input( INPUT_GET, 'page' );
-if ( $adminPage == 'videoads' ) {														## including videoad form if starts
+if ( $adminPage == 'videoads' ) {														// including videoad form if starts
 	require_once( APPTHA_VGALLERY_BASEDIR . DS . 'admin/views/videoads/videoads.php' );
-}																					## including videoad form if starts
-else if ( $adminPage == 'newvideoad' ) {												## including newvideo ad form if starts
+}																					// including videoad form if starts
+else if ( $adminPage == 'newvideoad' ) {												// including newvideo ad form if starts
 	require_once( APPTHA_VGALLERY_BASEDIR . DS . 'admin/views/videoads/addvideoads.php' );
-}																					## including newvideo ad form if ends
+}																					// including newvideo ad form if ends
 ?>    
