@@ -1,12 +1,13 @@
 <?php
-/*
-  Name: Wordpress Video Gallery
-  Plugin URI: http://www.apptha.com/category/extension/Wordpress/Video-Gallery
-  Description: video settings view file.
-  Version: 2.6
-  Author: Apptha
-  Author URI: http://www.apptha.com
-  License: GPL2
+/**
+ * Video setting view file. 
+ * 
+ * @category   Apptha
+ * @package    Contus video Gallery
+ * @version    2.7
+ * @author     Apptha Team <developers@contus.in>
+ * @copyright  Copyright (C) 2014 Apptha. All rights reserved.
+ * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
  */
 ?>
 <!--   MENU OPTIONS STARTS  --->
@@ -25,7 +26,9 @@ $player_colors = unserialize( $settingsGrid->player_colors );
 		<a href="?page=playlist" class="nav-tab"><?php esc_attr_e( 'Categories', 'video_gallery' ); ?></a>
 		<a href="?page=videoads" class="nav-tab"><?php esc_attr_e( 'Video Ads', 'video_gallery' ); ?></a>
 		<a href="?page=hdflvvideosharesettings" class="nav-tab nav-tab-active"><?php esc_attr_e( 'Settings', 'video_gallery' ); ?></a>
+		<a href="?page=googleadsense" class="nav-tab"><?php esc_attr_e( 'Google AdSense', 'video_gallery' ); ?></a>		
 	</h2>
+	<div id="trackcodeerror"></div>
 	<?php if ( $displayMsg ): ?>
 		<div class="updated below-h2">
 			<p>
@@ -35,8 +38,6 @@ $player_colors = unserialize( $settingsGrid->player_colors );
 	<?php endif; ?>
 	<!--  MENU OPTIONS ENDS --->
 	<div class="wrap">
-
-
 		<link rel="stylesheet" href="<?php echo balanceTags( APPTHA_VGALLERY_BASEURL ). 'admin/css/jquery.ui.all.css'; ?>">
 		<script type="text/javascript">
 
@@ -71,9 +72,8 @@ $player_colors = unserialize( $settingsGrid->player_colors );
 			var sortdr = jQuery.noConflict();
 			sortdr( function() {
 				sortdr( ".column" ).sortable( {
-					connectWith: ".column"
-				} );
-
+					connectWith: ".column" 				     		
+				 });
 				sortdr( ".portlet" ).addClass( "ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" )
 						.find( ".portlet-header" )
 						.addClass( "ui-widget-header ui-corner-all" )
@@ -86,14 +86,25 @@ $player_colors = unserialize( $settingsGrid->player_colors );
 					sortdr( this ).parents( ".portlet:first" ).find( ".portlet-content" ).toggle();
 				} );
 
+				sortdr('#videogallery_setting').click(function(){
+					var trackcode = sortdr('#trackcode').val();
+					var trackcodepattern = /^ua-\d{4,9}-\d{1,4}$/i;
+					if( ( !trackcodepattern.test(trackcode) )  && trackcode!='' ) {
+						   sortdr('#trackcodeerror').html('Enter valid Google Analytics Tracking Code');
+						   sortdr('#trackcodeerror').addClass('updated below-h2');
+	                       return false;                       
+				    }
+				    return true;
+				} );
+
 			} );
 		</script>
 
-		<form method="post" enctype="multipart/form-data" action="admin.php?page=hdflvvideosharesettings">
+		<form method="post" enctype="multipart/form-data" action="admin.php?page=hdflvvideosharesettings" >
 			<h2 class="option_title">
 				<?php echo '<img src="' . APPTHA_VGALLERY_BASEURL . 'images/setting.png" alt="move" width="30"/>'; ?>
 				<?php esc_attr_e( 'Settings', 'video_gallery' ); ?>
-				<input class='button-primary' style="float:right;  "type='submit'  name="updatebutton" value='<?php esc_attr_e( 'Update Options', 'video_gallery' ); ?>'>
+				<input class='button-primary' id='videogallery_setting' style="float:right;  "type='submit'  name="updatebutton" value='<?php esc_attr_e( 'Update Options', 'video_gallery' ); ?>'>
 			</h2>
 
 			<div class="admin_settings">
@@ -104,8 +115,11 @@ $player_colors = unserialize( $settingsGrid->player_colors );
 							<table class="form-table">
 								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'License Key', 'video_gallery' ); ?></th>
-									<td valign="top"><input type='text' name="license" value="<?php echo balanceTags( $settingsGrid->license ); ?>"  style="float: left;" size=35 /> <?php if ( isset( $settingsGrid->license ) && strlen( $settingsGrid->license ) != 31 ) { ?><?php echo "<a target='_blank' href='http://www.apptha.com/checkout/cart/add/product/12'><img src='" . APPTHA_VGALLERY_BASEURL . "images/buynow.gif' alt='Buy'/></a>";
-				} ?></td>
+									<td valign="top">
+									<input type='text' name="license" value="<?php echo balanceTags( $settingsGrid->license ); ?>"  style="float: left;" size="45" /> 
+									<?php if ( isset( $settingsGrid->license ) && ( !strpos( $settingsGrid->license ,'CONTUS' ) ) ) { ?><?php echo "<a class='buynow-btn' target='_blank' href='http://www.apptha.com/checkout/cart/add/product/12'><img valign='top' src='" . APPTHA_VGALLERY_BASEURL . "images/buynow.gif' alt='Buy'/></a>";
+				                    } ?>               
+				                    </td>
 								</tr>
 
 							</table>
@@ -124,7 +138,8 @@ $player_colors = unserialize( $settingsGrid->player_colors );
 								</tr>
 								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Logo Target', 'video_gallery' ); ?></th>
-									<td><input type='text' name="logotarget" value="<?php if ( isset( $settingsGrid->logo_target ) ) echo balanceTags( $settingsGrid->logo_target ); ?>" size=45  /></td>
+									<td><input type='text' name="logotarget" value="<?php if ( isset( $settingsGrid->logo_target ) ) echo balanceTags( $settingsGrid->logo_target ); ?>" size=45  /><br>
+									<br/><?php esc_attr_e( '', 'video_gallery' ) ?></td>
 								</tr>
 								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Logo Align', 'video_gallery' ); ?></th>
@@ -176,7 +191,29 @@ $player_colors = unserialize( $settingsGrid->player_colors );
 									<th scope='row'><?php esc_attr_e( 'Volume', 'video_gallery' ); ?></th>
 									<td><input type='text' name="volume" value="<?php echo balanceTags( $settingsGrid->volume ); ?>" size=45  /></td>
 								</tr>
-							</table>
+                                 <!-- New feature  for enable /disable  social icon  posted by and related video  under  player-->
+                                 <tr  class="gallery_separator">
+									<th scope='row'><?php esc_attr_e( 'Social Icon', 'video_gallery' ); ?></th>
+									<td><input type='checkbox' class='check' name="showSocialIcon" <?php if ( $player_colors['show_social_icon']== 1 ) { ?> checked <?php } ?> value="1" size=45  /></td>
+								</tr>
+                                 <tr  class="gallery_separator">
+									<th scope='row'><?php esc_attr_e( 'Posted By', 'video_gallery' ); ?></th>
+									<td><input type='checkbox' class='check' name="ShowPostBy" <?php if ( $player_colors['show_posted_by']== 1 ) { ?> checked <?php } ?> value="1" size=45  /></td>
+								</tr>
+								<tr  class="gallery_separator">
+									<th scope='row'><?php esc_attr_e( 'Show related video', 'video_gallery' ); ?></th>
+									<td><input type='checkbox' class='check' name="show_related_video" <?php if ( isset( $player_colors['show_related_video'] ) && $player_colors['show_related_video'] == 1 ) { ?> checked <?php } ?> value="1" size=45  /></td>
+								</tr>
+								 <tr  class="gallery_separator">
+									<th scope='row'><?php esc_attr_e( 'Show Added On', 'video_gallery' ); ?></th>
+									<td><input type='checkbox' class='check' name="show_added_on" <?php if ( $player_colors['show_added_on']== 1 ) { ?> checked <?php } ?> value="1" size=45  /></td>
+								</tr>
+								<!------- Rss Disable / Enable option -------->
+								<tr class="gallery_separator">
+									<th scope='row'><?php esc_attr_e( 'Show Rss Feed Icon', 'video_gallery' ); ?></th>
+									<td><input type='checkbox' class='check' name="show_rss_icon" <?php if ( $player_colors['show_rss_icon']== 1 ) { ?> checked <?php } ?> value="1" size=45  /></td>
+								</tr>
+								</table>
 						</div>
 					</div>
 
@@ -214,6 +251,18 @@ $player_colors = unserialize( $settingsGrid->player_colors );
 									<th scope='row'><?php esc_attr_e( 'Embed Visible', 'video_gallery' ); ?></th>
 									<td><input type='checkbox' class='check' <?php if ( $settingsGrid->embed_visible == 1 ) { ?> checked <?php } ?> name="embed_visible" value="1" size=45  /></td>
 								</tr>
+								<!-- Iframe visible  -->
+								<tr  class="gallery_separator">
+									<th scope='row'><?php esc_attr_e( 'Iframe Visible', 'video_gallery' ); ?></th>
+									<td><input type='checkbox' class='check' <?php if (isset($player_colors['iframe_visible'])&&$player_colors['iframe_visible']==1 ) { ?> checked <?php } ?> name="iframe_visible" value="1" size=45  /></td>
+								</tr>
+								<!-- Report video setting -->
+								
+								<tr  class="gallery_separator">
+									<th scope='row'><?php esc_attr_e( 'Enable Report', 'video_gallery' ); ?></th>
+									<td><input type='checkbox' class='check' <?php if ( $player_colors['report_visible'] == 1 ) { ?> checked <?php } ?> name="report_visible" value="1" size=45  /></td>
+								</tr>
+								<!-- End Report show setting -->
 								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Enable Views', 'video_gallery' ); ?></th>
 									<td><input type='checkbox' class='check' <?php if ( $settingsGrid->view_visible == 1 ) { ?> checked <?php } ?> name="view_visible" value="1" size=45  /></td>
@@ -229,6 +278,11 @@ $player_colors = unserialize( $settingsGrid->player_colors );
 								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Enable Category', 'video_gallery' ); ?></th>
 									<td><input type='checkbox' class='check' <?php if ( $settingsGrid->categorydisplay == 1 ) { ?> checked <?php } ?> name="categorydisplay" value="1" size=45  /></td>
+								</tr>
+								<!--  Display title on Home  , Category details page  -->
+								<tr  class="gallery_separator">
+									<th scope='row'><?php esc_attr_e( 'Enable video title in Home page', 'video_gallery' ); ?></th>
+									<td><input type='checkbox' class='check' <?php if (isset($player_colors['showTitle']) && $player_colors['showTitle'] == 1 ) { ?> checked <?php } ?> name="showTitle" value="1" size=45  /></td>
 								</tr>
 								<!--  Display Description on the player-->
 								<tr  class="gallery_separator">
@@ -461,7 +515,14 @@ $player_colors = unserialize( $settingsGrid->player_colors );
 										<input name="imaAds" id="imaAds" type='radio' value="1"  <?php if ( $settingsGrid->imaAds == 1 ) { echo 'checked'; } ?> /><label><?php esc_attr_e( 'Disable', 'video_gallery' ); ?></label>
 									</td>
 								</tr>
-
+                                <!-- Google adsense option -->
+                                <tr class="gallery_separator">
+                                    <th scope='row'><?php esc_attr_e( 'Google Ads', 'video_gallery' ); ?></th>
+									<td>
+										<input name="googleadsense_visible" id="googleadsense_visible" type='radio' value="1"  <?php if ( isset($player_colors['googleadsense_visible']) && ($player_colors['googleadsense_visible'] == 1 ) ) { echo 'checked'; } ?> /><label><?php esc_attr_e( 'Enable', 'video_gallery' ); ?></label>
+										<input name="googleadsense_visible" id="googleadsense_visible" type='radio' value="0"  <?php if ( isset($player_colors['googleadsense_visible']) && ($player_colors['googleadsense_visible'] == 0 ) ) { echo 'checked'; } ?> /><label><?php esc_attr_e( 'Disable', 'video_gallery' ); ?></label>
+									</td>
+                                </tr>
 								<!-- Ad Skip -->
 								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Ad Skip', 'video_gallery' ); ?></th>
@@ -479,10 +540,10 @@ $player_colors = unserialize( $settingsGrid->player_colors );
 								<!-- Track Code -->
 								<tr  class="gallery_separator">
 									<th scope='row'><?php esc_attr_e( 'Track Code', 'video_gallery' ); ?></th>
-									<td><input type='text' name="trackCode" value="<?php echo balanceTags( $settingsGrid->trackCode ); ?>" size=45  />
+									<td><input type='text' id="trackcode" name="trackCode" value="<?php echo balanceTags( $settingsGrid->trackCode ); ?>" size=45  />
+									<div id="trackcodeerror"></div>
 									</td>
 								</tr>
-
 							</table>
 						</div>
 					</div>
@@ -576,9 +637,30 @@ $player_colors = unserialize( $settingsGrid->player_colors );
 								<!--videos page banner settings-->
 
 								<!-- Popular Videos-->
-								<tr class="gallery_separator"><th><?php esc_attr_e( 'Gutter Space ( px )', 'video_gallery' ); ?></th>
+								<tr class="gallery_separator">
+								<th><?php esc_attr_e( 'Gutter Space ( px )', 'video_gallery' ); ?></th>
 									<td><input type="text" name="gutterspace" id="gutterspace" size="20" value="<?php echo balanceTags( $settingsGrid->gutterspace ); ?>"></td>
+								</tr>								
+								<!-- Related video count setting -->
+								<tr class="gallery_separator">
+								<th><?php esc_attr_e( 'Limit Related Videos count', 'video_gallery' ); ?></th>
+									<td><input type="text" name="related_video_count" id="related_video_count" size="20" value="<?php echo balanceTags( $player_colors['related_video_count']); ?>"></td>
 								</tr>
+								<tr class="gallery_separator"><th><?php esc_attr_e( 'No Of Categories in Home page', 'video_gallery' ); ?></th>
+									<td><input type="text" name="category_page" id="category_page" size="20" value="<?php echo balanceTags( $settingsGrid->category_page ); ?>"></td>
+								</tr>
+								 <!-- Order selected by the recent videos -->
+                                 <tr class="gallery_separator">
+									<th><?php esc_attr_e('Videos Order', 'video_gallery' ); ?></th>
+									<td>
+                                       <select name="recent_video_order" class="recent_video_order_setting">
+                                           <option value="id" <?php if($player_colors['recentvideo_order'] =='id'){ echo "selected='selected'";} ?>><?php echo esc_attr('Recent','video_gallery'); ?> </option>        
+                                           <option value="hitcount" <?php if($player_colors['recentvideo_order'] =='hitcount'){ echo "selected='selected'";} ?>><?php echo esc_attr('Most viewed','video_gallery'); ?> </option> 
+                                           <option value="default" <?php if($player_colors['recentvideo_order'] =='default'){ echo "selected='selected'";} ?>><?php echo esc_attr('Default ( Ordering)','video_gallery'); ?> </option>                                                                            
+                                        </select>
+                                        <div><?php echo esc_attr('Only Applicable for Featured and  Category Videos','video_gallery');?></div>
+                                     </td>
+								</tr>	
 								<tr class="gallery_separator">
 
 									<th><?php esc_attr_e( 'Popular Videos', 'video_gallery' ); ?></th>
@@ -605,7 +687,6 @@ $player_colors = unserialize( $settingsGrid->player_colors );
 									<td><label><?php esc_attr_e( 'Columns', 'video_gallery' ); ?> </label><input type="text" name="colRec" id="colRec" size="10" value="<?php echo balanceTags( $settingsGrid->colRec ); ?>">
 									</td>
 								</tr>
-
 								<!-- Featured Videos  -->
 								<tr class="gallery_separator">
 									<th><?php esc_attr_e( 'Featured Videos', 'video_gallery' ); ?></th>
@@ -633,9 +714,7 @@ $player_colors = unserialize( $settingsGrid->player_colors );
 									<td><label><?php esc_attr_e( 'Columns', 'video_gallery' ); ?></label><input type="text" name="colCat" id="colCat" size="10" value="<?php echo balanceTags( $settingsGrid->colCat ); ?>">
 									</td>
 								</tr>
-								<tr class="gallery_separator"><th><?php esc_attr_e( 'No Of Categories in Home page', 'video_gallery' ); ?></th>
-									<td><input type="text" name="category_page" id="category_page" size="20" value="<?php echo balanceTags( $settingsGrid->category_page ); ?>"></td>
-								</tr>
+								
 								<tr class="gallery_separator"><th><?php esc_attr_e( 'More Page', 'video_gallery' ); ?></th>
 
 								</tr>
@@ -647,8 +726,67 @@ $player_colors = unserialize( $settingsGrid->player_colors );
 							</table>
 						</div>
 					</div>
+					<div class="portlet">
+					<div class="portlet-header"><b><?php esc_attr_e( 'Amazon S3 Bucket Setting', 'video_gallery' ); ?></b></div>
+						<div class="portlet-content">
+						    <table class="form-table">								
+								<tr class="gallery_separator">
+									<th><?php esc_attr_e( 'Store Videos in Amazon S3 Bucket', 'video_gallery' ); ?></th>
+									<td>
+										<input  type='radio' name="amazonbuckets_enable" id="amazonbuckets_enable" checked="checked" value="1" <?php if ( isset($player_colors['amazonbuckets_enable']) && $player_colors['amazonbuckets_enable'] == 1 ) { echo 'checked'; } ?> /><label><?php esc_attr_e( 'Enable', 'video_gallery' ); ?></label>
+										<input  type='radio' name="amazonbuckets_enable" id="amazonbuckets_enable" value="0" <?php if ( isset($player_colors['amazonbuckets_enable']) && $player_colors['amazonbuckets_enable'] == 0 ) { echo 'checked'; } ?> /><label><?php esc_attr_e( 'Disable', 'video_gallery' ); ?></label>
+									</td>
+								</tr>
+								<tr class="gallery_separator">
+								 	<th><?php esc_attr_e( 'Enter Amazon S3 Bucket name', 'video_gallery' ); ?></th>
+									<td><input type="text" name="amazonbuckets_name" id="amazonbuckets_name" size="20" value="<?php if(isset( $player_colors['amazonbuckets_name'])){ echo balanceTags( $player_colors['amazonbuckets_name'] );} ?>"></td>
+								</tr>
+								<tr class="gallery_separator">
+								 	<th><?php esc_attr_e( 'Enter Amazon S3 Bucket link', 'video_gallery' ); ?></th>
+									<td><input type="text" name="amazonbuckets_link" id="amazonbuckets_link" size="20" value="<?php if(isset( $player_colors['amazonbuckets_link'])){ echo balanceTags( $player_colors['amazonbuckets_link'] );} ?>"></td>
+								</tr>
+								<tr class="gallery_separator">
+								 	<th><?php esc_attr_e( 'Enter Amazon S3 Bucket Access Key', 'video_gallery' ); ?></th>
+									<td><input type="text" name="amazon_bucket_access_key" id="amazon_bucket_access_key" size="20" value="<?php if(isset( $player_colors['amazon_bucket_access_key'])){ echo balanceTags( $player_colors['amazon_bucket_access_key'] );} ?>"></td>
+								</tr><tr class="gallery_separator">
+								 	<th><?php esc_attr_e( 'Enter Amazon S3 Bucket Access Secret Key', 'video_gallery' ); ?></th>
+									<td><input type="text" name="amazon_bucket_access_secretkey" id="amazon_bucket_access_secretkey" size="20" value="<?php if(isset( $player_colors['amazon_bucket_access_secretkey'])){ echo balanceTags( $player_colors['amazon_bucket_access_secretkey'] );} ?>"></td>
+								</tr>								
+						    </table>
+						  
+					    </div>
+					 </div>   	
+					 <div class="portlet">
+					<div class="portlet-header"><b><?php esc_attr_e( 'User Video Setting', 'video_gallery' ); ?></b></div>
+						<div class="portlet-content">
+						    <table class="form-table">	
+						    <tr class="gallery_separator">
+						         <th><?php esc_attr_e( 'Video Upload Option to Members', 'video_gallery' ); ?></th>
+						         <td>
+										<input  type='radio' name="member_upload_enable" id="member_upload_enable" checked="checked" value="1" <?php if ( isset($player_colors['member_upload_enable']) && $player_colors['member_upload_enable'] == 1 ) { echo 'checked'; } ?> /><label><?php esc_attr_e( 'Enable', 'video_gallery' ); ?></label>
+										<input  type='radio' name="member_upload_enable" id="member_upload_enable" value="0" <?php if ( isset($player_colors['member_upload_enable']) && $player_colors['member_upload_enable'] == 0 ) { echo 'checked'; } ?> /><label><?php esc_attr_e( 'Disable', 'video_gallery' ); ?></label>
+								</td>
+						      </tr>
+						      <tr class="gallery_separator" >
+						            <th><?php esc_attr_e( 'Select upload method(s) for users', 'video_gallery' ); ?></th>
+									<td> <?php echo esc_attr_e('( Press ctrl button and Choose Multiple Option)','video_gallery');?><?php $allowed_method = explode(',',$player_colors['user_allowed_method']); ?>
+										<span><select name="user_allowed_method[]" size="5" multiple="multiple" >
+											<option value="c" <?php if(in_array('c',$allowed_method)){ echo 'selected'; } ?>><?php esc_attr_e( 'YouTube URL / Viddler / Dailymotion', 'video_gallery' ); ?></option>
+											<option value="y" <?php if(in_array('y',$allowed_method)){ echo 'selected'; } ?>><?php esc_attr_e( 'Upload file', 'video_gallery' ); ?></option>										
+											<option value="url" <?php if(in_array('url',$allowed_method)){ echo 'selected'; } ?>><?php esc_attr_e( 'Custom URL', 'video_gallery' ); ?></option>
+											<option value="rmtp" <?php if(in_array('rmtp',$allowed_method)){ echo 'selected'; } ?>><?php esc_attr_e( 'RTMP', 'video_gallery' ); ?></option>												
+										    <?php if ( isset( $settingsGrid->license ) && ( strpos( $settingsGrid->license ,'CONTUS' ) ) ) { ?>
+											<option value="embed" <?php if(in_array('embed',$allowed_method)){ echo 'selected'; } ?>><?php esc_attr_e( 'Embed Video', 'video_gallery' ); ?></option>				
+										    <?php }  ?>
+										</select>
+										</span>
+									</td>
+						      </tr>
+						       </table>
+						 </div>
+					</div>	    
 					<div class="bottom_btn">
-						<input class='button-primary' style="float:right; " name="updatebutton"  type='submit' value='<?php esc_attr_e( 'Update Options', 'video_gallery' ); ?>'>
+						<input class='button-primary' id='videogallery_setting' style="float:right; " name="updatebutton"  type='submit' value='<?php esc_attr_e( 'Update Options', 'video_gallery' ); ?>'>
 					</div>
 				</div>
 			</div>

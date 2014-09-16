@@ -1,14 +1,13 @@
 <?php
-/*
-  Name: Wordpress Video Gallery
-  Plugin URI: http://www.apptha.com/category/extension/Wordpress/Video-Gallery
-  Description: Ajax Playlist Controller.
-  Version: 2.6
-  Author: Apptha
-  Author URI: http://www.apptha.com
-  License: GPL2
+/** 
+ * Ajax Playlist Controller.
+ * @category   Apptha
+ * @package    Contus video Gallery
+ * @version    2.7
+ * @author     Apptha Team <developers@contus.in>
+ * @copyright  Copyright (C) 2014 Apptha. All rights reserved.
+ * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html 
  */
-
 include_once( $adminModelPath . 'ajaxplaylist.php' );				## including Playlist model file for get database information.
 if ( class_exists( 'AjaxPlaylistController' ) != true ) {			## checks if the PlaylistController class has been defined starts
 
@@ -25,8 +24,10 @@ if ( class_exists( 'AjaxPlaylistController' ) != true ) {			## checks if the Pla
 		public $_del;
 		public $_orderDirection;
 		public $_orderBy;
-
-		public function __construct() {							## contructor starts
+        /**
+         * Contructor function
+         */
+		public function __construct() {							
 			parent::__construct();
 			$this->_playlistsearchQuery = filter_input( INPUT_POST, 'PlaylistssearchQuery' );
 			$this->_addnewPlaylist = filter_input( INPUT_POST, 'playlistadd' );
@@ -39,22 +40,22 @@ if ( class_exists( 'AjaxPlaylistController' ) != true ) {			## checks if the Pla
 			$this->_orderBy = filter_input( INPUT_GET, 'orderby' );
 		}
 
-		## contructor ends
+
 		public function hd_ajax_add_playlist( $name, $media ) {
 			global $wpdb;
-			##  Get input informations from POST
 			$p_name = addslashes( trim( $name ) );
+			$p_slugname = sanitize_title($name);
 			$p_description   = '';
-			$p_playlistorder = $wpdb->get_var( 'SELECT count( playlist_order ) FROM ' . $wpdb->prefix . 'hdflvvideoshare_playlist' );
+			$p_playlistorder = $wpdb->get_var( 'SELECT MAX(playlist_order) FROM ' . $wpdb->prefix . 'hdflvvideoshare_playlist' );
+			$playlist_order  = $p_playlistorder+1;  
 			$playlistname1   = 'SELECT playlist_name FROM ' . $wpdb->prefix . 'hdflvvideoshare_playlist WHERE playlist_name="' . $p_name . '"';
 			$planame1 = mysql_query( $playlistname1 );
 			if ( mysql_fetch_array( $planame1, MYSQL_NUM ) ) {
 				$this->render_error( __( 'Failed, category name already exist', 'hdflvvideoshare' ) ) . $this->get_playlist_for_dbx( $media );
 				return;
 			}
-			##  Add playlist in db
 			if ( ! empty( $p_name ) ) {
-				$insert_plist = mysql_query( ' INSERT INTO ' . $wpdb->prefix . 'hdflvvideoshare_playlist ( playlist_name, playlist_desc,is_publish, playlist_order ) VALUES ( "'.$p_name.'", "'.$p_description.'", "1", "'.$p_playlistorder.'" )' );
+				$insert_plist = mysql_query( ' INSERT INTO ' . $wpdb->prefix . 'hdflvvideoshare_playlist ( playlist_name, playlist_desc,is_publish, playlist_order,playlist_slugname ) VALUES ( "'.$p_name.'", "'.$p_description.'", "1", "'.$playlist_order.'","'.$p_slugname.'" )' );
 				if ( $insert_plist != 0 ) {
 					$this->render_message( __( 'Category', 'hdflvvideoshare' ) . ' ' . $name . __( ' added successfully', 'hdflvvideoshare' ) ) . $this->get_playlist_for_dbx( $media );
 				}
@@ -79,13 +80,13 @@ if ( class_exists( 'AjaxPlaylistController' ) != true ) {			## checks if the Pla
 				</div></div>
 			<?php
 		}
-
+        /**
+         * Get all playlists for our site
+         */
 		public function get_playlist() {
 
 			global $wpdb;
-			##  get playlist ID's
 			$playids = $wpdb->get_col( 'SELECT pid FROM ' . $wpdb->prefix . 'hdflvvideoshare_playlist WHERE is_publish=1' );
-			##  to be sure
 			$mediaid = '';
 			$videoId = filter_input( INPUT_GET, 'videoId' );
 			if ( isset( $videoId ) )
@@ -101,7 +102,6 @@ if ( class_exists( 'AjaxPlaylistController' ) != true ) {			## checks if the Pla
 			}
 
 			$result = array();
-			##  create an array with playid, checked status and name
 			if ( is_array( $playids ) ) {
 				foreach ( $playids as $playid ) {
 					$result[$playid]['playid']  = $playid;
@@ -128,14 +128,14 @@ if ( class_exists( 'AjaxPlaylistController' ) != true ) {			## checks if the Pla
 			$comma_separated = implode( ',', $hiddenarray );
 			echo '<input type=hidden name=hid value = "'.$comma_separated.'" >';
 		}
-
+        /**
+         * Get media playlist for the videos
+         * @param unknown $mediaid
+         */
 		public function get_playlist_for_dbx( $mediaid ) {
 			global $wpdb;
-			##  get playlist ID's
 			$playids = $wpdb->get_col( 'SELECT pid FROM ' . $wpdb->prefix . 'hdflvvideoshare_playlist where is_publish=1' );
-			##  to be sure
 			$mediaid = ( int ) $mediaid;
-			##  get checked ID's'
 			$checked_playlist = $wpdb->get_col(
 								'SELECT playlist_id,sorder
 								FROM ' . $wpdb->prefix . 'hdflvvideoshare_playlist,' . $wpdb->prefix . 'hdflvvideoshare_med2play
@@ -144,7 +144,6 @@ if ( class_exists( 'AjaxPlaylistController' ) != true ) {			## checks if the Pla
 			if ( count( $checked_playlist ) == 0 )
 				$checked_playlist[] = 0;
 			$result = array();
-			##  create an array with playid, checked status and name
 			if ( is_array( $playids ) ) {
 				foreach ( $playids as $playid ) {
 					$result[$playid]['playid']  = $playid;
@@ -167,7 +166,12 @@ if ( class_exists( 'AjaxPlaylistController' ) != true ) {			## checks if the Pla
 			$comma_separated = implode( ',', $hiddenarray );
 			echo '<input type=hidden name=hid value = "'.$comma_separated.'" >';
 		}
-
+        /**
+         * Get playlist sort order change
+         * @param number $mediaid
+         * @param unknown $pid
+         * @return Ambigous <string, NULL>
+         */
 		public function get_sortorder( $mediaid = 0, $pid ) {
 			global $wpdb;
 
@@ -176,7 +180,11 @@ if ( class_exists( 'AjaxPlaylistController' ) != true ) {			## checks if the Pla
 
 			return $result;
 		}
-
+		/**
+		 * Get playlist name by playlist id
+		 * @param number $pid
+		 * @return Ambigous <string, NULL>
+		 */
 		public function get_playlistname_by_id( $pid = 0 ) {
 			global $wpdb;
 

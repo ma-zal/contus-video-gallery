@@ -1,11 +1,12 @@
-/*
- Name: Wordpress Video Gallery
- Plugin URI: http://www.apptha.com/category/extension/Wordpress/Video-Gallery
- Description: Admin action javacript file.
- Version: 2.6
- Author: Apptha
- Author URI: http://www.apptha.com
- License: GPL2
+/**  
+ * Video admin js file.
+ *
+ * @category   Apptha
+ * @package    Contus video Gallery
+ * @version    2.7
+ * @author     Apptha Team <developers@contus.in>
+ * @copyright  Copyright (C) 2014 Apptha. All rights reserved.
+ * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html 
  */
 
 function checkingarray(checkname)						//for giving the coma seprerated  selcted checkbox id's
@@ -29,6 +30,112 @@ function checkingarray(checkname)						//for giving the coma seprerated  selcted
 		return false;
 	}
 }
+
+function t1( t2 )
+{    
+	if ( t2.value == "y" || t2 == "y" )
+	{
+		document.getElementById( 'upload2' ).style.display = "block";
+		document.getElementById( 'supportformats' ).style.display = "";
+		document.getElementById( 'ffmpeg_disable_new4' ).style.display = "";
+		document.getElementById( 'ffmpeg_disable_new2' ).style.display = "";
+		document.getElementById( 'ffmpeg_disable_new3' ).style.display = "";
+		document.getElementById( 'ffmpeg_disable_new1' ).style.display = "";
+		document.getElementById( 'ffmpeg_disable_new5' ).style.display = "";
+		document.getElementById( 'ffmpeg_disable_new6' ).style.display = "";
+		document.getElementById( 'filetypevalue' ).value = 2;
+		document.getElementById( 'youtube' ).style.display = "none";
+		document.getElementById( 'embedvideo' ).style.display = "none";
+		document.getElementById( 'customurl' ).style.display = "none";
+	} else if ( t2.value == "c" || t2 == "c" ) {
+		document.getElementById( 'youtube' ).style.display = "block";
+		document.getElementById( 'upload2' ).style.display = "block";
+		document.getElementById( 'supportformats' ).style.display = "none";
+		document.getElementById( 'ffmpeg_disable_new4' ).style.display = "none";
+		document.getElementById( 'ffmpeg_disable_new2' ).style.display = "none";
+		document.getElementById( 'ffmpeg_disable_new3' ).style.display = "none";
+		document.getElementById( 'ffmpeg_disable_new1' ).style.display = "none";
+		document.getElementById( 'ffmpeg_disable_new5' ).style.display = "";
+		document.getElementById( 'ffmpeg_disable_new6' ).style.display = "";
+		document.getElementById( 'embedvideo' ).style.display = "none";
+		document.getElementById( 'customurl' ).style.display = "none";
+		document.getElementById( 'filetypevalue' ).value = 1;
+	} else if ( t2.value == "url" || t2 == "url" ) {
+		document.getElementById( 'customurl' ).style.display = "block";
+		document.getElementById( 'embedvideo' ).style.display = "none";
+		document.getElementById( 'islive_visible' ).style.display = "none";
+		document.getElementById( 'upload2' ).style.display = "block";
+		document.getElementById( 'supportformats' ).style.display = "none";
+		document.getElementById( 'ffmpeg_disable_new4' ).style.display = "none";
+		document.getElementById( 'ffmpeg_disable_new2' ).style.display = "none";
+		document.getElementById( 'ffmpeg_disable_new3' ).style.display = "none";
+		document.getElementById( 'ffmpeg_disable_new1' ).style.display = "none";
+		document.getElementById( 'ffmpeg_disable_new5' ).style.display = "";
+		document.getElementById( 'ffmpeg_disable_new6' ).style.display = "";
+		document.getElementById( 'stream1' ).style.display = "none";
+		document.getElementById( 'hdvideourl' ).style.display = "";
+		document.getElementById( 'youtube' ).style.display = "none";
+		document.getElementById( 'filetypevalue' ).value = 3;
+	} else if ( t2.value == "rtmp" || t2 == "rtmp" ) {
+		document.getElementById( 'customurl' ).style.display = "block";
+		document.getElementById( 'islive_visible' ).style.display = "";
+		document.getElementById( 'stream1' ).style.display = "";
+		document.getElementById( 'upload2' ).style.display = "block";
+		document.getElementById( 'supportformats' ).style.display = "none";
+		document.getElementById( 'ffmpeg_disable_new4' ).style.display = "none";
+		document.getElementById( 'ffmpeg_disable_new2' ).style.display = "none";
+		document.getElementById( 'ffmpeg_disable_new3' ).style.display = "none";
+		document.getElementById( 'ffmpeg_disable_new1' ).style.display = "none";
+		document.getElementById( 'ffmpeg_disable_new5' ).style.display = "";
+		document.getElementById( 'ffmpeg_disable_new6' ).style.display = "";
+		document.getElementById( 'embedvideo' ).style.display = "none";
+		document.getElementById( 'hdvideourl' ).style.display = "none";
+		document.getElementById( 'youtube' ).style.display = "none";
+		document.getElementById( 'filetypevalue' ).value = 4;
+	} else if ( t2.value == "embed" || t2 == "embed" ) {
+		document.getElementById( 'embedvideo' ).style.display = "block";
+		document.getElementById( 'islive_visible' ).style.display = "";
+		document.getElementById( 'stream1' ).style.display = "";
+		document.getElementById( 'customurl' ).style.display = "none";
+		document.getElementById( 'hdvideourl' ).style.display = "none";
+		document.getElementById( 'youtube' ).style.display = "none";
+		document.getElementById( 'adstypebox' ).style.display = "none";
+		document.getElementById( 'upload2' ).style.display = "block"
+		document.getElementById( 'ffmpeg_disable_new3' ).style.display = ""
+		document.getElementById( 'supportformats' ).style.display = "none";
+		document.getElementById( 'ffmpeg_disable_new4' ).style.display = "none";
+		document.getElementById( 'ffmpeg_disable_new2' ).style.display = "none";
+		document.getElementById( 'ffmpeg_disable_new1' ).style.display = "none";
+		document.getElementById( 'ffmpeg_disable_new5' ).style.display = "none";
+		document.getElementById( 'ffmpeg_disable_new6' ).style.display = "none";
+		document.getElementById( 'filetypevalue' ).value = 5;
+	}
+}
+
+function VideogoogleaddeleteIds(){
+	var googleadactiondown      = document.getElementById("videogoogleadactiondown").value;
+	var googleadactionup        = document.getElementById("videogoogleadactionup").value;
+	var googleaddeleteID        = checkingarray('videogooglead_id[]');
+	if (googleadactiondown === "videogoogleaddelete" || googleadactionup === "videogoogleaddelete")
+	{
+		if (googleaddeleteID)
+		{
+			alert("You want to delete Google Adsense? ");
+			return true;
+		}
+		else
+		{
+			alert("Please select a Google Adsense to delete");
+			return false;
+		}
+	}
+	else
+	{
+		alert("Please select an action");
+	}
+	return false;
+}
+
 function PlaylistdeleteIds()
 {
 	playlistactiondown = document.getElementById("playlistactiondown").value;
@@ -204,7 +311,9 @@ function validateadInput() {
 				}
 			}
 		}
-		if (document.getElementById('name').value === '') {
+		var  adstitle = document.getElementById('name').value;
+		     adstitle =  adstitle.trim();
+		if ( adstitle == '') {
 			document.getElementById('nameerrormessage').style.display	= "block";
 			document.getElementById('nameerrormessage').innerHTML		= 'Enter Ad Name';
 			document.getElementById('name').focus();
@@ -310,6 +419,20 @@ function VideodeleteIds()
 			alert("Please select a Video to delete ");
 			return false;
 		}
+	}else if(videoactiondown ==="videopublish" || videoactionup ==="videopublish" || videoactiondown === "videounpublish" || videoactionup === "videounpublish"){
+		if(videoID){
+			return true;
+		}else{
+			alert("Please select  a video to  publish");
+			return false;
+		}
+	}else if(videoactiondown ==='videofeatured' || videoactionup ==="videofeatured" || videoactiondown === "videounfeatured" || videoactionup === "videounfeatured"){
+		if(videoID){
+			return true;
+		}else{
+			alert("Please select  a video to  featured");
+			return false;
+		}
 	}
 	else
 	{
@@ -358,8 +481,7 @@ function addQueue(whichForm, myfile)
 	var extn = extension(myfile);
 	if (whichForm === 'normalvideoform' || whichForm === 'hdvideoform')
 	{
-		if (extn !== 'flv' && extn !== 'FLV' && extn !== 'mp4' && extn !== 'MP4' && extn !== 'm4v' && extn !== 'M4V' && extn !== 'mp4v' && extn !== 'Mp4v' && extn !== 'm4a' && extn !== 'M4A' && extn !== 'mov' && extn !== 'MOV' && extn !== 'f4v' && extn != 'F4V')
-		{
+	    if (extn !== 'mp3' && extn !== 'MP3' && extn !== 'flv' && extn !== 'FLV' && extn !== 'mp4' && extn !== 'MP4' && extn !== 'm4v' && extn !== 'M4V' && extn !== 'mp4v' && extn !== 'Mp4v' && extn !== 'm4a' && extn !== 'M4A' && extn !== 'mov' && extn !== 'MOV' && extn !== 'f4v' && extn != 'F4V')		{
 			alert(extn + " is not a valid Video Extension");
 			return false;
 		}
@@ -406,7 +528,7 @@ function holdQueue()
 	setStatus(form_handler, 'Queued');
 }
 function updateQueue(statuscode, statusmessage, outfile)
-{
+{ 
 	uploadmessage	= statusmessage;
 	form_handler	= uploadqueue[0];
 	if (statuscode === 0) {
@@ -418,6 +540,7 @@ function updateQueue(statuscode, statusmessage, outfile)
 			getsubtitle2name();
 		}
 	}
+	
 	setStatus(form_handler, statuscode);
 	uploadqueue.shift();
 	processQueue();
@@ -427,7 +550,7 @@ function updateQueue(statuscode, statusmessage, outfile)
 function submitUploadForm(form_handle)
 {
 	document.forms[form_handle].target = "uploadvideo_target";
-	document.forms[form_handle].action = "../wp-content/plugins/" + folder + "/admin/ajax/videoupload.php?processing=1";
+	document.forms[form_handle].action = "admin-ajax.php?action=uploadvideo";
 	document.forms[form_handle].submit();
 }
 function setStatus(form_handle, status)
@@ -469,7 +592,7 @@ function setStatus(form_handle, status)
 			document.getElementById(divprefix + "-upload-status").innerHTML			= "Queued";
 			document.getElementById(divprefix + "-upload-message").style.display	= "none";
 			document.getElementById(divprefix + "-upload-filename").innerHTML		= document.forms[form_handle].myfile.value;
-			document.getElementById(divprefix + "-upload-image").src				= '../wp-content/plugins/' + folder + '/images/empty.gif';
+			document.getElementById(divprefix + "-upload-image").src				= videogallery_plugin_folder + '/images/empty.gif';
 			document.getElementById(divprefix + "-upload-cancel").innerHTML			= '<a style="float:right;padding-right:10px;" href=javascript:cancelUpload("' + form_handle + '") name="submitcancel">Cancel</a>';
 			break;
 
@@ -479,7 +602,7 @@ function setStatus(form_handle, status)
 			document.getElementById(divprefix + "-upload-status").innerHTML			= "Uploading";
 			document.getElementById(divprefix + "-upload-message").style.display	= "none";
 			document.getElementById(divprefix + "-upload-filename").innerHTML		= document.forms[form_handle].myfile.value;
-			document.getElementById(divprefix + "-upload-image").src				= '../wp-content/plugins/' + folder + '/images/loader.gif';
+			document.getElementById(divprefix + "-upload-image").src				= videogallery_plugin_folder + '/images/loader.gif';
 			document.getElementById(divprefix + "-upload-cancel").innerHTML			= '<a style="float:right;padding-right:10px;" href=javascript:cancelUpload("' + form_handle + '") name="submitcancel">Cancel</a>';
 			break;
 		case "Retry":
@@ -490,7 +613,7 @@ function setStatus(form_handle, status)
 			enableUpload(form_handle);
 			break;
 		case 0:
-			document.getElementById(divprefix + "-upload-image").src				= '../wp-content/plugins/' + folder + '/images/success.gif';
+			document.getElementById(divprefix + "-upload-image").src				= videogallery_plugin_folder + '/images/success.gif';
 			document.getElementById(divprefix + "-upload-status").innerHTML			= "";
 			document.getElementById(divprefix + "-upload-message").style.display	= "";
 			document.getElementById(divprefix + "-upload-message").style.backgroundColor = "#CEEEB2";
@@ -503,7 +626,7 @@ function setStatus(form_handle, status)
 
 
 		default:
-			document.getElementById(divprefix + "-upload-image").src				= '../wp-content/plugins/' + folder + '/images/error.gif';
+			document.getElementById(divprefix + "-upload-image").src				= videogallery_plugin_folder + '/images/error.gif';
 			document.getElementById(divprefix + "-upload-status").innerHTML			= " ";
 			document.getElementById(divprefix + "-upload-message").style.display	= "";
 			document.getElementById(divprefix + "-upload-message").innerHTML		= uploadmessage + " <a href=javascript:setStatus('" + form_handle + "','Retry')>Retry</a>";
@@ -583,12 +706,12 @@ function extension(fname)
 function generate12(str1)
 {
 	var re = /http:\/\/www\.youtube[^"]+/;
-	if (re.test(str1))
-		document.getElementById('generate').style.visibility = "visible";
-	else
+	if (re.test(str1)){
+		document.getElementById('generate').style.visibility = "visible";	  
+	}else {
 		document.getElementById('generate').style.visibility = "hidden";
-
-}
+    }
+ }	
 
 function validateInput() {
 
@@ -626,6 +749,7 @@ function validateInput() {
 		} else {
 			var thevideourl = document.getElementById("filepath2").value;
 			var tomatch = /(http:\/\/|https:\/\/)[A-Za-z0-9\.-]{3,}\.[A-Za-z]{3}|(http:\/\/|https:\/\/)/;
+                        var allowedfileformat = /^(([a-zA-Z]:)|(\\{2}\w+)\$?)(\\(\w[\w].*))+(.mp4|.M4V|.M4A|.MOV|.mp4v|.M4V)$/;//Allowed fileformat
 			if (!tomatch.test(thevideourl))
 			{
 				document.getElementById('videourlmessage').innerHTML		= 'Enter Valid Video URL';
@@ -633,6 +757,7 @@ function validateInput() {
 				document.getElementById("filepath2").focus();
 				return false;
 			}
+                        
 		}
 		var thehdvideourl = document.getElementById("filepath3").value;
 		if (thehdvideourl !== '') {
@@ -710,19 +835,22 @@ function validateInput() {
 			document.getElementById('embedmessage').innerHTML = '';
 		}
 	}
-	if (document.getElementById('name').value == '') {
+	var  title = document.getElementById('name').value;
+	title = title.trim();
+	if (title == '') {
 		document.getElementById('titlemessage').innerHTML = 'Enter Title';
 		document.getElementById('titlemessage').style.display = "block";
 		document.getElementById('name').focus();
 		return false;
 	}
+	
 
 //    validation for Video subtitle
 	if (document.getElementById('subtitle1form-value').value !== "")
 	{
 		if (document.getElementById('subtile_lang1').value === "")
 		{
-			document.getElementById('uploadsrt1message').innerHTML = 'You must provide SubTitle1';
+			document.getElementById('uploadsrt1message').innerHTML = 'You must provide Subtitle1';
 			document.getElementById('subtile_lang1').focus();
 			return false;
 		} else {
@@ -733,7 +861,7 @@ function validateInput() {
 	{
 		if (document.getElementById('subtile_lang2').value === "")
 		{
-			document.getElementById('uploadsrt2message').innerHTML = 'You must provide SubTitle2';
+			document.getElementById('uploadsrt2message').innerHTML = 'You must provide Subtitle2';
 			document.getElementById('subtile_lang2').focus();
 			return false;
 		} else {
@@ -758,7 +886,9 @@ function validateInput() {
 }
 
 function validateplyalistInput() {
-	if (document.getElementById('playlistname').value === '') {
+	var playlistname = document.getElementById('playlistname').value; 
+	    playlistname = playlistname.trim();
+	if ( playlistname === '') {
 		document.getElementById('playlistnameerrormessage').innerHTML = 'Enter Category Name';
 		document.getElementById('playlistname').focus();
 		return false;
@@ -772,6 +902,7 @@ function playlistdisplay()
 function playlistclose()
 {
 	document.getElementById('playlistcreate1').style.display = "none";
+	document.getElementById('jaxcat').innerHTML = "";
 	document.getElementById('message').style.display = "none";
 }
 
@@ -823,6 +954,7 @@ function validatevideotitle() {
 		document.getElementById('titlemessage').style.display = "none";
 	}
 }
+
 function validateerrormsg() {
 	if (document.getElementById('videoadfilepath').value !== '') {
 		document.getElementById('filepatherrormessage').style.display = "none";

@@ -1,12 +1,13 @@
 <?php
-/*
-  Name: Wordpress Video Gallery
-  Plugin URI: http://www.apptha.com/category/extension/Wordpress/Video-Gallery
-  Description: LanguageXML file for player.
-  Version: 2.6
-  Author: Apptha
-  Author URI: http://www.apptha.com
-  License: GPL2
+/** 
+ * LanguageXML file for player.
+ * 
+ * @category   Apptha
+ * @package    Contus video Gallery
+ * @version    2.7
+ * @author     Apptha Team <developers@contus.in>
+ * @copyright  Copyright (C) 2014 Apptha. All rights reserved.
+ * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html 
  */
 ob_clean();
 header( 'content-type: text/xml' );

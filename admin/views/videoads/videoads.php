@@ -1,21 +1,25 @@
 <?php
-/*
-  Name: Wordpress Video Gallery
-  Plugin URI: http://www.apptha.com/category/extension/Wordpress/Video-Gallery
-  Description: Video ad view file.
-  Version: 2.6
-  Author: Apptha
-  Author URI: http://www.apptha.com
-  License: GPL2
+/**
+ * Video ad view file.
+ * 
+ *  @category   Apptha
+ * @package    Contus video Gallery
+ * @version    2.7
+ * @author     Apptha Team <developers@contus.in>
+ * @copyright  Copyright (C) 2014 Apptha. All rights reserved.
+ * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html 
  */
 ?>
 <!--   MENU OPTIONS STARTS  --->
+<?php $imaadpath = $videoAdFile = ''; //  avoid invalid variable  ?>
 <div class="apptha_gallery">
 	<h2 class="nav-tab-wrapper">
 		<a href="?page=video" class="nav-tab"><?php esc_attr_e( 'All Videos', 'video_gallery' ); ?></a>
 		<a href="?page=playlist" class="nav-tab"><?php esc_attr_e( 'Categories', 'video_gallery' ); ?></a>
 		<a href="?page=videoads" class="nav-tab nav-tab-active"><?php esc_attr_e( 'Video Ads', 'video_gallery' ); ?></a>
 		<a href="?page=hdflvvideosharesettings" class="nav-tab"><?php esc_attr_e( 'Settings', 'video_gallery' ); ?></a>
+		<a href="?page=googleadsense" class="nav-tab"><?php esc_attr_e( 'Google AdSense', 'video_gallery' ); ?></a>
+		
 	</h2>
 
 	<!--  MENU OPTIONS ENDS --->
@@ -24,7 +28,7 @@
 		<h2 class="option_title">
 			<?php echo '<img src="' . APPTHA_VGALLERY_BASEURL . '/images/vid_ad.png" alt="move" width="30"/>'; ?>
 			<?php esc_attr_e( 'Manage Video Ads', 'video_gallery' ); ?>
-			<a class="button-primary" href="<?php echo balanceTags( get_site_url() ); ?>/wp-admin/admin.php?page=newvideoad" >Add Video Ad</a>
+			<a class="button-primary" href="<?php echo balanceTags( get_site_url() ); ?>/wp-admin/admin.php?page=newvideoad" >Add New</a>
 		</h2>
 
 		<?php if ( $displayMsg ): ?>
@@ -50,12 +54,12 @@ if ( isset( $searchBtn ) ) {
 	}
 		?> </div> 
 	<?php } ?>
-		<form name="videoads" action="" method="post"  onsubmit="return prodttagsearch();" >
+		<form name="videoads" action="" method="post" class="admin_video_search alignright"  onsubmit="return prodttagsearch();" >
 			<p class="search-box">
 				<input type="text"  name="videoadssearchQuery" id="videoadssearchQuery" value="<?php echo balanceTags( $searchMsg ); ?>">
 <?php echo '<script>document.getElementById( "videoadssearchQuery" ).value="' . $searchMsg . '"</script>'; ?>
 				<input type="hidden"  name="page" value="videoads">
-				<input type="submit" name="videoadsearchbtn"  class="button" value="Search Video Ads">
+				<input type="submit" name="videoadsearchbtn"  class="button" value="Search Ads">
 			</p>
 		</form>
 		<form  name="videoadsfrm" action="" method="post" onsubmit="return VideoaddeleteIds()" >
@@ -95,34 +99,34 @@ if ( $page_links ) {
 			<table class="wp-list-table widefat fixed tags" cellspacing="0">
 				<thead>
 					<tr>
-						<th scope="col"  class="manage-column column-cb check-column" style="">
-							<input type="checkbox" name="" >
+						<th scope="col" id="cb"  class="manage-column column-cb check-column" style="">
+							<input type="checkbox" name="" id="manage-column-video-1" >
 						</th>
-						<th scope="col"  class="manage-column column-name sortable desc" style="">
+						<th scope="col"  class="manage-column column-id sortable desc" style="">
 							<a  href="<?php echo balanceTags( get_site_url() ); ?>/wp-admin/admin.php?page=videoads&orderby=id&order=<?php echo balanceTags( $reverse_direction ); ?>">
 								<span><?php esc_attr_e( 'Ad ID', 'video_gallery' ); ?></span>
 								<span class="sorting-indicator"></span>
 							</a>
 						</th>
-						<th scope="col" class="manage-column column-description sortable desc" style="">
+						<th scope="col" class="manage-column column-name sortable desc" style="">
 							<a href="<?php echo balanceTags( get_site_url() ); ?>/wp-admin/admin.php?page=videoads&orderby=title&order=<?php echo balanceTags( $reverse_direction ); ?>" ><span><?php esc_attr_e( 'Title', 'video_gallery' ); ?></span>
 								<span class="sorting-indicator"></span>
 							</a>
 						</th>
-						<th scope="col"  class="manage-column column-name sortable desc" style="">
+						<th scope="col"  class="manage-column column-path sortable desc" style="">
 							<a  href="<?php echo balanceTags( get_site_url() ); ?>/wp-admin/admin.php?page=videoads&orderby=path&order=<?php echo balanceTags( $reverse_direction ); ?>">
 								<span><?php esc_attr_e( 'Path', 'video_gallery' ); ?></span>
 								<span class="sorting-indicator"></span>
 							</a>
 						</th>
 
-						<th scope="col" class="manage-column column-description sortable desc" style="">
-							<span><?php esc_attr_e( 'Ad Type', 'video_gallery' ); ?></span>
+						<th scope="col" class="manage-column column-type sortable desc" style="">
+							<a><span><?php esc_attr_e( 'Ad Type', 'video_gallery' ); ?></span></a>		
 						</th>
-						<th scope="col" class="manage-column column-description sortable desc" style="">
-							<span><?php esc_attr_e( 'Ad Method', 'video_gallery' ); ?></span>
+						<th scope="col" class="manage-column column-admethod sortable desc" style="">
+							<a><span><?php esc_attr_e( 'Ad Method', 'video_gallery' ); ?></span></a>
 						</th>
-						<th scope="col" class="manage-column column-description sortable desc" style="">
+						<th scope="col" class="manage-column column-publish sortable desc" style="">
 							<a  href="<?php echo balanceTags( get_site_url() ); ?>/wp-admin/admin.php?page=videoads&orderby=publish&order=<?php echo balanceTags( $reverse_direction ); ?>" ><span><?php esc_attr_e( 'Publish', 'video_gallery' ); ?></span>
 								<span class="sorting-indicator"></span>
 							</a>
@@ -135,35 +139,49 @@ foreach ( $gridVideoad as $videoAdview ) {
 	?>
 						<tr>
 							<th scope="row" class="check-column">
+							    <label class="screen-reader-text" for="cb-select-<?php echo balanceTags( $videoAdview->ads_id ); ?>">Select <?php echo  ucfirst( balanceTags( $videoAdview->title )); ?></label>
 								<input type="checkbox" name="videoad_id[]" value="<?php echo balanceTags( $videoAdview->ads_id ); ?>">
 							</th>
-							<td>
-								<a title="Edit <?php echo balanceTags( $videoAdview->title ); ?>" href="<?php echo balanceTags( get_site_url() ); ?>/wp-admin/admin.php?page=newvideoad&videoadId=<?php echo balanceTags( $videoAdview->ads_id ); ?>" ><?php echo balanceTags( $videoAdview->ads_id ); ?></a><div class="row-actions">
+							<td class="column-id">
+								<a title="Edit <?php echo ucfirst( balanceTags( $videoAdview->title ) ); ?>" href="<?php echo balanceTags( get_site_url() ); ?>/wp-admin/admin.php?page=newvideoad&videoadId=<?php echo balanceTags( $videoAdview->ads_id ); ?>" ><?php echo balanceTags( $videoAdview->ads_id ); ?></a><div class="row-actions">
 							</td>
-							<td>
-								<a title="Edit <?php echo balanceTags( $videoAdview->title ); ?>" class="row-title" href="<?php echo balanceTags( get_site_url() ); ?>/wp-admin/admin.php?page=newvideoad&videoadId=<?php echo balanceTags( $videoAdview->ads_id ); ?>" ><?php echo balanceTags( $videoAdview->title ); ?></a>
+							<td class="column-title">
+								<a title="Edit <?php echo ucfirst( balanceTags( $videoAdview->title ) ); ?>" class="row-title" href="<?php echo balanceTags( get_site_url() ); ?>/wp-admin/admin.php?page=newvideoad&videoadId=<?php echo balanceTags( $videoAdview->ads_id ); ?>" ><?php echo balanceTags( $videoAdview->title ); ?></a>
 							</td>
-							<td class="description column-description">
-							<?php if ( $videoAdview->admethod != 'midroll' ) echo balanceTags( $videoAdview->file_path ); ?>
-							<?php if ( $videoAdview->admethod == 'imaad' ) echo balanceTags( $videoAdview->imaadpath ); ?>
+							<td class="column-path">
+							
+						   <?php if( strlen( $videoAdview->file_path ) > 40 ) {
+							   $videoAdFile =  balanceTags( substr($videoAdview->file_path,0,40 ) ) .'&hellip;';
+							} else { 
+							   $videoAdFile  =  balanceTags($videoAdview->file_path);  
+							} 
+							echo $videoAdFile;?>
+							<?php if( $videoAdview->admethod == 'imaad') {
+								if(strlen( $videoAdview->imaadpath)>40 ) {
+									$imaadpath = substr($videoAdview->imaadpath , 0 , 40).'&hellip;';   
+								} else {
+									$imaadpath =  $videoAdview->imaadpath;
+								}
+							  echo $imaadpath;							
+							} ?>
+							
 							</td>
 							<?php
 							$status  = 1;
 							$image   = 'deactivate.jpg';
-							$publish = 'Click here to Activate';
+							$publish = 'Publish';
 	if ( $videoAdview->publish == 1 ) {
 		$status  = 0;
 		$image   = 'activate.jpg';
-		$publish = 'Click here to Deactivate';
+		$publish = 'Unpublish';
 	}
 							?>
-							<td>
-	<?php echo balanceTags( $videoAdview->admethod ); ?>
+							<td class="column-type videoadmethod"><?php  if( $videoAdview->admethod =='prepost') { echo 'Pre/Post-roll Ad'; } else if( $videoAdview->admethod =='midroll' ) {  echo 'Mid-roll Ad';  } else if($videoAdview->admethod =='imaad' ) {  echo 'IMA Ad '; }  ?>
 							</td>
-							<td>
+							<td class="column-admethod">
 	<?php if ( $videoAdview->admethod != 'midroll' ) echo balanceTags( $videoAdview->adtype ); ?>
 							</td>
-							<td class="description column-description">
+							<td class="column-publish" id="videoad-publish-icon">
 								<a href="<?php echo balanceTags( get_site_url() ); ?>/wp-admin/admin.php?page=videoads&videoadId=<?php echo balanceTags( $videoAdview->ads_id ); ?>&status=<?php echo balanceTags( $status ); ?>">   <img  src="<?php echo balanceTags( APPTHA_VGALLERY_BASEURL ) . 'images/' . $image ?>" title="<?php echo balanceTags( $publish ); ?>" title="<?php echo balanceTags( $publish ); ?>"  /></a>
 							</td>
 						</tr>
@@ -179,32 +197,32 @@ if ( count( $gridVideoad ) == 0 ) {
 				<tfoot>
 					<tr>
 						<th scope="col"  class="manage-column column-cb check-column" style="">
-							<input type="checkbox" name="" >
+							<input type="checkbox" name="" id="manage-column-video-1" >
 						</th>
-						<th scope="col"  class="manage-column column-name sortable desc" style="">
+						<th scope="col"  class="manage-column column-id sortable desc" style="">
 							<a  href="<?php echo balanceTags( get_site_url() ); ?>/wp-admin/admin.php?page=videoads&orderby=id&order=<?php echo balanceTags( $reverse_direction ); ?>">
 								<span><?php esc_attr_e( 'Ad ID', 'video_gallery' ); ?></span>
 								<span class="sorting-indicator"></span>
 							</a>
 						</th>
-						<th scope="col" class="manage-column column-description sortable desc" style="">
+						<th scope="col" class="manage-column column-name sortable desc" style="">
 							<a href="<?php echo balanceTags( get_site_url() ); ?>/wp-admin/admin.php?page=videoads&orderby=title&order=<?php echo balanceTags( $reverse_direction ); ?>" ><span><?php esc_attr_e( 'Title', 'video_gallery' ); ?></span>
 								<span class="sorting-indicator"></span>
 							</a>
 						</th>
-						<th scope="col"  class="manage-column column-name sortable desc" style="">
+						<th scope="col"  class="manage-column column-path sortable desc" style="">
 							<a  href="<?php echo balanceTags( get_site_url() ); ?>/wp-admin/admin.php?page=videoads&orderby=path&order=<?php echo balanceTags( $reverse_direction ); ?>">
 								<span><?php esc_attr_e( 'Path', 'video_gallery' ); ?></span>
 								<span class="sorting-indicator"></span>
 							</a>
 						</th>
-						<th scope="col" class="manage-column column-description sortable desc" style="">
-							<span><?php esc_attr_e( 'Ad Type', 'video_gallery' ); ?></span>
+						<th scope="col" class="manage-column column-adtype sortable desc" style="">
+							<a><span><?php esc_attr_e( 'Ad Type', 'video_gallery' ); ?></span></a>
 						</th>
-						<th scope="col" class="manage-column column-description sortable desc" style="">
-							<span><?php esc_attr_e( 'Ad Method', 'video_gallery' ); ?></span>
+						<th scope="col" class="manage-column column-admethod sortable desc" style="">
+							<a><span><?php esc_attr_e( 'Ad Method', 'video_gallery' ); ?></span></a>
 						</th>
-						<th scope="col" class="manage-column column-description sortable desc" style="">
+						<th scope="col" class="manage-column column-publish sortable desc" style="">
 							<a  href="<?php echo balanceTags( get_site_url() ); ?>/wp-admin/admin.php?page=videoads&orderby=publish&order=<?php echo balanceTags( $reverse_direction ); ?>" ><span><?php esc_attr_e( 'Publish', 'video_gallery' ); ?></span>
 								<span class="sorting-indicator"></span>
 							</a>

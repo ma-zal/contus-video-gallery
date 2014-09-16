@@ -1,72 +1,101 @@
 <?php
-/*
-  Name: Wordpress Video Gallery
-  Plugin URI: http://www.apptha.com/category/extension/Wordpress/Video-Gallery
-  Description: playlist model file.
-  Version: 2.6
-  Author: Apptha
-  Author URI: http://www.apptha.com
-  License: GPL2
+/**  
+ * Video playlist admin model file.
+ *
+ * @category   Apptha
+ * @package    Contus video Gallery
+ * @version    2.7
+ * @author     Apptha Team <developers@contus.in>
+ * @copyright  Copyright (C) 2014 Apptha. All rights reserved.
+ * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html 
  */
 
-if ( class_exists( 'PlaylistModel' ) != true ) {							## checks the VideoadModel class has been defined if starts
+if ( class_exists( 'PlaylistModel' ) != true ) {							
 
-	class PlaylistModel {													## PlaylistModel class starts
+	class PlaylistModel {													
 
 		public $_playListId;
 
-		public function __construct() {										## contructor starts
+		public function __construct() {										
 			global $wpdb;
 			$this->_wpdb		  = $wpdb;
 			$this->_playlisttable = $this->_wpdb->prefix . 'hdflvvideoshare_playlist';
-			$this->_playListId    = filter_input( INPUT_GET, 'playlistId' );
-		}																	## contructor ends
-
-		public function insert_playlist( $playlsitData ) {					## function for inserting playlist starts
+			$this->_playListId    = absint( filter_input( INPUT_GET, 'playlistId' ) );
+		}																	
+        /**
+         * Function insert new playlist
+         */
+		public function insert_playlist( $playlsitData ) {	
 			if ( $this->_wpdb->insert( $this->_playlisttable, $playlsitData ) ) {
 				return $this->_wpdb->insert_id;
 			}
-		}																	## function for inserting playlist ends
-		
-		public function playlist_update( $playlsitData, $playlistId ) {		## function for updating playlist starts
-			return $this->_wpdb->update( $this->_playlisttable, $playlsitData, array( 'pid' => $playlistId ) );
-		}																	## function for updating playlist ends
-		
-		public function status_update( $playlistId, $status ) {				## function for updating status of playlist starts
+		}																	
+		/**
+		 * Update the playlist details 
+		 */
+		public function playlist_update( $playlistData, $playlistId ) {		
+			return $this->_wpdb->update( $this->_playlisttable, $playlistData, array( 'pid' => $playlistId ) );
+		}																	
+		/**
+		 * Status changes via ajax
+		 */
+		public function status_update( $playlistId, $status ) {				
 			return $this->_wpdb->update( $this->_playlisttable, array( 'is_publish' => $status ), array( 'pid' => $playlistId ) );
-		}																	## function for updating status of playlist ends
-		
-		public function get_playlsitdata( $searchValue, $searchBtn, $order, $orderDirection ) {		## function for getting search playlist starts
+		}																	
+		/**
+		 * Get all playlists for grid  layout.  
+		 */
+		public function get_playlsitdata( $searchValue, $searchBtn, $order, $orderDirection ) {		
 			$where   = '';
-			$pagenum = isset( $_GET['pagenum'] ) ? absint( $_GET['pagenum'] ) : 1;
+			$pagenum =  absint( filter_input(INPUT_GET , 'pagenum') ) ;
+			if(empty( $pagenum) ) {
+				$pagenum = 1;
+			}
 			$limit   = 20;
 			$offset  = ( $pagenum - 1 ) * $limit;
+			$query = 'SELECT * FROM ' . $this->_playlisttable;
 			if ( isset( $searchBtn ) ) {
-				$where = ' WHERE playlist_name LIKE "%' . $searchValue . '%" || playlist_desc LIKE "%' . $searchValue . '%"';
+				$query .= ' WHERE playlist_name LIKE %s OR playlist_desc LIKE %s';
 			}
 			if ( ! isset( $orderDirection ) ) {
-				$orderDirection = 'DESC';
+				$query .= ' ORDER BY '. $order.' DESC';
+			} else {
+				$query  .= ' ORDER BY '. $order.' ' .$orderDirection;
 			}
-			$query = 'SELECT * FROM ' . $this->_playlisttable . $where . ' ORDER BY ' . $order . ' ' . $orderDirection . ' LIMIT '.$offset.', '.$limit;
+			if( isset( $searchBtn) ) {
+				$query = $this->_wpdb->prepare( $query , '%'.$searchValue.'%' , '%'.$searchValue.'%' );
+			} else {
+				$query =  $query;
+			}
 			return $this->_wpdb->get_results( $query );
-		}																	## function for getting search playlist ends
-		
-		public function playlist_edit( $playlistId ) {						## function for getting single playlist starts
+		}																	
+		/**
+		 * Get single playlistsdetails
+		 */
+		public function playlist_edit( $playlistId ) {						
 			return $this->_wpdb->get_row( 'SELECT * FROM ' . $this->_playlisttable . ' WHERE pid ='.$playlistId );
-		}																	## function for getting single playlist ends
-		
-		public function playlist_count( $searchValue, $searchBtn ) {		## function for getting single video starts
-			$where = '';
+		}																	
+		/**
+		 * Get total playlists for paginations
+		 */
+		public function playlist_count( $searchValue, $searchBtn ) {		
+			$query ='SELECT COUNT( `pid` ) FROM ' . $this->_playlisttable;
 			if ( isset( $searchBtn ) ) {
-				$where = ' WHERE playlist_name LIKE "%' . $searchValue . '%" || playlist_desc LIKE "%' . $searchValue . '%"';
+				$query  .= ' WHERE playlist_name LIKE %s OR playlist_desc LIKE %s';
+			}			
+			if( isset ($searchBtn) ) {
+				return $this->_wpdb->get_var( $this->_wpdb->prepare( $query ,  '%'.$searchValue.'%' , '%'.$searchValue.'%') );
+			} else {
+			   return $this->_wpdb->get_var($query);
 			}
-			return $this->_wpdb->get_var( 'SELECT COUNT( `pid` ) FROM ' . $this->_playlisttable . $where );
-		}																	## function for getting single video ends
-		
-		public function playlist_delete( $playListId ) {					## function for deleting playlist starts
+		}																	
+		/**
+		 * Delete function for playlists 
+		 */
+		public function playlist_delete( $playListId ) {					
 			$query = 'DELETE FROM ' . $this->_playlisttable . '  WHERE pid IN ( ' . $playListId . ' )';
 			return $this->_wpdb->query( $query );
-		}																	## function for deleting playlist ends here
-	}																		## PlaylistModel class ends
-}																			## checks the PlaylistModel class has been defined if ends
+		}																	
+	}																		
+}																			
 ?>

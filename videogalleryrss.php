@@ -1,14 +1,14 @@
 <?php
-/*
-  Name: Wordpress Video Gallery
-  Plugin URI: http://www.apptha.com/category/extension/Wordpress/Video-Gallery
-  Description: RSS Feed file for Videos.
-  Version: 2.6
-  Author: Apptha
-  Author URI: http://www.apptha.com
-  License: GPL2
+/**
+ * Rss admin-ajax  file
+ * 
+ * @category   Apptha
+ * @package    Contus video Gallery
+ * @version    2.7
+ * @author     Apptha Team <developers@contus.in>
+ * @copyright  Copyright (C) 2014 Apptha. All rights reserved.
+ * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html 
  */
-
 require_once( dirname( __FILE__ ) . '/hdflv-config.php' );
 header( 'Content-Type: ' . feed_content_type( 'rss-http' ) . '; charset=' . get_option( 'blog_charset' ), true );
 echo '<?xml version="1.0" encoding="' . get_option( 'blog_charset' ) . '"?' . '>';
@@ -20,8 +20,7 @@ $_imagePath = APPTHA_VGALLERY_BASEURL . 'images' . DS;	 ## declare image path
 $type		= filter_input( INPUT_GET, 'type' );
 $where		= $tag_name = '';
 $dataLimit	= 1000;
-$contusOBJ	= new ContusVideoController(  );
-
+$contusOBJ	= new ContusVideoController();
 switch ( $type ) {
 	case 'popular':													 ## GETTING POPULAR VIDEOS STARTS
 	default:
@@ -43,6 +42,12 @@ switch ( $type ) {
 		$thumImageorder = intval( filter_input( INPUT_GET, 'playid' ) );
 		$TypeOFvideos			= $contusOBJ->home_catthumbdata( $thumImageorder, $dataLimit );
 		break;
+	case 'video':
+		$thumbImageorder = 'w.vid ASC';
+		$vid             = filter_input(INPUT_GET,'vid');  
+		$where           = 'AND w.vid ='.$vid;
+		$TypeOFvideos    = $contusOBJ->home_thumbdata( $thumbImageorder , $where , $dataLimit );
+	break;		
 }
 ?>
 <rss version="2.0"
@@ -52,6 +57,9 @@ switch ( $type ) {
 	 xmlns:atom="http://www.w3.org/2005/Atom"
 	 xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
 	 xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	 xmlns:media="http://search.yahoo.com/mrss/"
+	 xmlns:gd="http://schemas.google.com/g/2005" 
+	 xmlns:yt="http://gdata.youtube.com/schemas/2007" 
 	 <?php do_action( 'rss2_ns' ); ?>
 	 >
 	<channel>
@@ -68,16 +76,16 @@ switch ( $type ) {
 <?php
 if ( count( $TypeOFvideos ) > 0 ) {
 	foreach ( $TypeOFvideos as $media ) :
-
 		$file_type	= $media->file_type;
 		$videoUrl		= $media->file;
 	if ( ! empty( $media->tags_name ) ) {
 		$tag_name = $media->tags_name;
-	}
+	}   
 		$views					= $media->hitcount;
 		$opimage			= $media->opimage;
 		$image					= $media->image;
 		$post_date	= $media->post_date;
+		$media_id = $media->ID;
 		## Get thumb image detail
 	if ( $image == '' ) {
 		$image = $_imagePath . 'nothumbimage.jpg';
@@ -102,20 +110,26 @@ if ( count( $TypeOFvideos ) > 0 ) {
 	}
 		?>
 		<item>
-			<title><?php echo balanceTags( get_the_title( $media->ID ) ); ?></title>
-			<videoId><?php echo balanceTags( $media->vid ); ?></videoId>
-			<videoUrl><?php echo balanceTags( $videoUrl ); ?></videoUrl>
-			<thumbImage><?php echo balanceTags( $image ); ?></thumbImage>
-			<previewImage><?php echo balanceTags( $opimage ); ?></previewImage>
-			<views><?php echo balanceTags( $views ); ?></views>
-			<createdDate><?php echo balanceTags( $post_date ); ?></createdDate>
-			<description><![CDATA[<?php echo balanceTags( $media->description ); ?>]]></description>
-			<tags><![CDATA[<?php echo balanceTags( $tag_name ); ?>]]></tags>
-			<guid><?php echo balanceTags( get_permalink( $media->ID ) ); ?></guid>
+				<title><?php echo balanceTags( get_the_title( $media_id ) ); ?></title>
+				<link><?php echo balanceTags( get_permalink( $media_id ) ); ?></link>
+				<media:group>
+                        <media:category/>
+                        <media:content url="<?php echo balanceTags( $videoUrl ); ?>" type="application/x-shockwave-flash" medium="video" isDefault="true" expression="full" yt:format="5"/>
+                        <media:description type="plain" />
+                        <media:keywords/>
+                        <media:thumbnail url="<?php echo balanceTags( $image ); ?>"/>
+                </media:group>
+				<guid><?php echo balanceTags( get_permalink( $media_id ) ); ?></guid>
+				<description>
+				<![CDATA[<p><img src ="<?php echo balanceTags( $image ); ?>"/><?php echo balanceTags( $media->description ); ?></p>]]>
+				</description>
+				<pubDate><?php echo balanceTags( $post_date ); ?></pubDate>
+				<category><?php echo balanceTags( $media->playlist_name); ?></category>
 		</item>
+
 	<?php
 	endforeach;
 }
 ?>
-	</channel>
+</channel>
 </rss>

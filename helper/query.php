@@ -1,15 +1,16 @@
 <?php
-/*
-  Name: Wordpress Video Gallery
-  Plugin URI: http://www.apptha.com/category/extension/Wordpress/Video-Gallery
-  Description: Wordpress video gallery helper file.
-  Version: 2.6
-  Author: Apptha
-  Author URI: http://www.apptha.com
-  License: GPL2
+/**
+ * Wordpress video gallery helper file.
+ * @category   Apptha
+ * @package    Contus video Gallery
+ * @version    2.7
+ * @author     Apptha Team <developers@contus.in>
+ * @copyright  Copyright (C) 2014 Apptha. All rights reserved.
+ * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html 
  */
-
-## Get playlist ID from slug name
+/** 
+ * Get playlist ID from slug name
+ */
 function get_playlist_id( $play_name ) {
 
 	global $wpdb;
@@ -18,7 +19,9 @@ function get_playlist_id( $play_name ) {
 	return $playlist_id;
 }
 
-## Get playlist Name from ID
+/** 
+ * Get playlist Name from Playlist id
+ */
 function get_playlist_name( $play_id ) {
 
 	global $wpdb;
@@ -27,7 +30,11 @@ function get_playlist_name( $play_id ) {
 	return $playlist_name;
 }
 
-## Get user ID from name
+/**
+ * Get  user  id from  username
+ * @param unknown $user_name
+ * @return Ambigous <string, NULL>
+ */
 function get_user_id( $user_name ) {
 
 	global $wpdb;
@@ -36,7 +43,11 @@ function get_user_id( $user_name ) {
 	return $user_id;
 }
 
-## Get user name from ID
+/**
+ * Get  User  Name from  ID
+ * @param unknown $user_name
+ * @return Ambigous <string, NULL>
+ */
 function get_user_name( $user_id ) {
 
 	global $wpdb;
@@ -45,14 +56,14 @@ function get_user_name( $user_id ) {
 	return $user_name;
 }
 
-## Get video permalink
-function get_video_permalink( $postid ) {
+/**
+ * Get video  link
+ */
+ function get_video_permalink( $postid ) {
 
 	global $wp_rewrite;
-
 	$link = $wp_rewrite->get_page_permastruct();					## check whether permalink enabled or not
-	$video_details = get_post( $postid );							 ## Get post detail from post id
-
+	$video_details = get_post( $postid );			
 	if ( ! empty( $link ) ) {		## Return SEO video URL if permalink enabled
 		return get_site_url() . '/' . $video_details->post_type . '/' . $video_details->post_name . '/';
 	} else {					## Return Non SEO video URL if permalink disabled
@@ -60,7 +71,9 @@ function get_video_permalink( $postid ) {
 	}
 }
 
-## Get playlist permalink
+/**
+ * Get playlist permalink
+ */ 
 function get_playlist_permalink( $morepageid, $playlist_id, $slug_name ) {
 
 	global $wp_rewrite;
@@ -72,8 +85,9 @@ function get_playlist_permalink( $morepageid, $playlist_id, $slug_name ) {
 		return get_site_url() . '/?page_id=' . $morepageid . '&amp;playid=' . $playlist_id;
 	}
 }
-
-## Get playlist permalink
+/** 
+ * Get User permalink
+ */
 function get_user_permalink( $morepageid, $userid, $username ) {
 
 	global $wp_rewrite;
@@ -86,7 +100,9 @@ function get_user_permalink( $morepageid, $userid, $username ) {
 	}
 }
 
-## Get more page permalink
+/** 
+ * Get more page permalink 
+ */
 function get_morepage_permalink( $morepageid, $morePage ) {
 
 	global $wp_rewrite;
@@ -104,7 +120,10 @@ function get_morepage_permalink( $morepageid, $morePage ) {
 					break;
 				case 'featured':
 					$location = get_site_url() . '/featured_videos/';
-					break;
+				break;
+				case 'random':
+				    $location = get_site_url() .'/random_videos/';
+				break;	
 				case 'categories':
 					$location = get_site_url() . '/all-category_videos/';
 					break;
@@ -116,7 +135,9 @@ function get_morepage_permalink( $morepageid, $morePage ) {
 	}
 }
 
-## Detect mobile device
+/** 
+ * Detect mobile device
+ */
 function vgallery_detect_mobile() {
 	$_SERVER['ALL_HTTP'] = isset( $_SERVER['ALL_HTTP'] ) ? $_SERVER['ALL_HTTP'] : '';
 	$mobile_browser = '0';

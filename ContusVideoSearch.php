@@ -1,12 +1,13 @@
 <?php
-/*
-  Name: Wordpress Video Gallery
-  Plugin URI: http://www.apptha.com/category/extension/Wordpress/Video-Gallery
-  Description: Wordpress Video Gallery Video Search Widget.
-  Version: 2.6
-  Author: Apptha
-  Author URI: http://www.apptha.com
-  License: GPL2
+/**
+ * Wordpress Video Gallery Video Search Widget.
+ * 
+ * @category   Apptha
+ * @package    Contus video Gallery
+ * @version    2.7
+ * @author     Apptha Team <developers@contus.in>
+ * @copyright  Copyright (C) 2014 Apptha. All rights reserved.
+ * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html 
  */
 
 class Widget_ContusVideoSearch_init extends WP_Widget {
@@ -31,30 +32,29 @@ class Widget_ContusVideoSearch_init extends WP_Widget {
 	}
 
 	function widget( $args, $instance ) {
-		## and after_title are the array keys." - These are set up by the theme
+
 		extract( $args, EXTR_SKIP );
 		$title = empty( $instance['title'] ) ? ' ' : apply_filters( 'widget_title', $instance['title'] );
 		global $wpdb;
-		## These are our own options
+
 		?>
-		<!-- For Getting The Page Id More and Video-->
+
 		<?php
-		$moreName = $wpdb->get_var( 'SELECT ID FROM ' . $wpdb->prefix . 'posts WHERE post_content="[videomore]" AND post_status="publish" AND post_type="page" LIMIT 1' );
-		## Video Search
-		$searchVal = __( 'Video Search ...', 'video_gallery' );
-		$focusVal  = 'onfocus="if(this.value == \'' . $searchVal . '\' )this.value= \'\' "';
-		$blurVal   = ' onblur="if(this.value == \'\' )this.value= \'' . $searchVal . '\' "';
-		$div       = '<div id="videos-search"  class="widget widget_search sidebar-wrap "><h3 class="widget-title">' . $title . '</h3>';
-		$div      .= '<form role="search" method="get" id="videosearchform" action="' . home_url( '/' ) . '" >
-					<div><label class="screen-reader-text" >' . __( 'Search for:' ) . '</label>
+		$moreName = $wpdb->get_var( 'SELECT ID FROM ' . $wpdb->prefix . 'posts WHERE post_content LIKE "%[videomore]%" AND post_status="publish" AND post_type="page" LIMIT 1' );
+
+		echo $before_widget;
+		$searchVal = __( 'Video Search &hellip;', 'video_gallery' );
+		$div       = '<div id="videos-search"  class="widget_search sidebar-wrap search-form-container "><h3 class="widget-title">' . $title . '</h3>';
+		$div      .= '<form role="search" method="get" id="search-form" class="search-form searchform clearfix" action="' . home_url( '/' ) . '" >
+					<label class="screen-reader-text" >' . __( 'Search for:' ) . '</label>
 					<input type="hidden" value="' . $moreName . '" name="page_id" id="page_id"  />
-					<input type="text" value="' . $searchVal . '" ' . $focusVal . $blurVal . ' name="video_search" id="video_search"  />
-					<input type="submit" id="videosearchsubmit" value="' . __( 'Search', 'video_gallery' ) . '" />
-					</div>
+					<input type="text" class="s field search-field" placeholder="'.$searchVal.'" value="" name="video_search" id="s video_search"  />
+					<input type="submit" class="search-submit submit" id="videosearchsubmit" value="' . __( 'Search', 'video_gallery' ) . '" />
 					</form>';
 		$div     .= '</div>';
 		echo balanceTags( $div );
+		echo $after_widget;
 	}
 }
-add_action( 'widgets_init', create_function( '', 'return register_widget("Widget_ContusVideoSearch_init" );' ) ); ##adding product tag widget
+add_action( 'widgets_init', create_function( '', 'return register_widget("Widget_ContusVideoSearch_init" );' ) ); 
 ?>

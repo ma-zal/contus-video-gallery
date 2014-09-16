@@ -1,19 +1,21 @@
 <?php
-/*
-  Name: Wordpress Video Gallery
-  Plugin URI: http://www.apptha.com/category/extension/Wordpress/Video-Gallery
-  Description: Playlist Controller.
-  Version: 2.6
-  Author: Apptha
-  Author URI: http://www.apptha.com
-  License: GPL2
+/**  
+ * Video playlist admin controller file.
+ *
+ * @category   Apptha
+ * @package    Contus video Gallery
+ * @version    2.7
+ * @author     Apptha Team <developers@contus.in>
+ * @copyright  Copyright (C) 2014 Apptha. All rights reserved.
+ * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html 
  */
 
-include_once( $adminModelPath . 'playlist.php' );				## including Playlist model file for get database information.
 
-if ( class_exists( 'PlaylistController' ) != true ) {			## checks if the PlaylistController class has been defined starts
+include_once( $adminModelPath . 'playlist.php' );				// including Playlist model file for get database information.
 
-	class PlaylistController extends PlaylistModel {		## VideoadController class starts
+if ( class_exists( 'PlaylistController' ) != true ) {			// checks if the PlaylistController class has been defined starts
+
+	class PlaylistController extends PlaylistModel {		// VideoadController class starts
 
 		public $_status;
 		public $_msg;
@@ -27,7 +29,7 @@ if ( class_exists( 'PlaylistController' ) != true ) {			## checks if the Playlis
 		public $_orderDirection;
 		public $_orderBy;
 
-		public function __construct() {						## contructor starts
+		public function __construct() {						// contructor starts
 			parent::__construct();
 			$this->_playlistsearchQuery = filter_input( INPUT_POST, 'PlaylistssearchQuery' );
 			$this->_addnewPlaylist		= filter_input( INPUT_POST, 'playlistadd' );
@@ -40,35 +42,42 @@ if ( class_exists( 'PlaylistController' ) != true ) {			## checks if the Playlis
 			$this->_orderBy				= filter_input( INPUT_GET, 'orderby' );
 		}
 
-		## contructor ends
-		public function add_playlist() {					## function for adding playlist starts
+		/** 
+		 * Function for add/ update playlist data.
+		 * 
+		 */
+		public function add_playlist() {					
 			global $wpdb;
-			if ( isset( $this->_status ) ) {					## updating status of video ad starts
+			if ( isset( $this->_status ) ) {					
 				$this->status_update( $this->_playListId, $this->_status );
-			} ## updating status of video ad ends
+			} 
 
 			if ( isset( $this->_addnewPlaylist ) ) {
 				$playlistName	   = filter_input( INPUT_POST, 'playlistname' );
 				$playlist_slugname = sanitize_title( $playlistName );
 				$playlistPublish   = filter_input( INPUT_POST, 'ispublish' );
-
+				$playlist_slug     =  $this->_wpdb->get_var( 'SELECT COUNT(playlist_slugname) FROM ' . $wpdb->prefix . 'hdflvvideoshare_playlist WHERE playlist_slugname LIKE "'.$playlist_slugname.'%"');
+			
+				if($playlist_slug > 0 ){
+					$playlist_slugname =  $playlist_slugname.'-'.intval($playlist_slug+1);
+				}
 				$playlsitData = array(
 					'playlist_name'		=> $playlistName,
 					'playlist_slugname' => $playlist_slugname,
-					'is_publish'		=> $playlistPublish,
+					'is_publish'		=> $playlistPublish
 				);
 
-				if ( isset( $this->_playListId ) ) {			## update for playlist if starts
+				if (  $this->_playListId  ) {			
 					$updateflag = $this->playlist_update( $playlsitData, $this->_playListId );
-
 					if ( $updateflag ) {
 						$this->admin_redirect( 'admin.php?page=newplaylist&playlistId=' . $this->_playListId . '&update=1' );
 					} else {
 						$this->admin_redirect( 'admin.php?page=newplaylist&playlistId=' . $this->_playListId . '&update=0' );
 					}
-				}											## update for playlist if ends
-				else {										## adding playlist else starts
+				}											
+				else {										
 					$ordering = $wpdb->get_var( 'SELECT COUNT( pid ) FROM ' . $wpdb->prefix . 'hdflvvideoshare_playlist' );
+					$ordering = $wpdb->get_var( "SELECT MAX(playlist_order) FROM ".$wpdb->prefix."hdflvvideoshare_playlist" );
 					$playlsitData['playlist_order'] = $ordering + 1;
 					$addflag = $this->insert_playlist( $playlsitData );
 
@@ -77,17 +86,21 @@ if ( class_exists( 'PlaylistController' ) != true ) {			## checks if the Playlis
 					} else {
 						$this->admin_redirect( 'admin.php?page=playlist&add=1' );
 					}
-				}											## adding playlist else ends
+				}											
 			}
 		}
 
-		## function for adding playlist ends
-		public function admin_redirect( $url ) {				## admin redirection url function starts
+		/** 
+		 * Admin redirection url 
+		 */
+		public function admin_redirect( $url ) {				
 			echo '<script>window.open( "' . $url . '","_top",false )</script>';
 		}
 
-		## admin redirection url function ends
-		public function playlist_data() {					## getting playlist data function starts
+		/**
+		 * Edit  data fields get  function
+		 */
+		public function playlist_data() {					
 			$orderBy = array( 'id', 'title', 'desc', 'publish', 'sorder' );
 			$order   = 'id';
 
@@ -116,9 +129,11 @@ if ( class_exists( 'PlaylistController' ) != true ) {			## checks if the Playlis
 			}
 			return $this->get_playlsitdata( $this->_playlistsearchQuery, $this->_searchBtn, $order, $this->_orderDirection );
 		}
-
-		## getting playlist data function starts
-		public function get_message() {						## displaying database message function starts
+		/**
+		 * Displaying database message function starts
+		 * @return multitype:string
+		 */		
+		public function get_message() {						
 			$message_div = '';
 			if ( isset( $this->_update ) && $this->_update == '1' ) {
 				$this->_msg  = 'Category Updated Successfully ...';
@@ -141,22 +156,23 @@ if ( class_exists( 'PlaylistController' ) != true ) {			## checks if the Playlis
 				$this->_msg  = 'Category Published Successfully ...';
 				$message_div = 'category';
 			} else if ( $this->_status == '0' ) {
-				$this->_msg  = 'Category UnPublished Successfully ...';
+				$this->_msg  = 'Category Unpublished Successfully ...';
 				$message_div = 'category';
 			}
 			$return_values = array( 0 => $this->_msg, 1 => $message_div );
 			return $return_values;
 		}
-
-		## displaying database message function ends
-		public function get_delete() {										## deleting playlist data function starts
+		/**
+		 * function  delete the  playlist
+		 */
+		public function get_delete() {										
 			$playlistApply		= filter_input( INPUT_POST, 'playlistapply' );
 			$playlistActionup			= filter_input( INPUT_POST, 'playlistactionup' );
 			$playlistActiondown = filter_input( INPUT_POST, 'playlistactiondown' );
 			$playListcheckId				= filter_input( INPUT_POST, 'pid', FILTER_VALIDATE_INT, FILTER_REQUIRE_ARRAY );
-			if ( isset( $playlistApply ) ) {									## apply button if starts
+			if ( isset( $playlistApply ) ) {									
 				if ( $playlistActionup || $playlistActiondown == 'playlistdelete' ) {
-					if ( is_array( $playListcheckId ) ) {						## delete button if starts
+					if ( is_array( $playListcheckId ) ) {						
 						$playListId = implode( ',', $playListcheckId );
 						$deleteflag = $this->playlist_delete( $playListId );
 						if ( ! $deleteflag ) {
@@ -164,25 +180,31 @@ if ( class_exists( 'PlaylistController' ) != true ) {			## checks if the Playlis
 						} else {
 							$this->admin_redirect( 'admin.php?page=playlist&del=1' );
 						}
-					}														## delete button if ends
+					}														
 				}
-			}																## apply button if ends
+			}																
 		}
-		## deleting playlist data function ends
+		
 	}
-																			## PlaylistController class ends
-} ## checks if the PlaylistController class has been defined ends
+																			
+} 
 
-$playlistOBJ	= new PlaylistController();									## creating object for VideoadController class
+$playlistOBJ	= new PlaylistController();									// creating object for VideoadController class
 $playlistOBJ->add_playlist();
 $playlistOBJ->get_delete();
 $playListId		   = $playlistOBJ->_playListId;
 $searchMsg		   = $playlistOBJ->_playlistsearchQuery;
 $searchBtn		   = $playlistOBJ->_searchBtn;
+$status            = $playlistOBJ->_status;
+$update            = $playlistOBJ->_update;
 $gridPlaylist   = $playlistOBJ->playlist_data();
 $playlist_count = $playlistOBJ->playlist_count( $searchMsg, $searchBtn );
 if ( ! empty ( $playListId ) ) {
-	$playlistEdit = $playlistOBJ->playlist_edit( $playListId );
+	if(isset($_GET['status']) || isset($_GET['update']) ) {
+		$playlistEdit = '';		
+	}else {
+		$playlistEdit = $playlistOBJ->playlist_edit( $playListId );
+	}
 } else {
 	$playlistEdit = '';
 }
