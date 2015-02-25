@@ -3,7 +3,7 @@
   Plugin Name: Wordpress Video Gallery
   Plugin URI: http://www.apptha.com/category/extension/Wordpress/Video-Gallery
   Description: Widely favored by lot of customers! The hugest advantage of deploying WordPress Video Gallery is it can help to integrate, display, and set up video gallery on any WordPress page and it works great with the existing themes as well. Also, it is powered with social sharing facility which helps users to share awesome videos via popular social channels. Powered by Apptha.
-  Version: 2.7
+  Version: 2.8
   Author: Apptha
   Author URI: http://www.apptha.com
   License: GPL2
@@ -207,19 +207,10 @@ function hd_getsingleyoutubevideo( $youtube_media ) {
  * youtube function
  */
 function youtubeurl() {
-	$act_filepath = addslashes( trim( $_GET['filepath'] ) );
-	if ( ! empty( $act_filepath ) ) {
-		if ( strpos( $act_filepath, 'youtube' ) > 0 || strpos( $act_filepath, 'youtu.be' ) > 0 ) {
-			if ( strpos( $act_filepath, 'youtube' ) > 0 ) {
-				$imgstr = explode( 'v=', $act_filepath );
-				$imgval = explode( '&', $imgstr[1] );
-				$match  = $imgval[0];
-			} else if ( strpos( $act_filepath, 'youtu.be' ) > 0 ) {
-				$imgstr = explode( '/', $act_filepath );
-				$match  = $imgstr[3];
-				$act_filepath = 'http://www.youtube.com/watch?v=' . $imgstr[3];
-			}
-			$youtube_data = hd_getsingleyoutubevideo( $match );
+	$video_id = addslashes( trim( $_GET['filepath'] ) );
+	if ( ! empty( $video_id ) ) {
+			$act_filepath = 'http://www.youtube.com/watch?v=' . $video_id;
+			$youtube_data = hd_getsingleyoutubevideo( $video_id );
 			if ( $youtube_data ) {
 				$act[0] = addslashes( $youtube_data['title'] );
 				if ( isset( $youtube_data['thumbnail_url'] ) ) {
@@ -236,10 +227,6 @@ function youtubeurl() {
 			else {
 				$this->render_error( __( 'Could not retrieve Youtube video information', 'hdflvvideoshare' ) );
 			}
-		}else {
-			$act[4] = $act_filepath;
-			$this->render_error( __( 'URL entered is not a valid Youtube Url', 'hdflvvideoshare' ) );
-		}
 		return $act;
 	}
 }
@@ -635,7 +622,7 @@ if ( isset( $_GET['action']) && $_GET['action'] == 'activate-plugin' && $_GET['p
 		$updatemember_id      = add_column_if_not_exists( $errorMsg, "$table_name", 'member_id', 'INT( 3 ) NOT NULL' );
 		$updategoogle_adsense = add_column_if_not_exists( $errorMsg, "$table_name", 'google_adsense', 'INT( 3 ) NOT NULL' );
 		$updategoogle_adsense_value = add_column_if_not_exists( $errorMsg, "$table_name", 'google_adsense_value', 'INT( 11 ) NOT NULL' );
-		$update_amazon_bucket = add_column_if_not_exists($errorMsg,"$table_name",'amazon_buckets','INT ( 1 ) NOT NULL');
+		$update_amazon_bucket = add_column_if_not_exists($errorMsg,"$table_name",'amazon_buckets','INT ( 1 ) NOT NULL DEFAULT 0');
 		
 
 		// AD table Alter
@@ -894,7 +881,7 @@ include_once $frontControllerPath . 'videohomeController.php';
  */
 add_shortcode('videohome','video_homereplace');
 add_shortcode('videomore','video_morereplace');
-add_shortcode('hdvideo','video_shortcodereplace');
+add_shortcode('hdvideo','video_shortcodeplace');
 add_shortcode('categoryvideothumb', 'video_moreidreplace');
 add_shortcode('popularvideo','video_popular_video_shortcode');
 add_shortcode('recentvideo','video_recent_video_shortcode');
@@ -998,7 +985,6 @@ function video_shortcodeplace( $arguments = array() ) {
 		return $contentPlayer;
 }
 
-add_shortcode( 'hdvideo', 'video_shortcodeplace' );
 /**
  * Function display content for  category shortcode
  */

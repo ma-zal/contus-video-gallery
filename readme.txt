@@ -1,22 +1,25 @@
 === WORDPRESS VIDEO GALLERY ===
 Contributors: hdflvplayer
-Tags: Video Player plugin, video, flash player, flv player, WORDPRESS VIDEO GALLERY, flv player wordpress, hd flv player, youtube plugin, youtube Video Player, high definition Video Player, flash, play flv wordpress, player, Video Plugin, wp flv player, wp flv plugin, flv player 2009,  WORDPRESS VIDEO GALLERY, wp flv, wordpress flv plugin, wp hd flv player, flv player plugin, wordpress flv player
+Tags: WordPress video gallery, Wordpress video gallery Plugin, wordPress video sharing script, Youtube video gallery, Vimeo video gallery, WordPress HTML5 video gallery, WP video gallery, Wordpress video sharing website
 Requires at least: 2.8
 Tested up to: 4.0
-Stable tag: 2.7
+Stable tag: 2.8
 Get the most exciting Video Gallery for your WordPress site. Advanced features, Easy Install and timely support which makes this product irresistible
 
 == Description ==
 
-Contus' Best WordPress Video Gallery Plugin has a whole set of utile features and options that make the product a versatile one. In addition to the quickly visible options such as recent Videos, popular Videos and featured Videos, the plugin also has the ability to control the number and order of these videos from back end.
+WordPress Video Gallery is a sturdy tool from Contus, that helps in erecting a video sharing website in WordPress quite effortlessly. Using this script managing a video sharing website becomes easy.
 
 Video Gallery Demo - http://www.apptha-demo.com/template/videostream/
 
 Video Gallery Home Page - https://www.apptha.com/category/extension/Wordpress/Video-Gallery
 
-GitHub Repository - https://github.com/Apptha/contus-video-gallery
+We're on GitHub! Engage now & fork us!&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+https://github.com/Apptha/contus-video-gallery
 
-FLV & H.264 encoded video including MP4, M4V, M4A, MOV, Mp4v, F4V, social networking comments from the gallery page (like for Facebook), provision to alter width, height, skin, theme, aspect ratio, volume, downloads etc. from the backend are few if the best features with this plugin. It also covers other regular and utile features which we could see in popular video sharing sites such as social media bookmark option (diggit, myspace, facebook, del.icio.us, spurl, furl, google), managing multiple playlists, views count for video and so forth.
+This plugin has an inbuilt HD FLV Player which delivers video contents in crystal clear quality and support FLV & H.264 encoded video formats like MP4, M4V, M4A, MOV, Mp4v etc. HTML 5 support enables uninterrupted video viewing in mobile devices. Sharing of videos can be done from popular third-party websites like YouTube, Vimeo etc.
+
+Live events can be aired using RTMP, Live Telecast, Amazon S3 Live Streaming video support. Moreover, website owners can make additional revenue by monetizing through video ads. For creating an online reputation and improve brand awareness the player offers a space to promote the website's logo.
 
 * Supports Lighttpd, RTMP, Live telecast and Amazon S3 Streaming
 * Facility to add YouTube, Vimeo, Viddler, Daily Motion videos and embed code videos from other sites
@@ -83,6 +86,10 @@ FLV & H.264 encoded video including MP4, M4V, M4A, MOV, Mp4v, F4V, social networ
 9. **Videos(recent,popular,feature, Video Categories)** - We are also displaying Popular, Recent, Featured, Related videos and Video Categories in content page under player.
 
 == Changelog ==
+
+= 2.8 =
+
+* Fixed vulnerability issue in videogalleryrss.php file
 
 = 2.7 =
 

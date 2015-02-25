@@ -5,7 +5,7 @@
  * Add video with multiple method 
  * @category   Apptha
  * @package    Contus video Gallery
- * @version    2.7
+ * @version    2.8
  * @author     Apptha Team <developers@contus.in>
  * @copyright  Copyright (C) 2014 Apptha. All rights reserved.
  * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html 
@@ -60,6 +60,15 @@ if ( isset( $_GET['videoId'] ) ) {
 			}
 			function getyoutube_details(){
 	               var youtube_url =  document.getElementById("filepath1").value;
+	               if(youtube_url.indexOf('youtube') != -1) {
+		               var video_id = youtube_url.split('v=')[1];
+		               var ampersandPosition = video_id.indexOf('&');
+		               if(ampersandPosition != -1) {
+		                 video_id = video_id.substring(0, ampersandPosition);
+		               }
+	               } else if(youtube_url.indexOf('youtu.be') != -1) {
+		               var video_id = youtube_url.split('/')[3];
+	               }
 	               var urlmatch = /(http:\/\/|https:\/\/)[A-Za-z0-9\.-]{3,}\.[A-Za-z]{3}|(http:\/\/|https:\/\/)/;
 	               var errormsg = "<p>Enter Valid Video URL</p>";
 	               if( !urlmatch.test(youtube_url) ){
@@ -73,20 +82,24 @@ if ( isset( $_GET['videoId'] ) ) {
 		           playlistajax.ajax({
 	                       url:requesturl,
 	                       type:"GET",
-	                       data:"filepath="+ youtube_url,
+	                       data:"filepath="+ video_id,
 	                       success : function( msg ){
-                               var resultdata =  playlistajax.parseJSON(msg);
-                               document.getElementById( 'name' ).value = resultdata[0];
-                           	   document.getElementById( 'filepath1' ).value = resultdata[4];
-                           		tinymce.activeEditor.setContent(resultdata[5]);
-                               var tag_name = resultdata[6];
-                           	   if( tag_name == 'undefined' ) {	   
-                           	   	 document.getElementById( 'tags_name' ).value = resultdata[6];
-                           	   }	                      
+                         var resultdata =  playlistajax.parseJSON(msg);
+                         document.getElementById( 'name' ).value = resultdata[0];
+                     	   document.getElementById( 'filepath1' ).value = resultdata[4];
+                     		var tag_name = resultdata[6];
+
+                     	   if(resultdata[5] !== undefined){
+                     		tinymce.activeEditor.setContent(resultdata[5]);
+                     		tinymce.execCommand('mceAddControl',true,'description');
+                     	   }
+
+                     	   if( tag_name !== undefined ) {	   
+                     	   	 document.getElementById( 'tags_name' ).value = resultdata[6];
+                     	   }	                      
 	                    	   document.getElementById( 'embedvideo').style.display = "none";
-                               document.getElementById('loading_image').style.display ='none';
-                               tinymce.execCommand('mceAddControl',true,'description');
-                            }  
+                         document.getElementById('loading_image').style.display ='none';
+                      }  
 	               } ); 
 	           }
 			
@@ -638,11 +651,15 @@ if ( $settings[0]->preroll == 0 || $settings[0]->postroll == 0 || $settings[0]->
 									<div id="submitpost" class="submitbox">
 
 										<div class="misc-pub-section">
+										<?php
+										if ($user_role != 'subscriber') {
+										?>
 											<h4><span>
 													<a style="cursor:pointer"  onclick="playlistdisplay()"><?php esc_attr_e( 'Create New', 'video_gallery' ) ?></a></span></h4>
 											<div id="playlistcreate1"><?php esc_attr_e( 'Name', 'video_gallery' ); ?><input type="text" style="width:100%;" name="p_name" id="p_name" value="" />
 												<input type="button" class="button-primary button button-highlighted" name="add_pl1" value="<?php esc_attr_e( 'Add' ); ?>" onclick="return savePlaylist( document.getElementById( 'p_name' ), <?php echo balanceTags( $act_vid ); ?> );"  />
 												<a  class="button cancelplaylist"  onclick="playlistclose()"><b>Close</b></a></div>
+											<?php } ?>
 											<div id="jaxcat"></div>
 											<div id="playlistchecklist"><?php $ajaxplaylistOBJ->get_playlist(); ?></div>
 											 <input type="hidden" name="filetypevalue" id="filetypevalue" value="1"  />

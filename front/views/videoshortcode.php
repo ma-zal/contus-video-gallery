@@ -4,7 +4,7 @@
  *
  * @category   Apptha
  * @package    Contus video Gallery
- * @version    2.7
+ * @version    2.8
  * @author     Apptha Team <developers@contus.in>
  * @copyright  Copyright (C) 2014 Apptha. All rights reserved.
  * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html 
@@ -649,8 +649,8 @@ if (class_exists ( 'ContusVideoShortcodeView' ) != true) {
 				    $output .='</div>';
 					
 					$output .= '<div class="clearfix">';
-					$output .= '<div class="video-cat-thumb">';
 				}
+				$output .= '<div class="video-cat-thumb">';
 				//  show rss icon enable / disable 
 				if($show_rss_icon && !$show_social_icon ) {
 					$rs_url = get_site_url () . '/wp-admin/admin-ajax.php?action=rss&type=video&vid='.$vid;
@@ -706,7 +706,7 @@ if (class_exists ( 'ContusVideoShortcodeView' ) != true) {
 					$output .= '<div style="clear: both;"></div><div class="video-page-desc">' . apply_filters('the_content', $description ) . '</div>';
 				}
 				
-				$output .= '</div></div>';			 	
+				$output .= '</div>';			 	
 			}
 			$output .= '</div></div>';
 			// Enable/disable Related videos starts here
