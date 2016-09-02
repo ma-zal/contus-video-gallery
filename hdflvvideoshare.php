@@ -479,7 +479,10 @@ function rss_function() {
 add_action('wp_ajax_upload','admin_upload_video');
 add_action('wp_ajax_nopriv_upload','admin_upload_video');
 function admin_upload_video(){
+    global $adminAjaxpath;
 	require_once($adminAjaxpath.'videoupload.php');
+    VgAjaxVideoUpload::main($_FILES['myfile']);
+    wp_die();
 } 
 function videogallery_register() {
 		$labels = array(
@@ -795,6 +798,8 @@ add_action('wp_ajax_nopriv_uploadvideo','video_files_uploads');
 function video_files_uploads(){
 	global $adminAjaxpath;
 	require_once ($adminAjaxpath.'videoupload.php');
+    VgAjaxVideoUpload::main($_FILES['myfile']);
+    wp_die();
 }
 
 
