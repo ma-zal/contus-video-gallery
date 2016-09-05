@@ -297,8 +297,8 @@ if ( class_exists( 'VideoModel' ) != true ) {							## checks the VideoModel cla
 		}																## function for getting single video ends
        /**
         * Function for deleting video.
-        * @param unknown $videoId
-        * @return Ambigous <number, false, boolean, mixed>
+        * @param $videoId
+        * @return number|false|boolean|mixed
         */
 		public function video_delete($videoId)
         {
@@ -335,7 +335,7 @@ if ( class_exists( 'VideoModel' ) != true ) {							## checks the VideoModel cla
         }
 		/**
 		 * Function for  multiple video featured 
-		 * @param unknown $videoId
+		 * @param $videoId
 		 */																
 		public function video_multifeatured($videoId){
 			$query  = 'UPDATE ' . $this->_videotable . ' SET `featured`=1 WHERE vid IN (' . $videoId . ')';
@@ -343,7 +343,7 @@ if ( class_exists( 'VideoModel' ) != true ) {							## checks the VideoModel cla
 		}
 		/**
 		 * Function for  multiple video publish
-		 * @param unknown $videoId
+		 * @param $videoId
 		 */
 		public function video_multipublish($videoId){
 			$query  = 'UPDATE ' . $this->_videotable . ' SET `publish`=1 WHERE vid IN (' . $videoId . ')';
@@ -351,7 +351,7 @@ if ( class_exists( 'VideoModel' ) != true ) {							## checks the VideoModel cla
 		}
 		/**
 		 * Function for  multiple video unfeatured
-		 * @param unknown $videoId
+		 * @param $videoId
 		 */
 		public function video_multiunfeatured($videoId){
 			$query  = 'UPDATE ' . $this->_videotable . ' SET `featured`=0 WHERE vid IN (' . $videoId . ')';
@@ -359,7 +359,7 @@ if ( class_exists( 'VideoModel' ) != true ) {							## checks the VideoModel cla
 		}
 		/**
 		 * Function for  multiple video unpublish
-		 * @param unknown $videoId
+		 * @param $videoId
 		 */
 		public function video_multiunpublish($videoId){
 			$query  = 'UPDATE ' . $this->_videotable . ' SET `publish`=0 WHERE vid IN (' . $videoId . ')';
@@ -367,7 +367,7 @@ if ( class_exists( 'VideoModel' ) != true ) {							## checks the VideoModel cla
 		}
 		/**
 		 * Video Gallery setting datas.
-		 * @return Ambigous <mixed, NULL, multitype:>
+		 * @return mixed|null
 		 */
 		public function get_settingsdata() {							
 			$query = 'SELECT * FROM ' . $this->_videosettingstable . ' WHERE settings_id = 1';

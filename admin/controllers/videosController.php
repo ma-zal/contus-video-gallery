@@ -4,12 +4,13 @@
  *
  * @category   Apptha
  * @package    Contus video Gallery
- * @version    2.8
+ * @version    2.7
  * @author     Apptha Team <developers@contus.in>
+ * @author     Martin Zaloudek, zal.cz (as contributor)
  * @copyright  Copyright (C) 2014 Apptha. All rights reserved.
  * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html 
  */
-include_once( $adminModelPath . 'video.php' );			
+require_once(__DIR__ . '/../models/video.php');
 
 if ( class_exists( 'VideoController' ) != true ) {			
 
@@ -45,12 +46,14 @@ if ( class_exists( 'VideoController' ) != true ) {
 			$this->_orderBy			 = filter_input( INPUT_GET, 'orderby' );
 			$this->_settingsData     = $this->get_settingsdata();
 		}
+		
+		
         /**
          *  function for adding video and update status / featured.
          */
 		public function add_newvideo() {			
 			global $wpdb;
-			$subtitle1 = $subtitle2 = $sub_title1 = $new_subtitle = $new_subtitle1 = $new_subtitle2 = $sub_title2 = $match =NULL; // undefined index $matches error hide 
+			$match = null; // undefined index $matches error hide
 			if ( isset( $this->_status ) || isset( $this->_featured ) ) { 
 				$this->status_update( $this->_videoId, $this->_status, $this->_featured );
 			}										## updating status of video ends
@@ -66,12 +69,9 @@ if ( class_exists( 'VideoController' ) != true ) {
 				$streamname			 = filter_input( INPUT_POST, 'streamerpath-value' );
 				$videoLinkurl		 = filter_input( INPUT_POST, 'youtube-value' );
 				$pieces				 = explode( ',', $_POST['hid'] );
-				$sorder				 = $act_playlist = '';
+				$act_playlist = '';
 				if ( ! empty( $_POST['playlist'] ) ) {
 					$act_playlist = $_POST['playlist'];
-				}
-				if ( ! empty( $_POST['sorder'] ) ) {
-					$sorder = $_POST['sorder'];
 				}
 				$videoFeatured    = filter_input( INPUT_POST, 'feature' );
 				$videoDownload    = filter_input( INPUT_POST, 'download' );
@@ -81,7 +81,6 @@ if ( class_exists( 'VideoController' ) != true ) {
 				$videoPrerollads  = filter_input( INPUT_POST, 'prerollads' );
 				$google_adsense   = filter_input( INPUT_POST, 'googleadsense');
 				$google_adsense_value   = filter_input( INPUT_POST, 'google_adsense_value');
-				$videoDate        = date( 'Y-m-d H:i:s' );
 
 				$dir              = dirname( plugin_basename( __FILE__ ) );
 				$dirExp    = explode( '/', $dir );
@@ -101,9 +100,8 @@ if ( class_exists( 'VideoController' ) != true ) {
 				$subtitle_lang1 = filter_input( INPUT_POST, 'subtitle_lang1' );
 				$subtitle_lang2 = filter_input( INPUT_POST, 'subtitle_lang2' );
 				$member_id      = filter_input( INPUT_POST, 'member_id' );
-				$img3           = $_POST['customimage'];
-				$pre_image      = $_POST['custompreimage'];
-				$duration       = '0:00';
+                $act_filepath = null;
+				$duration       = null;
                 $video_added_method = filter_input(INPUT_POST, 'filetypevalue');
                 $amazon_buckets = filter_input(INPUT_POST , 'amazon_buckets');
                 
@@ -112,53 +110,37 @@ if ( class_exists( 'VideoController' ) != true ) {
 						$videoLinkurl = 'http://' . $videoLinkurl;
 					}
 					$act_filepath = addslashes( trim( $videoLinkurl ) );
-					$file_type    = '1';
+					// Note: file_type = '1';
 
 					if ( strpos( $act_filepath, 'youtube' ) > 0 ) {
 						$imgstr     = explode( 'v=', $act_filepath );
 						$imgval     = explode( '&', $imgstr[1] );
 						$match      = $imgval[0];
-						$previewurl = 'http://img.youtube.com/vi/' . $imgval[0] . '/maxresdefault.jpg';
-						$img        = 'http://img.youtube.com/vi/' . $imgval[0] . '/mqdefault.jpg';
-						$act_image  = $img;
-						$act_opimage = $previewurl;
 					} else if ( strpos( $act_filepath, 'youtu.be' ) > 0 ) {
 						$imgstr       = explode( '/', $act_filepath );
 						$match        = $imgstr[3];
-						$previewurl   = 'http://img.youtube.com/vi/' . $imgstr[3] . '/maxresdefault.jpg';
-						$img          = 'http://img.youtube.com/vi/' . $imgstr[3] . '/mqdefault.jpg';
 						$act_filepath = 'http://www.youtube.com/watch?v=' . $imgstr[3];
-						$act_image    = $img;
-						$act_opimage =  $previewurl;
-					} else if ( strpos( $act_filepath, 'dailymotion' ) > 0 ) {				 ## check video url is dailymotion
-						$split     = explode( '/', $act_filepath );
-						$split_id  = explode( '_', $split[4] );
-						$img = $act_imgage = $act_opimage = $previewurl = 'http://www.dailymotion.com/thumbnail/video/' . $split_id[0];
-						$file_type = '1';
-					} else if ( strpos( $act_filepath, 'viddler' ) > 0 ) {					## check video url is viddler
-						$imgstr    = explode( '/', $act_filepath );
-						$img = $act_image = $act_opimage = $previewurl = 'http://cdn-thumbs.viddler.com/thumbnail_2_' . $imgstr[4] . '_v1.jpg';
-						$file_type = '1';
 					}
 					$youtube_data = $this->hd_getsingleyoutubevideo( $match );
 					$sec          = $youtube_data['duration']['SECONDS'];
 					$duration     = $this->converttime( $sec );
 				} else {
-					$act_filepath1 = $_REQUEST['normalvideoform-value'];
-					$act_filepath1 = $srt_path . $act_filepath1;
+					$act_filepath1 = $srt_path . $video1;
 					if( isset($_POST['custom_url']) ){
-					$act_filepath  = addslashes( trim( $_POST['customurl'] ) );
-					$act_optimage  = addslashes( trim(  'thumb_'.$_POST['custom_url'] ) );
+						$act_filepath  = addslashes( trim( $_POST['customurl'] ) );
 					}else{
-						$act_filepath = $act_optimage = '';
+						$act_filepath = '';
 					}
-					$ffmpeg_path   = $this->_settingsData->ffmpeg_path;
-					$file_type     = '2';
+					
+					// Get duration by FFMPEG
+					$ffmpeg_path = $this->_settingsData->ffmpeg_path;
+					if (!file_exists($ffmpeg_path)) {
+						trigger_error('FFMPEG binary file not found at ' . $ffmpeg_path . ', where is expected.', E_USER_ERROR);
+					}
 					ob_start();
 					passthru( $ffmpeg_path . ' -i "' . $act_filepath1 . '" 2>&1' );
 					$get_duration = ob_get_contents();
 					ob_end_clean();
-
 					$search   = '/Duration: (.*?),/';
 					$duration = preg_match( $search, $get_duration, $matches, PREG_OFFSET_CAPTURE, 3 );
 					if ( ! empty( $duration ) ) {
@@ -170,21 +152,23 @@ if ( class_exists( 'VideoController' ) != true ) {
 					}
 				}
 
+				// Rename Image thumbnail to match with video name
 				if($this->_videoId)
 				{
-					$extension = end( explode( '.' , $img1));
+					$extension = pathinfo($img1, PATHINFO_EXTENSION);
 					$oldImagePath = $srt_path.$img1;
 
 					if(file_exists($oldImagePath))
 					{
-						$img1 = $img2 = $this->_videoId.'_thumb.'.$extension;
-						rename($oldImagePath,$srt_path.$img1);
+						$img2 = $this->_videoId.'_thumb.'.$extension;
+						$img1 = $img2;
+						rename($oldImagePath, $srt_path.$img1);
 					}
 				}
 
-				$act_filepath2 = trim( $_POST['customhd'] );
-				$act_image     = addslashes( trim( $_POST['customurl'] ) );
-				$act_link      = $act_hdpath = $act_name = $act_opimage = '';
+				$act_image = addslashes( trim( $_POST['customurl'] ) );
+				$act_hdpath = '';
+				$act_opimage = '';
 
 				if ( ! empty( $act_filepath ) ) {
 					if ( strpos( $act_filepath, 'youtube' ) > 0 || strpos( $act_filepath, 'youtu.be' ) > 0 ) {
@@ -202,13 +186,9 @@ if ( class_exists( 'VideoController' ) != true ) {
 						$act_opimage  = 'http://i3.ytimg.com/vi/' . $match . '/maxresdefault.jpg';
 						$youtube_data = $this->hd_getsingleyoutubevideo( $match );
 						if ( $youtube_data ) {
-							if ( $act_name == '' )
-								$act_name = addslashes( $youtube_data['title'] );
 							if ( $act_image == '' )
 								$act_image = 'http://i3.ytimg.com/vi/' . $youtube_data['id'] . '/mqdefault.jpg';
-							if ( $act_link == '' )
-								$act_link = $act_filepath;
-							$file_type = '1';
+							// Note: file_type = '1';
 						}
 
 						else{
@@ -218,11 +198,11 @@ if ( class_exists( 'VideoController' ) != true ) {
 						$split     = explode( '/', $act_filepath );
 						$split_id  = explode( '_', $split[4] );
 						$act_image = $act_opimage = 'http://www.dailymotion.com/thumbnail/video/' . $split_id[0];
-						$file_type = '1';
+						//Note: file_type = '1';
 					} else if ( strpos( $act_filepath, 'viddler' ) > 0 ) {					## check video url is viddler
 						$imgstr    = explode( '/', $act_filepath );
 						$act_image = $act_opimage = 'http://cdn-thumbs.viddler.com/thumbnail_2_' . $imgstr[4] . '_v1.jpg';
-						$file_type = '1';
+						//Note: file_type = '1';
 					} 
 				} else {
 					if ( $video1 != '' )
@@ -236,15 +216,11 @@ if ( class_exists( 'VideoController' ) != true ) {
 				}
 
 				if ( ! empty( $streamname ) ) {
-					$file_type   = '4';
+					// Note: file_type   = '4';
 
 					$thumb_image    = filter_input(INPUT_POST ,'filepath3');
-					$video_file     = filter_input(INPUT_POST ,'filepath4');
 					$act_image      = $thumb_image;
 					$act_opimage    = $thumb_image;
-				}
-				if ( ! empty( $embedcode ) ) {
-					$file_type = '5';
 				}
 				if ( empty($member_id ) ) {
 					$current_user = wp_get_current_user();
@@ -291,7 +267,7 @@ if ( class_exists( 'VideoController' ) != true ) {
 					'google_adsense_value'=> $google_adsense_value,
 					'amazon_buckets'    =>$amazon_buckets,		
 				);     				
-					$videoData['post_date'] = $videoDate;
+				$videoData['post_date'] = date( 'Y-m-d H:i:s' );
 				if( empty ( $this->_videoId ) ) {	
 					$videoData['ordering']  = $ordering;
 					$videoData['slug']      = '';
@@ -301,42 +277,36 @@ if ( class_exists( 'VideoController' ) != true ) {
 					$videoData['slug'] = $slug_id;
 					$this->video_update( $videoData, $this->_videoId);
                         
-                        if(!empty($subtitle1))
-                        {
-                        	$sub_title_path1 = $srt_path.$subtitle1;
-                        	if(file_exists($sub_title_path1))
-                        	{
-                        		$new_subtitle1 = $this->_videoId.'_'.$subtitle_lang1.'.srt';
-                        		rename($sub_title_path1,$srt_path.$new_subtitle1);
-                        	}
-                        	else
-                        	{
-                        		$new_subtitle1 = $sub_title1;
-                        	}
-                        }
-                        else
-                        {
-                        	$new_subtitle1 = '';
-                        }
-                        
-                        if(!empty($subtitle2))
-                        {
-                        	$sub_title_path2 = $srt_path.$subtitle2;
-                        
-                        	if(file_exists($sub_title_path2))
-                        	{
-                        		$new_subtitle2 = $this->_videoId.'_'.$subtitle_lang2.'.srt';
-                        		rename($sub_title_path2,$srt_path.$new_subtitle2);
-                        	}
-                        	else
-                        	{
-                        		$new_subtitle2 = $sub_title2;
-                        	}
-                        }
-                        else
-                        {
-                        	$new_subtitle2 = '';
-                        }
+					/** @var */ $new_subtitle1 = '';                            
+					if(!empty($subtitle1))
+					{
+						$sub_title_path1 = $srt_path.$subtitle1;
+						if(file_exists($sub_title_path1))
+						{
+							$new_subtitle1 = $this->_videoId.'_'.$subtitle_lang1.'.srt';
+							rename($sub_title_path1,$srt_path.$new_subtitle1);
+						}
+						else
+						{
+							$new_subtitle1 = $subtitle1;
+						}
+					}
+					
+					/** @var */ $new_subtitle2 = '';                            
+					if(!empty($subtitle2))
+					{
+						$sub_title_path2 = $srt_path.$subtitle2;
+					
+						if(file_exists($sub_title_path2))
+						{
+							$new_subtitle2 = $this->_videoId.'_'.$subtitle_lang2.'.srt';
+							rename($sub_title_path2,$srt_path.$new_subtitle2);
+						}
+						else
+						{
+							$new_subtitle2 = $subtitle2;
+						}
+					}
                         
 					$wpdb->query( ' UPDATE ' . $wpdb->prefix . 'hdflvvideoshare SET srtfile1= "'.$new_subtitle1.'",srtfile2= "'.$new_subtitle2.'" , subtitle_lang1="'.$subtitle_lang1.'" ,  subtitle_lang2 ="'.$subtitle_lang2.'"  WHERE vid = '.$this->_videoId );
 
@@ -359,7 +329,6 @@ if ( class_exists( 'VideoController' ) != true ) {
 						$add_list = array_diff( $act_playlist, $old_playlist );
 						if ( $add_list ) {
 							foreach ( $add_list as $new_list ) {
-								$new_list1 = $new_list - 1;
 								$wpdb->query( ' INSERT INTO ' . $wpdb->prefix . 'hdflvvideoshare_med2play ( media_id,playlist_id,sorder ) VALUES ( '.$this->_videoId.', ' . $new_list . ', 0 )' );
 							}
 						}
@@ -381,19 +350,14 @@ if ( class_exists( 'VideoController' ) != true ) {
 					$insertflag = $this->insert_video( $videoData);
 					if ( $insertflag != 0 ) {
 
+						/** @var */ $new_subtitle1 = '';
 						if ( ! empty( $subtitle1 ) ) {
-							$new_subtitle1  =  $insertflag.'_'.$subtitle_lang1.$subtitle1;
-							$sub_title1 = rename( $srt_path.$subtitle1 , $new_subtitle1 ); 						
-						} else {
-							$sub_title1 = '';
+							$new_subtitle1 = $insertflag.'_'.$subtitle_lang1.$subtitle1;
 						}
 
+						/** @var */ $new_subtitle2 = '';                            
 						if ( ! empty( $subtitle2 ) ) {
-							$new_subtitle2 = $insertflag.'_'.$subtitle_lang2.$subtitle12; 
-							$sub_title2 = rename($srt_path.$subtitle2 , $new_subtitle2 ); 
-							
-						} else {
-							$sub_title2 = '';
+							$new_subtitle2 = $insertflag.'_'.$subtitle_lang2.$subtitle2; 
 						}
 						$wpdb->query( ' UPDATE ' . $wpdb->prefix . 'hdflvvideoshare SET subtitle_lang1 = "'.$subtitle_lang1.'" , subtitle_lang2 = "'.$subtitle_lang2.'" , srtfile1= "'.$new_subtitle1.'",srtfile2= "'.$new_subtitle2.'" WHERE vid = '.$insertflag );
 
@@ -407,7 +371,6 @@ if ( class_exists( 'VideoController' ) != true ) {
 
 							if ( $add_list ) {
 								foreach ( $add_list as $new_list ) {
-									$new_list1 = $new_list - 1;
 									$wpdb->query( ' INSERT INTO ' . $wpdb->prefix . 'hdflvvideoshare_med2play ( media_id,playlist_id,sorder ) VALUES ( '.$video_aid.', '.$new_list.', 0 )' );
 								}
 							}
@@ -432,11 +395,13 @@ if ( class_exists( 'VideoController' ) != true ) {
 			<div class="wrap"><h2>&nbsp;</h2>
 				<div class="error" id="error">
 					<p><strong><?php echo balanceTags( $message ); ?></strong></p>
-				</div></div>
+				</div>
+			</div>
 			<?php
 		}
+		
 		public function admin_redirect( $url ) {								## admin redirection url function starts
-			echo '<script>window.open( "' . $url . '","_top",false )</script>';
+			echo '<script>window.open( "' . $url . '","_top" )</script>';
 		}
 
 		## admin redirection url function ends
@@ -486,18 +451,22 @@ if ( class_exists( 'VideoController' ) != true ) {
 			return $this->get_videodata( $this->_videosearchQuery, $this->_searchBtn, $order, $this->_orderDirection );
 		}
         
-		/** function for adding video ends
+		/**
+		 * function for adding video ends
 		 *
+		 * @param $youtube_media
+		 * @return mixed
 		 */
 		function hd_getsingleyoutubevideo( $youtube_media ) {
 		
 			if ( $youtube_media == '' ) {
-				return;
+				return null;
 			}
 			$url = 'http://gdata.youtube.com/feeds/api/videos/' . $youtube_media;
 			$ytb = hd_parseyoutubedetails( hd_getyoutubepage( $url ) );
 			return $ytb[0];
 		}
+		
 		## getting video data function ends
 		function converttime( $sec ) {
 			$hms	 = $padHours = '';
@@ -621,8 +590,8 @@ $searchMsg		  = $videoOBJ->_videosearchQuery;
 $settingsGrid = $videoOBJ->_settingsData;
 $adminPage    = filter_input( INPUT_GET, 'page' );
 if ( $adminPage == 'video' ) {													## including video form if starts
-	require_once( APPTHA_VGALLERY_BASEDIR . DS . 'admin/views/video/video.php' );
+	require_once( __DIR__ . '/../views/video/video.php' );
 }																				## including video form if starts
 else if ( $adminPage == 'newvideo' ) {											## including newvideo ad form if starts
-	require_once( APPTHA_VGALLERY_BASEDIR . DS . 'admin/views/video/addvideo.php' );
+	require_once( __DIR__ . '/../views/video/addvideo.php' );
 }																				## including newvideo ad form if ends
