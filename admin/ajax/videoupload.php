@@ -217,28 +217,39 @@ class VgAjaxVideoUpload {
      * @return string - Filename, how to store in videogallery upload directory
      */
     public static function generateDestinationFilename( $originalFilename ) { 
+        // For better orientation in filesystem add part of original filename
+        $normalizedFilename = self::normalizeFilename($originalFilename);   
+        return 'temp-' . rand(10000,99999) . '-' . $normalizedFilename;	
+    }
+
+    
+    /**
+     * Trim filename, reduce diacritics and special chars, switch spaces to '-' char.
+     * 
+     * @param string $originalFilename - File basename (without path).
+     * @return string - Filename, how is best way to store in filesystem.
+     */
+    public static function normalizeFilename($originalFilename) {
         $pathinfo = pathinfo($originalFilename);
         $extension = strtolower($pathinfo['extension']);	
     
         if($extension === 'jpeg'){
             $extension = 'jpg';
         }
-        
-        // For better orientation in filesystem add part of original filename
-        $normalizedFilename = strtolower(                           // 6) All in lowecase 
+
+        return strtolower(                                          // 6) All in lowecase 
             preg_replace('/[\-]+$/u', '',                           // 5) Remove '-' from string ending (if exists)
                 preg_replace('/^[\-]+/u', '',                       // 4) Remove '-' from string beginning (if exists)
                     substr(                                         // 3) Limit filename size to 32 chars
                         preg_replace('/[^A-Za-z0-9()\[\]]+/u', '-', // 2) Replace special chars to '-'
                             remove_accents(                         // 1) Remove diacritics by global WP function
-                                $pathinfo['filename']
+                                pathinfo($originalFilename, PATHINFO_FILENAME)
                             )
                         ), 0, 30
                     )
                 )
             )
-        );                                          // 6) All in lower case
-        
-        return 'temp-' . rand(10000,99999) . (!empty($normalizedFilename) ? '-' . $normalizedFilename : '') . '.' . $extension;	
+        ) . '.' . $extension;
     }
+
 }
