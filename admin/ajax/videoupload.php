@@ -217,9 +217,6 @@ class VgAjaxVideoUpload {
      * @return string - Filename, how to store in videogallery upload directory
      */
     public static function generateDestinationFilename( $originalFilename ) { 
-        global $wpdb;
-        $last_vid = $wpdb->get_var('select MAX( vid ) from ' . $wpdb->prefix . 'hdflvvideoshare');
-        $next_vid = $last_vid + 1;
         $pathinfo = pathinfo($originalFilename);
         $extension = strtolower($pathinfo['extension']);	
     
@@ -228,27 +225,20 @@ class VgAjaxVideoUpload {
         }
         
         // For better orientation in filesystem add part of original filename
-        $normalizedFilename = preg_replace('/[\-]+$/u', '',       // 5) Remove '-' from string ending (if exists)
-            preg_replace('/^[\-]+/u', '',                         // 4) Remove '-' from string beginning (if exists)
-                substr(                                           // 3) Limit filename size to 32 chars
-                    preg_replace('/[^A-Za-z0-9()\[\]]+/u', '-',   // 2) Replace special chars to '-'
-                        remove_accents(                           // 1) Remove diacritics by global WP function
-                            $pathinfo['filename']
-                        )
-                    ), 0, 32
+        $normalizedFilename = strtolower(                           // 6) All in lowecase 
+            preg_replace('/[\-]+$/u', '',                           // 5) Remove '-' from string ending (if exists)
+                preg_replace('/^[\-]+/u', '',                       // 4) Remove '-' from string beginning (if exists)
+                    substr(                                         // 3) Limit filename size to 32 chars
+                        preg_replace('/[^A-Za-z0-9()\[\]]+/u', '-', // 2) Replace special chars to '-'
+                            remove_accents(                         // 1) Remove diacritics by global WP function
+                                $pathinfo['filename']
+                            )
+                        ), 0, 30
+                    )
                 )
             )
-        );
+        );                                          // 6) All in lower case
         
-        switch($extension) {
-            case 'srt':
-                return 'video-' . rand(1000,9099) . (!empty($normalizedFilename) ? '-' . $normalizedFilename : '') . '.' . $extension;
-            case 'jpg':
-            case 'png':
-            case 'gif':
-                return $next_vid . '-thumb-' . rand(1000,9099) . (!empty($normalizedFilename) ? '-' . $normalizedFilename : '') . '.' . $extension;
-            default:
-                return $next_vid . '-video-' . rand(1000,9099) . (!empty($normalizedFilename) ? '-' . $normalizedFilename : '') . '.' . $extension;	
-        }
+        return 'temp-' . rand(10000,99999) . (!empty($normalizedFilename) ? '-' . $normalizedFilename : '') . '.' . $extension;	
     }
 }
