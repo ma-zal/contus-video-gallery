@@ -58,9 +58,6 @@ if ( class_exists( 'VideoController' ) != true ) {
 				$this->status_update( $this->_videoId, $this->_status, $this->_featured );
 			}										## updating status of video ends
 			if ( $this->_addnewVideo ) {
-				$videoName = $video_slug = filter_input( INPUT_POST, 'name' );
-				$videoDescription    = filter_input( INPUT_POST, 'description' );
-				$embedcode			 = filter_input( INPUT_POST, 'embed_code' );
 				$tags_name			 = filter_input( INPUT_POST, 'tags_name' );
 				$strip_tags_name     = strtolower( stripslashes( $tags_name ) );
 				$ambersand_tags_name = preg_replace( '/[&:\s]+/i', '-', $strip_tags_name );
@@ -73,24 +70,14 @@ if ( class_exists( 'VideoController' ) != true ) {
 				if ( ! empty( $_POST['playlist'] ) ) {
 					$act_playlist = $_POST['playlist'];
 				}
-				$videoFeatured    = filter_input( INPUT_POST, 'feature' );
-				$videoDownload    = filter_input( INPUT_POST, 'download' );
-				$videomidrollads  = filter_input( INPUT_POST, 'midrollads' );
-				$videoimaad       = filter_input( INPUT_POST, 'imaad' );
-				$videoPostrollads = filter_input( INPUT_POST, 'postrollads' );
-				$videoPrerollads  = filter_input( INPUT_POST, 'prerollads' );
-				$google_adsense   = filter_input( INPUT_POST, 'googleadsense');
-				$google_adsense_value   = filter_input( INPUT_POST, 'google_adsense_value');
 
-				$dir              = dirname( plugin_basename( __FILE__ ) );
+				$dir       = dirname( plugin_basename( __FILE__ ) );
 				$dirExp    = explode( '/', $dir );
 				$dirPage   = $dirExp[0];
 				$srt_path1 = str_replace( 'plugins', 'uploads/videogallery/', APPTHA_VGALLERY_BASEDIR );
 				$srt_path  = str_replace( $dirPage, '', $srt_path1 );
 
 				$ordering       = $this->_wpdb->get_var( 'SELECT count( ordering ) FROM ' . $wpdb->prefix . 'hdflvvideoshare' );
-				$videoPublish   = filter_input( INPUT_POST, 'publish' );
-				$islive         = filter_input( INPUT_POST, 'islive-value' );
 				$video1         = filter_input( INPUT_POST, 'normalvideoform-value' );
 				$video2         = filter_input( INPUT_POST, 'hdvideoform-value' );
 				$img1           = filter_input( INPUT_POST, 'thumbimageform-value' );
@@ -100,7 +87,7 @@ if ( class_exists( 'VideoController' ) != true ) {
 				$subtitle_lang1 = filter_input( INPUT_POST, 'subtitle_lang1' );
 				$subtitle_lang2 = filter_input( INPUT_POST, 'subtitle_lang2' );
 				$member_id      = filter_input( INPUT_POST, 'member_id' );
-                $act_filepath = null;
+                $act_filepath   = null;
 				$duration       = null;
                 $video_added_method = filter_input(INPUT_POST, 'filetypevalue');
                 $amazon_buckets = filter_input(INPUT_POST , 'amazon_buckets');
@@ -205,14 +192,18 @@ if ( class_exists( 'VideoController' ) != true ) {
 						//Note: file_type = '1';
 					} 
 				} else {
-					if ( $video1 != '' )
+					if ( $video1 != '' ) {
 						$act_filepath = $video1;
-					if ( $video2 != '' )
+                    }
+					if ( $video2 != '' ) {
 						$act_hdpath = $video2;
-					if ( $img1 != '' )
+                    }
+					if ( $img1 != '' ) {
 						$act_image = $img1;
-					if ( $img2 != '' )
+                    }
+					if ( $img2 != '' ) {
 						$act_opimage = $img2;
+                    }
 				}
 
 				if ( ! empty( $streamname ) ) {
@@ -239,16 +230,16 @@ if ( class_exists( 'VideoController' ) != true ) {
 					$act_opimage   =  filter_input(INPUT_POST , 'custompreimage');
 				}
 				$videoData = array(
-					'name'				=> $videoName,
-					'description'		=> $videoDescription,
-					'embedcode'			=> $embedcode,
+					'name'				=> filter_input( INPUT_POST, 'name' ),
+					'description'		=> filter_input( INPUT_POST, 'description' ),
+					'embedcode'			=> filter_input( INPUT_POST, 'embed_code' ),
 					'file'				=> $act_filepath,
 					'file_type'			=> $video_added_method,
 					'member_id'			=> $member_id,
 					'duration'			=> $duration,
 					'hdfile'			=> $act_hdpath,
 					'streamer_path'		=> $streamname,
-					'islive'			=> $islive,
+					'islive'			=> filter_input( INPUT_POST, 'islive-value' ),
 					'image'				=> $act_image,
 					'opimage'			=> $act_opimage,
 					'srtfile1'			=> $subtitle1,
@@ -256,15 +247,15 @@ if ( class_exists( 'VideoController' ) != true ) {
 					'subtitle_lang1'	=> $subtitle_lang1,
 					'subtitle_lang2'	=> $subtitle_lang2,
 					'link'				=> $videoLinkurl,
-					'featured'			=> $videoFeatured,
-					'download'			=> $videoDownload,
-					'postrollads'		=> $videoPostrollads,
-					'midrollads'		=> $videomidrollads,
-					'imaad'				=> $videoimaad,
-					'prerollads'		=> $videoPrerollads,
-					'publish'			=> $videoPublish,
-				    'google_adsense'	=> $google_adsense,
-					'google_adsense_value'=> $google_adsense_value,
+					'featured'			=> filter_input( INPUT_POST, 'feature' ),
+					'download'			=> filter_input( INPUT_POST, 'download' ),
+					'postrollads'		=> filter_input( INPUT_POST, 'postrollads' ),
+					'midrollads'		=> filter_input( INPUT_POST, 'midrollads' ),
+					'imaad'				=> filter_input( INPUT_POST, 'imaad' ),
+					'prerollads'		=> filter_input( INPUT_POST, 'prerollads' ),
+					'publish'			=> filter_input( INPUT_POST, 'publish' ),
+				    'google_adsense'	=> filter_input( INPUT_POST, 'googleadsense'),
+					'google_adsense_value'=> filter_input( INPUT_POST, 'google_adsense_value'),
 					'amazon_buckets'    =>$amazon_buckets,		
 				);     				
 				$videoData['post_date'] = date( 'Y-m-d H:i:s' );
