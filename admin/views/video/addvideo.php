@@ -106,8 +106,7 @@ if ( isset( $_GET['videoId'] ) ) {
 		 * Function get user roles 
 		 */
 		function get_current_user_role() {
-			global $current_user;
-			get_currentuserinfo();
+			$current_user = wp_get_current_user();
 			$user_roles = $current_user->roles;
 			$user_role  = array_shift( $user_roles );
 			return $user_role;
