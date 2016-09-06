@@ -367,7 +367,7 @@ if ( class_exists( 'VideoModel' ) != true ) {							## checks the VideoModel cla
 		}
 		/**
 		 * Video Gallery setting datas.
-		 * @return mixed|null
+		 * @return object|null
 		 */
 		public function get_settingsdata() {							
 			$query = 'SELECT * FROM ' . $this->_videosettingstable . ' WHERE settings_id = 1';
