@@ -11,6 +11,8 @@
  * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html 
  */
 
+require_once __DIR__ . '/../models/videosetting.php';  // Class SettingsModel
+
 class VgAjaxVideoUpload {
 
     /**
@@ -120,14 +122,8 @@ class VgAjaxVideoUpload {
      */
     public static function is_allowed_extension( $file, $allowedExtensions ) {
         $filename = $file['name'];
-        $extension = explode('.', $filename );
-        $extension = end($extension);
-        $output   = in_array($extension, $allowedExtensions );
-        if ( ! $output ) {
-            return false;
-        } else {
-            return true;
-        }
+        $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+        return in_array($extension, $allowedExtensions);
     }
     
     
@@ -159,49 +155,31 @@ class VgAjaxVideoUpload {
     public static function doupload( $file ) {
     
         global $wpdb;
-        $wp_upload_dir = wp_upload_dir();
-        $upload_url    = $wp_upload_dir['baseurl'];
-        $site_url      = get_option('siteurl'); 
-        $uPath         = str_replace($site_url,'',$upload_url);
-        $uPath         = $uPath.'/videogallery';
-        if ( $uPath != '' ) {
-            $dir = ABSPATH . trim( $uPath ) . '/';
-            $url = trailingslashit( get_option( 'siteurl' ) ) . trim( $uPath ) . '/';
-            if ( ! wp_mkdir_p( $dir ) ) {
-                $message = sprintf( __( 'Unable to create directory %s. Is its parent directory writable by the server?', 'hdflv' ), $dir );
-                $uploads['error'] = $message;
-                return $uploads;
-            }
-            $uploads    = array( 'path' => $dir, 'url' => $url, 'error' => false );
-            $uploadpath = $uploads['path'];
-        } else {
-            $uploadpath = ABSPATH;
-        }
     
-        $destination_path = $uploadpath;
+        /** @var */ $vgSettings = (new SettingsModel())->get_settingsdata();
+        /** @var string $uploadsDir - Absolute path to uploaded videofiles */
+        $uploadsDir = ABSPATH . $vgSettings->uploads;
     
         /** @var string $file_name */
-        $file_name = self::generateDestinationFilename($file['name']);
+        $file_name = self::generateTempFilename($file['name'], $uploadsDir);
     
-        $pathinfo = pathinfo($file_name);
-        $extension = strtolower($pathinfo['extension']);	
+        $extension = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));	
     
         // File move to destination directory
-        $amazon_s3_bucket_setting = $wpdb->get_var("SELECT player_colors FROM ".$wpdb->prefix."hdflvvideoshare_settings");
+        $amazon_s3_bucket_setting = $wpdb->get_var("SELECT player_colors FROM ".$wpdb->prefix."ntube_settings");
         $player_colors = unserialize($amazon_s3_bucket_setting);
         if($extension !== 'srt' && $player_colors['amazonbuckets_enable'] && $player_colors['amazonbuckets_name'] ){
             $s3bucket_name  =  $player_colors['amazonbuckets_name'];
-            include_once(APPTHA_VGALLERY_BASEDIR . '/helper/s3_config.php');
+            require_once(__DIR__ . '/../../helper/s3_config.php');
             if($s3->putObjectFile($file['tmp_name'],$s3bucket_name,$file_name,S3::ACL_PUBLIC_READ)){
                 $file_name = 'http://'.$s3bucket_name.'.s3.amazonaws.com/'.$file_name;
             }else{
-                throw new Exception( '', 4 );
+                throw new Exception('Unknown Error Occured', 4);
             }
             // End Amazon S3 bucket  storage data
         } else {	  
-            $target_path = $destination_path . '' . $file_name;
-            if( !move_uploaded_file( $file['tmp_name'], $target_path ) ) {
-                throw new Exception( '', 4 );
+            if( !move_uploaded_file( $file['tmp_name'], $uploadsDir . '/' . $file_name ) ) {
+                throw new Exception('Unknown Error Occured', 4);
             }
         }
         sleep( 1 );
@@ -214,12 +192,16 @@ class VgAjaxVideoUpload {
      * Note: Helper function for `doupload()`.
      * 
      * @param string $originalFilename
+     * @param string $uploadsDir - absolute path to video upload directory
      * @return string - Filename, how to store in videogallery upload directory
      */
-    public static function generateDestinationFilename( $originalFilename ) { 
+    public static function generateTempFilename($originalFilename, $uploadsDir) { 
         // For better orientation in filesystem add part of original filename
         $normalizedFilename = self::normalizeFilename($originalFilename);   
-        return 'temp-' . rand(10000,99999) . '-' . $normalizedFilename;	
+        do {
+            $tempFilename =  'temp-' . rand(10000,99999) . '-' . $normalizedFilename;
+        } while (file_exists($uploadsDir . '/' . $tempFilename));
+        return $tempFilename;
     }
 
     
@@ -230,8 +212,7 @@ class VgAjaxVideoUpload {
      * @return string - Filename, how is best way to store in filesystem.
      */
     public static function normalizeFilename($originalFilename) {
-        $pathinfo = pathinfo($originalFilename);
-        $extension = strtolower($pathinfo['extension']);	
+        $extension = strtolower(pathinfo($originalFilename, PATHINFO_EXTENSION));
     
         if($extension === 'jpeg'){
             $extension = 'jpg';
@@ -241,7 +222,7 @@ class VgAjaxVideoUpload {
             preg_replace('/[\-]+$/u', '',                           // 5) Remove '-' from string ending (if exists)
                 preg_replace('/^[\-]+/u', '',                       // 4) Remove '-' from string beginning (if exists)
                     substr(                                         // 3) Limit filename size to 32 chars
-                        preg_replace('/[^A-Za-z0-9()\[\]]+/u', '-', // 2) Replace special chars to '-'
+                        preg_replace('/[^A-Za-z0-9]+/u', '-', // 2) Replace special chars to '-'
                             remove_accents(                         // 1) Remove diacritics by global WP function
                                 pathinfo($originalFilename, PATHINFO_FILENAME)
                             )

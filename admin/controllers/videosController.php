@@ -11,7 +11,8 @@
  * @copyright  Copyright (C) 2014 Apptha. All rights reserved.
  * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html 
  */
-require_once(__DIR__ . '/../models/video.php');
+require_once __DIR__ . '/../models/video.php';      // Class VideoModel
+require_once __DIR__ . '/../ajax/videoupload.php';  // Class VgAjaxVideoUpload
 
 if ( class_exists( 'VideoController' ) != true ) {			
 
@@ -100,8 +101,10 @@ if ( class_exists( 'VideoController' ) != true ) {
 				$subtitle_lang2 = filter_input( INPUT_POST, 'subtitle_lang2' );
 				$member_id      = filter_input( INPUT_POST, 'member_id' );
                 $amazon_buckets = filter_input(INPUT_POST , 'amazon_buckets');
+                $act_filepath = null;
+                $duration = null;
                 
-        		if ( $videoLinkurl != '' ) {
+        		if ( $videoLinkurl != '' ) { // Entered Video URL
 					if ( preg_match( '#https?://#', $videoLinkurl ) === 0 ) {
 						$videoLinkurl = 'http://' . $videoLinkurl;
 					}
@@ -151,7 +154,7 @@ if ( class_exists( 'VideoController' ) != true ) {
 					// Get previous version of Video DB data
     				/*@var*/ $previousVideoDetails = null;
     				if ($this->_videoId) { // Edit existing video item
-    				    $previousVideoDetails = $wpdb->get_row('SELECT slug, media_id, image, file FROM ' . $wpdb->prefix . 'ntube_media WHERE media_id =' . $this->_videoId);
+    				    $previousVideoDetails = $wpdb->get_row('SELECT slug, media_id, image, file FROM ' . $wpdb->prefix . 'hdflvvideoshare WHERE media_id =' . $this->_videoId);
     				}
     				
     				// Detect if new files has been uploaded
@@ -182,27 +185,51 @@ if ( class_exists( 'VideoController' ) != true ) {
     				}
 					
     
-                    // Rename newly uploaded "temp" files to name, that match with Video ID
-                    /** VideoID (db row index) of Media, that video/image will be assocated to. */
+                    // Rename newly uploaded "temp" files to filaname, that match with Video title
+                    /** @var int $vid - VideoID (db row index) of Media, that video/image will be assocated to. */
                     $vid = null; 
                     if ($this->_videoId) {
                         $vid = $this->_videoId;
                     } else {
                         // In case adding the new video, the media item db row does not exists yet.
                         // ID is autoincrement value, so we are trying found last item. 
-                        $last_vid = $wpdb->get_var('select MAX( media_id ) from ' . $wpdb->prefix . 'ntube_media');
+                        $last_vid = $wpdb->get_var('select MAX( media_id ) from ' . $wpdb->prefix . 'hdflvvideoshare');
                         $vid = ((empty($last_vid) ? 0 : $last_vid) + 1);
                     }
-                    if ($isUploadedNewVideo) {
+                    if ($isUploadedNewVideo) { // if video file has been sent
                         $old_video1 = $video1;
-                        $video1 =  preg_replace('/^temp-[0-9]+/', $vid, $video1);
+
+                        // Generate new filename of video
+                        do {
+                            $video1 = VgAjaxVideoUpload::normalizeFilename(
+                                $vid . '-' . 
+                                filter_input(INPUT_POST, 'name') . 
+                                (isset($postfix) ? '-' . $postfix : '') . 
+                                '.' . pathinfo($old_video1, PATHINFO_EXTENSION)
+                            );
+                            /**@var*/ $postfix = isset($postfix) ? $postfix + 1 : 2;
+                        } while (file_exists($srt_path . $video1));   // Note: Check if same filename does not exists
+
+                        // Rename file
                         rename($srt_path . $old_video1, $srt_path . $video1);
                         echo '<p>Updating new video name: ' . $old_video1 . ' -> ' . $video1 . '</p>';
                         unset($old_video1);
                     }
-                    if ($isUploadedNewImage) {
+                    if ($isUploadedNewImage) { // if image thumbnail file has been sent
                         $old_img1 = $img1;
-                        $img1 =  preg_replace('/^temp-[0-9]+/', $vid, $img1);
+
+                        // Generate new filename of image thumbnail
+                        do {
+                            $img1 = VgAjaxVideoUpload::normalizeFilename(
+                                $vid . '-' . 
+                                filter_input(INPUT_POST, 'name') . 
+                                (isset($postfix) ? '-' . $postfix : '') . 
+                                '.' . pathinfo($old_img1, PATHINFO_EXTENSION)
+                            );
+                            /**@var*/ $postfix = isset($postfix) ? $postfix + 1 : 2;
+                        } while (file_exists($srt_path . $img1));   // Note: Check if same filename does not exists
+
+                        // Rename file
                         rename($srt_path . $old_img1, $srt_path . $img1);
                         echo '<p>Updating new thumbnail name: ' . $old_img1 . ' -> ' . $img1 . '</p>';
                         unset($old_img1);
@@ -228,13 +255,7 @@ if ( class_exists( 'VideoController' ) != true ) {
 						$act_image    = 'http://i3.ytimg.com/vi/' . $match . '/mqdefault.jpg';
 						$act_opimage  = 'http://i3.ytimg.com/vi/' . $match . '/maxresdefault.jpg';
 						$youtube_data = $this->hd_getsingleyoutubevideo( $match );
-						if ( $youtube_data ) {
-							if ( $act_image == '' )
-								$act_image = 'http://i3.ytimg.com/vi/' . $youtube_data['id'] . '/mqdefault.jpg';
-							// Note: file_type = '1';
-						}
-
-						else{
+                        if (!$youtube_data) {
 							$this->render_error( __( 'Could not retrieve Youtube video information', 'hdflvvideoshare' ) );
 						}
 					}else if ( strpos( $act_filepath, 'dailymotion' ) > 0 ) {			  ## check video url is dailymotion
