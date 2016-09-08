@@ -79,9 +79,17 @@ if ( class_exists( 'VideoModel' ) != true ) {							## checks the VideoModel cla
 			return $result;
 		}																			## function for updating status of playlist ends
 		
+
+        /**
+         * @param array $videoData {
+         *     @option string name
+         * }
+         * @param $videoId
+         * @return void
+         */
 		public function video_update( $videoData, $videoId ) {				## function for updating video starts
 			$this->_wpdb->update( $this->_videotable, $videoData, array( 'vid' => $videoId ) );
-			$slug_id = $this->_wpdb->get_var( 'SELECT slug FROM ' . $this->_videotable . ' WHERE vid ='.$videoId );
+			$post = $this->_wpdb->get_row( 'SELECT  `name`, `slug` FROM ' . $this->_videotable . ' WHERE vid ='.$videoId );
 			if ( !empty( $slug_id ) ) {
 				$post_content = '[hdvideo id=' . $videoId . ']';
 
@@ -90,7 +98,7 @@ if ( class_exists( 'VideoModel' ) != true ) {							## checks the VideoModel cla
 					'post_date'				=> date( 'Y-m-d H:i:s' ),
 					'post_date_gmt'			=> date( 'Y-m-d H:i:s' ),
 					'post_content'			=> $post_content,
-					'post_title'			=> $videoData['name'],
+					'post_title'			=> $post->name,
 					'post_excerpt'			=> '',
 					'post_status'			=> 'publish',
 					'comment_status'		=> 'open',
@@ -106,7 +114,7 @@ if ( class_exists( 'VideoModel' ) != true ) {							## checks the VideoModel cla
 					'post_type'				=> 'videogallery',
 					'post_mime_type'		=> '',
 					'comment_count'			=> '0',
-					'ID'                    => $slug_id	
+					'ID'                    => $post->slug_id	
 				);
 				wp_update_post($postsData);
 				$guid = get_site_url() . '/?post_type=videogallery&#038;p=' . $slug_id;
@@ -251,6 +259,7 @@ if ( class_exists( 'VideoModel' ) != true ) {							## checks the VideoModel cla
 			return $video_count;
 		}
 
+		
 		public function video_edit( $videoId ) {
 			global $current_user, $wpdb;
 			if ( isset( $videoId ) && ! current_user_can( 'manage_options' ) ) {
@@ -263,6 +272,7 @@ if ( class_exists( 'VideoModel' ) != true ) {							## checks the VideoModel cla
 			return $this->_wpdb->get_row( 'SELECT a.*,b.tags_name FROM ' . $this->_videotable . ' as a LEFT JOIN ' . $this->_wpdb->prefix . 'hdflvvideoshare_tags b ON b.media_id=a.vid WHERE a.vid ='.$videoId );
 		}																## function for getting single video ends
 		
+        
 		public function video_count( $searchValue, $searchBtn ) {		## function for getting single video starts
 			global $wpdb;
 			$where = '';
@@ -294,10 +304,12 @@ if ( class_exists( 'VideoModel' ) != true ) {							## checks the VideoModel cla
 			$result = $this->_wpdb->get_results($query );
 			return count($result) ;
 		}																## function for getting single video ends
+
+
        /**
         * Function for deleting video.
-        * @param $videoId
-        * @return number|false|boolean|mixed
+        * @param int $videoId
+        * @return int|false
         */
 		public function video_delete($videoId)
         {
@@ -334,36 +346,48 @@ if ( class_exists( 'VideoModel' ) != true ) {							## checks the VideoModel cla
         }
 		/**
 		 * Function for  multiple video featured 
-		 * @param $videoId
+		 * @param int $videoId
+         * @return int|false
 		 */																
 		public function video_multifeatured($videoId){
 			$query  = 'UPDATE ' . $this->_videotable . ' SET `featured`=1 WHERE vid IN (' . $videoId . ')';
 			return $this->_wpdb->query( $query );
 		}
+		
+		
 		/**
 		 * Function for  multiple video publish
-		 * @param $videoId
+         * @param int $videoId
+         * @return int|false
 		 */
 		public function video_multipublish($videoId){
 			$query  = 'UPDATE ' . $this->_videotable . ' SET `publish`=1 WHERE vid IN (' . $videoId . ')';
 			return $this->_wpdb->query( $query );
 		}
+		
+		
 		/**
 		 * Function for  multiple video unfeatured
-		 * @param $videoId
+         * @param int $videoId
+         * @return int|false
 		 */
 		public function video_multiunfeatured($videoId){
 			$query  = 'UPDATE ' . $this->_videotable . ' SET `featured`=0 WHERE vid IN (' . $videoId . ')';
 			return $this->_wpdb->query( $query );
 		}
+		
+		
 		/**
 		 * Function for  multiple video unpublish
-		 * @param $videoId
+         * @param int $videoId
+         * @return int|false
 		 */
 		public function video_multiunpublish($videoId){
 			$query  = 'UPDATE ' . $this->_videotable . ' SET `publish`=0 WHERE vid IN (' . $videoId . ')';
 			return $this->_wpdb->query( $query );
 		}
+		
+		
 		/**
 		 * Video Gallery setting datas.
 		 * @return object|null
@@ -372,6 +396,8 @@ if ( class_exists( 'VideoModel' ) != true ) {							## checks the VideoModel cla
 			$query = 'SELECT * FROM ' . $this->_videosettingstable . ' WHERE settings_id = 1';
 			return $this->_wpdb->get_row( $query );
 		}		
+		
+		
 		/**
 		 * Function  for  default order for  videos
 		 */
