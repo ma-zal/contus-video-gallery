@@ -29,12 +29,6 @@ class VgAjaxVideoUpload {
                 throw new Exception( 'Cancelled by user', 1 );
             }
         
-            if ( isset( $_GET['processing'] ) ) {
-                $pro = $_GET['processing'];
-            }else{
-                $pro = 1;
-            }
-        
             switch (@$_POST['mode']) {
                 case 'video':
                     $allowedExtensions = array( 'flv', 'mp4', 'm4v', 'm4a', 'mov', 'mp4v', 'f4v', 'mp3');
@@ -50,7 +44,8 @@ class VgAjaxVideoUpload {
                     break;
             }
         
-            if ( ( $pro == 1 ) && ( empty( $file ) ) ) {
+            // TODO Check, what is `processing` variable?
+            if ( ( !isset( $_GET['processing']) || $_GET['processing'] === 1) && ( empty( $file ) ) ) {
                 throw new Exception( 'Please check post_max_size in php.ini settings',  13 );
             }
         
