@@ -23,11 +23,10 @@ class VgAjaxVideoUpload {
     public static function main ($file) {
         
         $file_name = '';
-       	$errorcode = 0;
         
        	try {
             if (isset( $_GET['error'] ) &&  $_GET['error'] == 'cancel') {
-                throw new Exception( '', 1 );
+                throw new Exception( 'Cancelled by user', 1 );
             }
         
             if ( isset( $_GET['processing'] ) ) {
@@ -47,47 +46,35 @@ class VgAjaxVideoUpload {
                     $allowedExtensions = array( 'srt' );
                     break;
                 default:
-                    throw new Exception( '', 14 );
+                    throw new Exception( 'Missing or wrong parameter `mode`', 14 );
                     break;
             }
         
             if ( ( $pro == 1 ) && ( empty( $file ) ) ) {
-                throw new Exception( '',  13 );
+                throw new Exception( 'Please check post_max_size in php.ini settings',  13 );
             }
         
             self::check_file_upload_error( $file['error'] );
         
             if ( !self::is_allowed_extension( $file, $allowedExtensions ) ) {
-                throw new Exception( '',  2 );
+                throw new Exception( 'Invalid File type specified',  2 );
             }
             if ( self::isFilesizeExceeded() ) {
-                throw new Exception( '',  3 );
+                throw new Exception( 'Your File Exceeds Server Limit size',  3 );
             }
             
             $file_name = self::doupload( $file );
-        } catch (Exception $_errorcode) {
-            $errorcode = $_errorcode->getCode();
-        }
-        
-        $errormsg[0]  = '<b>Upload Success:</b> File Uploaded Successfully';
-        $errormsg[1]  = '<b>Upload Cancelled:</b> Cancelled by user';
-        $errormsg[2]  = '<b>Upload Failed:</b> Invalid File type specified';
-        $errormsg[3]  = '<b>Upload Failed:</b> Your File Exceeds Server Limit size';
-        $errormsg[4]  = '<b>Upload Failed:</b> Unknown Error Occured';
-        $errormsg[5]  = '<b>Upload Failed:</b> The uploaded file exceeds the upload_max_filesize directive in php.ini';
-        $errormsg[6]  = '<b>Upload Failed:</b> The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form';
-        $errormsg[7]  = '<b>Upload Failed:</b> The uploaded file was only partially uploaded';
-        $errormsg[8]  = '<b>Upload Failed:</b> No file was uploaded';
-        $errormsg[9]  = '<b>Upload Failed:</b> Missing a temporary folder';
-        $errormsg[10] = '<b>Upload Failed:</b> Failed to write file to disk';
-        $errormsg[11] = '<b>Upload Failed:</b> File upload stopped by extension';
-        $errormsg[12] = '<b>Upload Failed:</b> Unknown upload error.';
-        $errormsg[13] = '<b>Upload Failed:</b> Please check post_max_size in php.ini settings';
-        $errormsg[14] = '<b>Upload Failed:</b> Missing or wrong parameter "mode".';
         
         echo '<script type="text/javascript">';
-        echo    'window.top.window.updateQueue('. balanceTags( $errorcode ) . ', "' . balanceTags( $errormsg[$errorcode] ) . '", "' . balanceTags( $file_name ) . '");';
+            echo    'window.top.window.updateQueue(0, "Upload Success", ' . json_encode( $file_name ) . ');';
         echo '</script>';
+            
+        } catch (Exception $error) {
+
+            echo '<script type="text/javascript">';
+            echo    'window.top.window.updateQueue('. (int)$error->getCode() . ', ' . json_encode( "Upload FAILED: " . $error->getMessage() ) . ', ' . json_encode( $file_name ) . ');';
+            echo '</script>';
+        }
     }
     
     
@@ -100,15 +87,15 @@ class VgAjaxVideoUpload {
      */
     public static function check_file_upload_error( $file_error ) {
         switch ( $file_error ) {
-            case 1: throw new Exception( '', 5 );
-            case 2: throw new Exception( '', 6 );
-            case 3: throw new Exception( '', 7 );
-            case 4: throw new Exception( '', 8 );
-            case 6: throw new Exception( '', 9 );
-            case 7: throw new Exception( '', 10 );
-            case 8: throw new Exception( '', 11 );
+            case 1: throw new Exception( 'The uploaded file exceeds the upload_max_filesize directive in php.ini', 5 );
+            case 2: throw new Exception( 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form', 6 );
+            case 3: throw new Exception( 'The uploaded file was only partially uploaded', 7 );
+            case 4: throw new Exception( 'No file was uploaded', 8 );
+            case 6: throw new Exception( 'Missing a temporary folder', 9 );
+            case 7: throw new Exception( 'Failed to write file to disk', 10 );
+            case 8: throw new Exception( 'File upload stopped by extension.', 11 );
             case 0: return true;
-            default: throw new Exception( '', 12 );
+            default: throw new Exception( 'Unknown upload error', 12 );
         }
     }
     
