@@ -13,7 +13,7 @@ class Widget_ContusRandomVideos_init extends WP_Widget {
 	/**
 	 * Widget intiation detail
 	 */
-	function Widget_ContusRandomVideos_init() {
+	function __construct() {
 		$widget_ops = array (
 				'classname' => 'Widget_ContusRandomVideos_init ',
 				'description' => 'Contus Random Videos' 

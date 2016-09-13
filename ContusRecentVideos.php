@@ -10,7 +10,7 @@
  * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html 
  */
 class Widget_ContusRecentVideos_init extends WP_Widget {
-	function Widget_ContusRecentVideos_init() {
+	function __construct() {
 		$widget_ops = array (
 				'classname' => 'Widget_ContusRecentVideos_init ',
 				'description' => 'Contus Recent Videos' 

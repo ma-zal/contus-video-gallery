@@ -12,7 +12,7 @@
 
 class Widget_ContusVideoSearch_init extends WP_Widget {
 
-	function Widget_ContusVideoSearch_init() {
+	function __construct() {
 		$widget_ops = array( 'classname' => 'Widget_ContusVideoSearch_init ', 'description' => 'Displays Product tag link in product page' );
 		$this->WP_Widget( 'Widget_ContusVideoSearch', 'Contus Video Search', $widget_ops );
 	}

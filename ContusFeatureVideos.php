@@ -11,7 +11,7 @@
  */
 
 class widget_ContusFeaturedVideos_init extends WP_Widget {
-	function widget_ContusFeaturedVideos_init() {
+	function __construct() {
 		$widget_ops = array (
 				'classname' => 'widget_ContusFeaturedVideos_init ',
 				'description' => 'Contus Featured Videos' 

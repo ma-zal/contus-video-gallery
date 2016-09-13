@@ -12,7 +12,7 @@
 
 class Widget_ContusRelatedVideos_init extends WP_Widget {
 
-	function Widget_ContusRelatedVideos_init() {
+	function __construct() {
 		$widget_ops = array( 'classname' => 'Widget_ContusRelatedVideos_init ', 'description' => 'Contus Related Videos' );
 		$this->WP_Widget( 'Widget_ContusRelatedVideos_init', 'Contus Related Videos', $widget_ops );
 	}

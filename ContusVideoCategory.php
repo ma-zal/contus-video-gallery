@@ -11,7 +11,7 @@
  */
 class Widget_ContusVideoCategory_init extends WP_Widget {
 
-	function Widget_ContusVideoCategory_init() {
+	function __construct() {
 		$widget_ops = array( 'classname' => 'Widget_ContusVideoCategory_init ', 'description' => 'Contus Video Categories' );
 		$this->WP_Widget( 'Widget_ContusVideoCategory_init', 'Contus Video Category', $widget_ops );
 	}
